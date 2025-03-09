@@ -1,0 +1,17 @@
+C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Data\bin\Debug\net7.0\PaintMe.Data.deps.json
+C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Data\bin\Debug\net7.0\PaintMe.Data.runtimeconfig.json
+C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Data\bin\Debug\net7.0\PaintMe.Data.dll
+C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Data\bin\Debug\net7.0\PaintMe.Data.pdb
+C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Data\bin\Debug\net7.0\PaintMe.Core.dll
+C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Data\bin\Debug\net7.0\PaintMe.Core.pdb
+C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Data\obj\Debug\net7.0\PaintMe.Data.csproj.AssemblyReference.cache
+C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Data\obj\Debug\net7.0\PaintMe.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Data\obj\Debug\net7.0\PaintMe.Data.AssemblyInfoInputs.cache
+C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Data\obj\Debug\net7.0\PaintMe.Data.AssemblyInfo.cs
+C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Data\obj\Debug\net7.0\PaintMe.Data.csproj.CoreCompileInputs.cache
+C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Data\obj\Debug\net7.0\PaintMe.Data.dll
+C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Data\obj\Debug\net7.0\refint\PaintMe.Data.dll
+C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Data\obj\Debug\net7.0\PaintMe.Data.pdb
+C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Data\obj\Debug\net7.0\PaintMe.Data.genruntimeconfig.cache
+C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Data\obj\Debug\net7.0\ref\PaintMe.Data.dll
+C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Data\obj\Debug\net7.0\PaintMe.Data.csproj.CopyComplete
