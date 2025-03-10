@@ -1,55 +1,58 @@
-﻿using PaintMe.Core;
+﻿using AutoMapper;
+using PaintMe.Core;
+using PaintMe.Core.DTOs;
 using PaintMe.Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PaintMe.Service.Services
 {
-    public class UsersService:IService<User>
+    public class UsersService : IService<UserDto>
     {
         readonly IRepository<User> _usersRepository;
-        public UsersService(IRepository<User> dataContext)
+        readonly IMapper _mapper;
+
+        public UsersService(IMapper mapper, IRepository<User> dataContext)
         {
+            _mapper = mapper;
             _usersRepository = dataContext;
         }
-        public List<User> GetList()
+
+        public List<UserDto> GetList()
         {
             var data = _usersRepository.GetAllData();
-            if (data == null)
-                return null;
-            return data;
+            return _mapper.Map<List<UserDto>>(data);
         }
-        public User GetById(int id)
+
+        public UserDto GetById(int id)
         {
             var data = _usersRepository.GetByIdData(id);
-            if (data == null)
-                return null;
-            return data;
+            Console.WriteLine(data == null ? "User not found" : "User found");
+            var result = _mapper.Map<UserDto>(data);
+            Console.WriteLine(result);
+            return result;
         }
-        public bool Update(int id, User driver)
+
+        public bool Update(int id, UserDto user)
         {
             var item = GetById(id);
-            if (item == null) { return false; }
-            return (_usersRepository.UpdateData(id, driver) == null);
+            if (item == null) return false;
+            user.UpdatedAt = DateTime.Now;
+            var data = _mapper.Map<User>(user);
+            return _usersRepository.UpdateData(id, data);
         }
-        public bool Add(User driver)
+
+        public bool Add(UserDto user)
         {
-            var data = _usersRepository.GetByIdData(driver.Id);
-            if (data != null)
+            if (_usersRepository.GetByIdData(user.Id) != null)
                 return false;
-            return _usersRepository.AddData(driver);
+            user.CreatedAt = DateTime.Now;
+            user.UpdatedAt = DateTime.Now;
+            var data = _mapper.Map<User>(user);
+            return _usersRepository.AddData(data);
         }
+
         public bool Delete(int id)
         {
-            if (_usersRepository.isExist(id))
-            {
-                var item = GetById(id);
-                return _usersRepository.RemoveItemFromData(id);
-            }
-            return false;
+            return _usersRepository.RemoveItemFromData(id);
         }
     }
 }

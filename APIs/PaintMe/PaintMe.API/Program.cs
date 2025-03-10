@@ -15,8 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddScoped<IService<User>, UsersService>();
-builder.Services.AddScoped<IService<File>, FilesService>();
+builder.Services.AddScoped<IService<UserDto>, UsersService>();
+builder.Services.AddScoped<IService<FileDto>, FilesService>();
 builder.Services.AddScoped<IService<ColoredFileDto>, ColoredFilesService>();
 
 

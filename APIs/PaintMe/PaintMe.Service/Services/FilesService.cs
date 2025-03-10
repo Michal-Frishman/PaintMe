@@ -1,55 +1,59 @@
-﻿using PaintMe.Core;
+﻿using AutoMapper;
+using PaintMe.Core;
+using PaintMe.Core.DTOs;
 using PaintMe.Core.Entities;
-using System;
-using System.Collections.Generic;
 using File = PaintMe.Core.Entities.File;
 
 namespace PaintMe.Service.Services
 {
-    public class FilesService:IService<File>
+    public class FilesService : IService<FileDto>
     {
         readonly IRepository<File> _filesRepository;
-        public FilesService(IRepository<File> dataContext)
+        readonly IMapper _mapper;
+
+        public FilesService(IMapper mapper, IRepository<File> dataContext)
         {
+            _mapper = mapper;
             _filesRepository = dataContext;
         }
 
-        public List<File> GetList()
+        public List<FileDto> GetList()
         {
             var data = _filesRepository.GetAllData();
-            return data ?? new List<File>();
+            return _mapper.Map<List<FileDto>>(data);
         }
 
-        public File GetById(int id)
+        public FileDto GetById(int id)
         {
-            return _filesRepository.GetByIdData(id);
+            var data = _filesRepository.GetByIdData(id);
+            Console.WriteLine(data == null ? "File not found" : "File found");
+            var result = _mapper.Map<FileDto>(data);
+            Console.WriteLine(result);
+            return result;
         }
 
-        public bool Update(int id, File file)
+        public bool Update(int id, FileDto file)
         {
             var item = GetById(id);
             if (item == null) return false;
             file.UpdatedAt = DateTime.Now;
-            return _filesRepository.UpdateData(id, file) == null;
+            var data = _mapper.Map<File>(file);
+            return _filesRepository.UpdateData(id, data);
         }
 
-        public bool Add(File file)
+        public bool Add(FileDto file)
         {
             if (_filesRepository.GetByIdData(file.Id) != null)
                 return false;
-
             file.CreatedAt = DateTime.Now;
             file.UpdatedAt = DateTime.Now;
-            return _filesRepository.AddData(file);
+            var data = _mapper.Map<File>(file);
+            return _filesRepository.AddData(data);
         }
 
         public bool Delete(int id)
         {
-            if (_filesRepository.isExist(id))
-            {
-                return _filesRepository.RemoveItemFromData(id);
-            }
-            return false;
+            return _filesRepository.RemoveItemFromData(id);
         }
     }
 }

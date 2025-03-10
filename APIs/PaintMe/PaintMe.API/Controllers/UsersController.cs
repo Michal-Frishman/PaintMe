@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 using PaintMe.Core;
+using PaintMe.Core.DTOs;
 using PaintMe.Core.Entities;
+using PaintMe.API.PostModals;
 
 namespace PaintMe.API.Controllers
 {
@@ -8,28 +11,31 @@ namespace PaintMe.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IService<User> _usersService;
+        private readonly IService<UserDto> _usersService;
+        private readonly IMapper _mapper;
 
-        public UsersController(IService<User> usersService)
+        public UsersController(IService<UserDto> usersService, IMapper mapper)
         {
             _usersService = usersService;
+            _mapper = mapper;
         }
 
-        // GET: api/<UsersController>
+        // GET: api/Users
         [HttpGet]
-        public ActionResult<List<User>> Get()
+        public ActionResult<List<UserDto>> Get()
         {
             var result = _usersService.GetList();
             if (result == null || result.Count == 0)
             {
                 return NotFound("No users found.");
             }
-            return Ok(result);
+            var resultDto = _mapper.Map<IEnumerable<UserDto>>(result);
+            return Ok(resultDto);
         }
 
-        // GET api/<UsersController>/5
+        // GET api/Users/5
         [HttpGet("{id}")]
-        public ActionResult<User> Get(int id)
+        public ActionResult<UserDto> GetById(int id)
         {
             if (id <= 0)
             {
@@ -41,46 +47,47 @@ namespace PaintMe.API.Controllers
             {
                 return NotFound("User not found.");
             }
-            return Ok(result);
+            var resultDto = _mapper.Map<UserDto>(result);
+            return Ok(resultDto);
         }
 
-        // POST api/<UsersController>
+        // POST api/Users
         [HttpPost]
-        public ActionResult<bool> Post([FromBody] User user)
+        public ActionResult<UserDto> Post([FromBody] UserPostModal userPostModal)
         {
-            if (user == null)
+            if (userPostModal == null)
             {
                 return BadRequest("Invalid user data.");
             }
 
-            var result = _usersService.Add(user);
+            var userDto = _mapper.Map<UserDto>(userPostModal);
+            var result = _usersService.Add(userDto);
             if (!result)
             {
                 return BadRequest("Failed to create user.");
             }
 
-            return CreatedAtAction(nameof(Get), new { id = user.Id }, true);
+            return CreatedAtAction(nameof(GetById), new { id = userDto.Id }, userDto);
         }
 
-        // PUT api/<UsersController>/5
+        // PUT api/Users/5
         [HttpPut("{id}")]
-        public ActionResult<bool> Put(int id, [FromBody] User user)
+        public ActionResult<bool> Put(int id, [FromBody] UserPostModal userPostModal)
         {
-            if (id <= 0 || user == null)
+            if (id <= 0 || userPostModal == null)
             {
                 return BadRequest("Invalid ID or user data.");
             }
-
-            var updated = _usersService.Update(id, user);
+            var userDto = _mapper.Map<UserDto>(userPostModal);
+            var updated = _usersService.Update(id, userDto);
             if (updated)
             {
                 return Ok(true);
             }
-
             return NotFound("User not found.");
         }
 
-        // DELETE api/<UsersController>/5
+        // DELETE api/Users/5
         [HttpDelete("{id}")]
         public ActionResult<bool> Delete(int id)
         {
@@ -88,13 +95,11 @@ namespace PaintMe.API.Controllers
             {
                 return BadRequest("Invalid ID.");
             }
-
             var deleted = _usersService.Delete(id);
             if (deleted)
             {
                 return Ok(true);
             }
-
             return NotFound("User not found.");
         }
     }

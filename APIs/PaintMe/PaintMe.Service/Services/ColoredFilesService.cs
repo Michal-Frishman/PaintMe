@@ -14,13 +14,12 @@ namespace PaintMe.Service.Services
             _mapper = mapper;
             _coloredFilesRepository = dataContext;
         }
-
         public List<ColoredFileDto> GetList()
         {
             var data = _coloredFilesRepository.GetAllData();
-            var result = _mapper.Map<IEnumerable<ColoredFileDto>>(data);
-            return result.ToList();
+            return _mapper.Map<List<ColoredFileDto>>(data); 
         }
+
 
         public ColoredFileDto GetById(int id)
         {
@@ -37,14 +36,13 @@ namespace PaintMe.Service.Services
             if (item == null) return false;
             coloredFile.UpdatedAt = DateTime.Now;
             var data=_mapper.Map<ColoredFile>(coloredFile);
-            return _coloredFilesRepository.UpdateData(id, data) == null;
+            return _coloredFilesRepository.UpdateData(id, data);
         }
 
         public bool Add(ColoredFileDto coloredFile)
         {
             if (_coloredFilesRepository.GetByIdData(coloredFile.Id) != null)
                 return false;
-
             coloredFile.CreatedAt = DateTime.Now;
             coloredFile.UpdatedAt = DateTime.Now;
             var data = _mapper.Map<ColoredFile>(coloredFile);
@@ -53,11 +51,7 @@ namespace PaintMe.Service.Services
 
         public bool Delete(int id)
         {
-            if (_coloredFilesRepository.isExist(id))
-            {
-                return _coloredFilesRepository.RemoveItemFromData(id);
-            }
-            return false;
+            return _coloredFilesRepository.RemoveItemFromData(id);
         }
     }
 }

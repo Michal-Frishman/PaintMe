@@ -47,7 +47,7 @@ namespace PaintMe.API.Controllers
             {
                 return NotFound();
             }
-            var resultDto=_mapper.Map<ColoredFileDto>(result);
+            var resultDto = _mapper.Map<ColoredFileDto>(result);
             return Ok(resultDto);
         }
 
@@ -67,7 +67,7 @@ namespace PaintMe.API.Controllers
                 return BadRequest("Failed to create the colored file.");
             }
 
-            return Ok(result);
+            return CreatedAtAction(nameof(GetById), new { id = coloredFileDto.Id }, coloredFileDto);
         }
 
         // PUT api/<ColoredFilesController>/5
@@ -86,8 +86,7 @@ namespace PaintMe.API.Controllers
             {
                 return Ok(true);
             }
-            else 
-                return NotFound("Colored file not found.");
+            return NotFound("Colored file not found.");
         }
 
         // DELETE api/<ColoredFilesController>/5

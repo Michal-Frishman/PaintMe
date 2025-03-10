@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 using PaintMe.Core;
 using PaintMe.Core.DTOs;
+using PaintMe.Core.Entities;
+using PaintMe.API.PostModals;
 using File = PaintMe.Core.Entities.File;
 
 namespace PaintMe.API.Controllers
@@ -9,28 +12,31 @@ namespace PaintMe.API.Controllers
     [ApiController]
     public class FilesController : ControllerBase
     {
-        private readonly IService<File> _fileService;
+        private readonly IService<FileDto> _fileService;
+        private readonly IMapper _mapper;
 
-        public FilesController(IService<File> fileService)
+        public FilesController(IService<FileDto> fileService, IMapper mapper)
         {
             _fileService = fileService;
+            _mapper = mapper;
         }
 
-        // GET: api/<FilesController>
+        // GET: api/Files
         [HttpGet]
-        public ActionResult<List<File>> Get()
+        public ActionResult<List<FileDto>> Get()
         {
             var result = _fileService.GetList();
             if (result == null || result.Count == 0)
             {
                 return NotFound();
             }
-            return Ok(result);
+            var resultDto = _mapper.Map<IEnumerable<FileDto>>(result);
+            return Ok(resultDto);
         }
 
-        // GET api/<FilesController>/5
+        // GET api/Files/5
         [HttpGet("{id}")]
-        public ActionResult<File> GetById(int id)
+        public ActionResult<FileDto> GetById(int id)
         {
             if (id <= 0)
             {
@@ -42,46 +48,47 @@ namespace PaintMe.API.Controllers
             {
                 return NotFound();
             }
-            return Ok(result);
+            var resultDto = _mapper.Map<FileDto>(result);
+            return Ok(resultDto);
         }
 
-        // POST api/<FilesController>
+        // POST api/Files
         [HttpPost]
-        public ActionResult<bool> Post([FromBody] File file)
+        public ActionResult<FileDto> Post([FromBody] FilePostModal filePostModal)
         {
-            if (file == null)
+            if (filePostModal == null)
             {
                 return BadRequest("Invalid data.");
             }
 
-            var result = _fileService.Add(file);
+            var fileDto = _mapper.Map<FileDto>(filePostModal);
+            var result = _fileService.Add(fileDto);
             if (!result)
             {
                 return BadRequest("Failed to create the file.");
             }
 
-            return CreatedAtAction(nameof(GetById), new { id = file.Id }, true);
+            return CreatedAtAction(nameof(GetById), new { id = fileDto.Id }, fileDto);
         }
 
-        // PUT api/<FilesController>/5
+        // PUT api/Files/5
         [HttpPut("{id}")]
-        public ActionResult<bool> Put(int id, [FromBody] File file)
+        public ActionResult<bool> Put(int id, [FromBody] FilePostModal filePostModal)
         {
-            if (id <= 0 || file == null)
+            if (id <= 0 || filePostModal == null)
             {
                 return BadRequest("Invalid data or ID.");
             }
-
-            var updated = _fileService.Update(id, file);
+            var fileDto = _mapper.Map<FileDto>(filePostModal);
+            var updated = _fileService.Update(id, fileDto);
             if (updated)
             {
                 return Ok(true);
             }
-
             return NotFound("File not found.");
         }
 
-        // DELETE api/<FilesController>/5
+        // DELETE api/Files/5
         [HttpDelete("{id}")]
         public ActionResult<bool> Delete(int id)
         {
@@ -89,13 +96,11 @@ namespace PaintMe.API.Controllers
             {
                 return BadRequest("Invalid ID.");
             }
-
             var deleted = _fileService.Delete(id);
             if (deleted)
             {
                 return Ok(true);
             }
-
             return NotFound("File not found.");
         }
     }

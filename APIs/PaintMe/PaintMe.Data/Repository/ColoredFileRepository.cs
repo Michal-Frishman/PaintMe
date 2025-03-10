@@ -38,8 +38,7 @@ namespace PaintMe.Data.Repository
 
         public ColoredFile GetByIdData(int id)
         {
-            return _dataContext.ColoredFiles.AsTracking()
-                .FirstOrDefault(cf => cf.Id == id);
+            return _dataContext.ColoredFiles.FirstOrDefault(cf => cf.Id == id);
         }
 
         public bool RemoveItemFromData(int id)
