@@ -21,7 +21,6 @@ namespace PaintMe.Data.Repository
         {
             try
             {
-                user.CreatedAt = DateTime.Now;
                 _dataContext.Users.Add(user);
                 _dataContext.SaveChanges();
                 return true;
@@ -57,7 +56,7 @@ namespace PaintMe.Data.Repository
             }
         }
 
-        public bool UpdateData(int id, User user)
+        public bool UpdateData(int id, User user,User userToUpdateq)
         {
             try
             {
@@ -82,9 +81,9 @@ namespace PaintMe.Data.Repository
             }
         }
 
-        public bool isExist(int id)
-        {
-            return _dataContext.Users.Any(u => u.Id == id);
-        }
+        //public bool isExist(int id)
+        //{
+        //    return _dataContext.Users.Any(u => u.Id == id);
+        //}
     }
 }

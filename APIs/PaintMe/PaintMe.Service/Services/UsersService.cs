@@ -25,10 +25,8 @@ namespace PaintMe.Service.Services
         public UserDto GetById(int id)
         {
             var data = _usersRepository.GetByIdData(id);
-            Console.WriteLine(data == null ? "User not found" : "User found");
-            var result = _mapper.Map<UserDto>(data);
-            Console.WriteLine(result);
-            return result;
+            return _mapper.Map<UserDto>(data);
+             
         }
 
         public bool Update(int id, UserDto user)
@@ -37,13 +35,12 @@ namespace PaintMe.Service.Services
             if (item == null) return false;
             user.UpdatedAt = DateTime.Now;
             var data = _mapper.Map<User>(user);
-            return _usersRepository.UpdateData(id, data);
+            var userToUpdate= _mapper.Map<User>(item);
+            return _usersRepository.UpdateData(id, data,userToUpdate);
         }
 
         public bool Add(UserDto user)
         {
-            if (_usersRepository.GetByIdData(user.Id) != null)
-                return false;
             user.CreatedAt = DateTime.Now;
             user.UpdatedAt = DateTime.Now;
             var data = _mapper.Map<User>(user);
@@ -52,6 +49,9 @@ namespace PaintMe.Service.Services
 
         public bool Delete(int id)
         {
+            var item = GetById(id);
+            if (item == null) return false;
+            var itemToDelete= _mapper.Map<User>(item);
             return _usersRepository.RemoveItemFromData(id);
         }
     }

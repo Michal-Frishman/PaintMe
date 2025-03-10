@@ -16,7 +16,7 @@ namespace PaintMe.Data.Repository
         public List<ColoredFile> GetAllData()
         {
             return _dataContext.ColoredFiles
-                .Include(cf => cf.User) 
+                .Include(cf => cf.User)
                 .ToList();
         }
 
@@ -60,23 +60,15 @@ namespace PaintMe.Data.Repository
             }
         }
 
-        public bool UpdateData(int id, ColoredFile coloredFile)
+        public bool UpdateData(int id, ColoredFile coloredFile, ColoredFile fileToUpdatea)
         {
             try
             {
-                Console.WriteLine("------------------------updating");
                 var fileToUpdate = GetByIdData(id);
-
                 if (fileToUpdate == null)
                 {
                     return false;
                 }
-                else
-                {
-                    Console.WriteLine("------------------------fileToUpdate");
-
-                }
-
                 fileToUpdate.OriginalDrawingId = coloredFile.OriginalDrawingId;
                 fileToUpdate.ColoredImageUrl = coloredFile.ColoredImageUrl;
                 fileToUpdate.UpdatedAt = DateTime.Now;
@@ -92,9 +84,9 @@ namespace PaintMe.Data.Repository
             }
         }
 
-        public bool isExist(int id)
-        {
-            return _dataContext.ColoredFiles.Any(cf => cf.Id == id);
-        }
+        //public bool isExist(int id)
+        //{
+        //    return _dataContext.ColoredFiles.Any(cf => cf.Id == id);
+        //}
     }
 }

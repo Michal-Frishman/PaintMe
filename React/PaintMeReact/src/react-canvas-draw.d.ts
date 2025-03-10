@@ -8,6 +8,7 @@ declare module "react-canvas-draw" {
     }
   
     class CanvasDraw extends React.Component<CanvasDrawProps> {
+      canvasContainer: any;
       clear(): void;
       undo(): void;
       exportPaths(): any; // Add the missing method

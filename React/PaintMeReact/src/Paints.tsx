@@ -76,41 +76,39 @@ const DrawingCanvas: React.FC = () => {
   // פונקציה להדפסת הציור
   const handlePrint = () => {
     if (!canvasRef.current) return;
-
+  
     const canvas = canvasRef.current.canvasContainer.childNodes[1] as HTMLCanvasElement;
     const newCanvas = document.createElement("canvas");
     const context = newCanvas.getContext("2d");
     if (!context) return;
-
+  
     newCanvas.width = canvas.width;
     newCanvas.height = canvas.height;
-
-    // אם יש תמונת רקע, נטמיע אותה על הקנבס החדש
-    if (backgroundImage) {
-      const img = new Image();
-      img.src = backgroundImage;
-      img.onload = () => {
-        context.drawImage(img, 0, 0, newCanvas.width, newCanvas.height);
-        // ואז נעתיק את הציור עצמו על הרקע
+  
+    const drawCanvas = () => {
+      // If there's a background image, apply it first
+      if (backgroundImage) {
+        const img = new Image();
+        img.src = backgroundImage;
+        img.onload = () => {
+          context.drawImage(img, 0, 0, newCanvas.width, newCanvas.height);
+          context.drawImage(canvas, 0, 0); // Then draw the painting on top of the background
+          openPrintWindow(newCanvas);
+        };
+        img.onerror = (err) => {
+          console.error('Error loading background image', err);
+        };
+      } else {
+        // If no background image, just print the drawing
         context.drawImage(canvas, 0, 0);
-        const dataUrl = newCanvas.toDataURL();
-
-        // פתיחת דף חדש להדפסה
-        const printWindow = window.open('', '', 'height=500,width=800');
-        if (printWindow) {
-          printWindow.document.write('<html><body>');
-          printWindow.document.write(`<img src="${dataUrl}" />`);
-          printWindow.document.write('</body></html>');
-          printWindow.document.close();
-          printWindow.print();
-        }
-      };
-    } else {
-      // אם אין תמונת רקע, פשוט נעתיק את הציור
-      context.drawImage(canvas, 0, 0);
+        openPrintWindow(newCanvas);
+      }
+    };
+  
+    const openPrintWindow = (newCanvas: HTMLCanvasElement) => {
       const dataUrl = newCanvas.toDataURL();
-
-      // פתיחת דף חדש להדפסה
+    
+      // Open a new window for printing
       const printWindow = window.open('', '', 'height=500,width=800');
       if (printWindow) {
         printWindow.document.write('<html><body>');
@@ -118,9 +116,16 @@ const DrawingCanvas: React.FC = () => {
         printWindow.document.write('</body></html>');
         printWindow.document.close();
         printWindow.print();
+      } else {
+        console.error('Failed to open print window');
       }
-    }
+    };
+  
+    // Draw the canvas (with or without background image)
+    drawCanvas();
   };
+  
+  
 
   return (
     <div>
@@ -130,7 +135,7 @@ const DrawingCanvas: React.FC = () => {
         brushRadius={brushRadius}
         lazyRadius={0}
         // אם יש תמונה ברקע, זה יופיע
-        imgSrc={backgroundImage || ""}
+        // imgSrc={backgroundImage || ""}
       />
       
       <div>

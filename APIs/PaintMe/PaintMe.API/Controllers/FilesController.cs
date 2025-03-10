@@ -4,7 +4,7 @@ using PaintMe.Core;
 using PaintMe.Core.DTOs;
 using PaintMe.Core.Entities;
 using PaintMe.API.PostModals;
-using File = PaintMe.Core.Entities.File;
+using PaintMe.API.PutModels;
 
 namespace PaintMe.API.Controllers
 {
@@ -28,10 +28,9 @@ namespace PaintMe.API.Controllers
             var result = _fileService.GetList();
             if (result == null || result.Count == 0)
             {
-                return NotFound();
+                return NotFound("No files found.");
             }
-            var resultDto = _mapper.Map<IEnumerable<FileDto>>(result);
-            return Ok(resultDto);
+            return Ok(result);
         }
 
         // GET api/Files/5
@@ -46,10 +45,9 @@ namespace PaintMe.API.Controllers
             var result = _fileService.GetById(id);
             if (result == null)
             {
-                return NotFound();
+                return NotFound("File not found.");
             }
-            var resultDto = _mapper.Map<FileDto>(result);
-            return Ok(resultDto);
+            return Ok(result);
         }
 
         // POST api/Files
@@ -58,28 +56,27 @@ namespace PaintMe.API.Controllers
         {
             if (filePostModal == null)
             {
-                return BadRequest("Invalid data.");
+                return BadRequest("Invalid file data.");
             }
 
             var fileDto = _mapper.Map<FileDto>(filePostModal);
             var result = _fileService.Add(fileDto);
             if (!result)
             {
-                return BadRequest("Failed to create the file.");
+                return BadRequest("Failed to create file.");
             }
-
             return CreatedAtAction(nameof(GetById), new { id = fileDto.Id }, fileDto);
         }
 
         // PUT api/Files/5
         [HttpPut("{id}")]
-        public ActionResult<bool> Put(int id, [FromBody] FilePostModal filePostModal)
+        public ActionResult<bool> Put(int id, [FromBody] FilePostModal filePutModal)
         {
-            if (id <= 0 || filePostModal == null)
+            if (id <= 0 || filePutModal == null)
             {
-                return BadRequest("Invalid data or ID.");
+                return BadRequest("Invalid ID or file data.");
             }
-            var fileDto = _mapper.Map<FileDto>(filePostModal);
+            var fileDto = _mapper.Map<FileDto>(filePutModal);
             var updated = _fileService.Update(id, fileDto);
             if (updated)
             {

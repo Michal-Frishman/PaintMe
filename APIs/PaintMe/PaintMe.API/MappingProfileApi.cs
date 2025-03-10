@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using PaintMe.API.PostModals;
+using PaintMe.API.PutModels;
 using PaintMe.Core.DTOs;
 using PaintMe.Core.Entities;
 
@@ -9,10 +10,10 @@ namespace PaintMe.API
     {
         public MappingProfileApi()
         {
-            CreateMap<ColoredFilePostModal, ColoredFileDto>().ReverseMap();
             CreateMap<UserPostModal, UserDto>().ReverseMap();
             CreateMap<ColoredFileDto, ColoredFilePostModal>().ReverseMap();
             CreateMap<FilePostModal, FileDto>().ReverseMap();
+            //CreateMap<UserPutModel,UserDto>().ReverseMap();
         }
     }
 }

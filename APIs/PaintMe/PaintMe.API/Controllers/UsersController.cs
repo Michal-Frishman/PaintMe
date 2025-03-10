@@ -4,6 +4,7 @@ using PaintMe.Core;
 using PaintMe.Core.DTOs;
 using PaintMe.Core.Entities;
 using PaintMe.API.PostModals;
+using PaintMe.API.PutModels;
 
 namespace PaintMe.API.Controllers
 {
@@ -29,8 +30,7 @@ namespace PaintMe.API.Controllers
             {
                 return NotFound("No users found.");
             }
-            var resultDto = _mapper.Map<IEnumerable<UserDto>>(result);
-            return Ok(resultDto);
+            return result;
         }
 
         // GET api/Users/5
@@ -47,8 +47,7 @@ namespace PaintMe.API.Controllers
             {
                 return NotFound("User not found.");
             }
-            var resultDto = _mapper.Map<UserDto>(result);
-            return Ok(resultDto);
+            return result;
         }
 
         // POST api/Users
@@ -66,20 +65,19 @@ namespace PaintMe.API.Controllers
             {
                 return BadRequest("Failed to create user.");
             }
-
-            return CreatedAtAction(nameof(GetById), new { id = userDto.Id }, userDto);
+            return Ok(result);
         }
 
         // PUT api/Users/5
         [HttpPut("{id}")]
-        public ActionResult<bool> Put(int id, [FromBody] UserPostModal userPostModal)
+        public ActionResult<bool> Put(int id, [FromBody] UserPostModal userPutModal)
         {
-            if (id <= 0 || userPostModal == null)
+            if (id <= 0 || userPutModal == null)
             {
                 return BadRequest("Invalid ID or user data.");
             }
-            var userDto = _mapper.Map<UserDto>(userPostModal);
-            var updated = _usersService.Update(id, userDto);
+            var userDto = _mapper.Map<UserDto>(userPutModal);
+             var updated = _usersService.Update(id, userDto);
             if (updated)
             {
                 return Ok(true);

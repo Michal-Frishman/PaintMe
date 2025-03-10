@@ -38,7 +38,8 @@ namespace PaintMe.Service.Services
             if (item == null) return false;
             file.UpdatedAt = DateTime.Now;
             var data = _mapper.Map<File>(file);
-            return _filesRepository.UpdateData(id, data);
+            var dataToUpdate=_mapper.Map<File>(data);
+            return _filesRepository.UpdateData(id, data, dataToUpdate);
         }
 
         public bool Add(FileDto file)
@@ -53,6 +54,10 @@ namespace PaintMe.Service.Services
 
         public bool Delete(int id)
         {
+
+            var item = GetById(id);
+            if (item == null) return false;
+            var itemToDelete = _mapper.Map<File>(item);
             return _filesRepository.RemoveItemFromData(id);
         }
     }

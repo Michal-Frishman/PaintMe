@@ -20,20 +20,19 @@ namespace PaintMe.API.Controllers
             _mapper = mapper;
         }
 
-        // GET: api/<ColoredFilesController>
+        // GET: api/ColoredFiles
         [HttpGet]
         public ActionResult<List<ColoredFileDto>> Get()
         {
             var result = _coloredFileService.GetList();
             if (result == null || result.Count == 0)
             {
-                return NotFound();
+                return NotFound("No colored files found.");
             }
-            var resultDto = _mapper.Map<IEnumerable<ColoredFileDto>>(result);
-            return Ok(resultDto);
+            return Ok(result);
         }
 
-        // GET api/<ColoredFilesController>/5
+        // GET api/ColoredFiles/5
         [HttpGet("{id}")]
         public ActionResult<ColoredFileDto> GetById(int id)
         {
@@ -45,20 +44,18 @@ namespace PaintMe.API.Controllers
             var result = _coloredFileService.GetById(id);
             if (result == null)
             {
-                return NotFound();
+                return NotFound("Colored file not found.");
             }
-            var resultDto = _mapper.Map<ColoredFileDto>(result);
-            return Ok(resultDto);
+            return Ok(result);
         }
 
-        // POST api/<ColoredFilesController>
+        // POST api/ColoredFiles
         [HttpPost]
         public ActionResult<ColoredFileDto> Post([FromBody] ColoredFilePostModal coloredFile)
         {
             if (coloredFile == null)
             {
-
-                return BadRequest("Invalid data.");
+                return BadRequest("Invalid colored file data.");
             }
             var coloredFileDto = _mapper.Map<ColoredFileDto>(coloredFile);
             var result = _coloredFileService.Add(coloredFileDto);
@@ -66,19 +63,16 @@ namespace PaintMe.API.Controllers
             {
                 return BadRequest("Failed to create the colored file.");
             }
-
             return CreatedAtAction(nameof(GetById), new { id = coloredFileDto.Id }, coloredFileDto);
         }
 
-        // PUT api/<ColoredFilesController>/5
+        // PUT api/ColoredFiles/5
         [HttpPut("{id}")]
         public ActionResult<bool> Put(int id, [FromBody] ColoredFilePostModal coloredFile)
         {
-            Console.WriteLine($"Received PUT request for ID: {id}");
-
             if (id <= 0 || coloredFile == null)
             {
-                return BadRequest("Invalid data or ID.");
+                return BadRequest("Invalid ID or colored file data.");
             }
             var coloredFileDto = _mapper.Map<ColoredFileDto>(coloredFile);
             var updated = _coloredFileService.Update(id, coloredFileDto);
@@ -89,7 +83,7 @@ namespace PaintMe.API.Controllers
             return NotFound("Colored file not found.");
         }
 
-        // DELETE api/<ColoredFilesController>/5
+        // DELETE api/ColoredFiles/5
         [HttpDelete("{id}")]
         public ActionResult<bool> Delete(int id)
         {

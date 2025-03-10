@@ -36,7 +36,8 @@ namespace PaintMe.Service.Services
             if (item == null) return false;
             coloredFile.UpdatedAt = DateTime.Now;
             var data=_mapper.Map<ColoredFile>(coloredFile);
-            return _coloredFilesRepository.UpdateData(id, data);
+            var dataToUpdate=_mapper.Map<ColoredFile>(item);
+            return _coloredFilesRepository.UpdateData(id, data, dataToUpdate);
         }
 
         public bool Add(ColoredFileDto coloredFile)
@@ -51,6 +52,10 @@ namespace PaintMe.Service.Services
 
         public bool Delete(int id)
         {
+
+            var item = GetById(id);
+            if (item == null) return false;
+            var itemToDelete = _mapper.Map<ColoredFile>(item);
             return _coloredFilesRepository.RemoveItemFromData(id);
         }
     }

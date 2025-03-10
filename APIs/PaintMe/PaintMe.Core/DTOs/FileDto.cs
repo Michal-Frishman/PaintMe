@@ -15,9 +15,7 @@ namespace PaintMe.Core.DTOs
         public FileCategoryEnum Category { get; set; }
         public string FileUrl { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public int? CreatedBy { get; set; }
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
-        public int? UpdatedBy { get; set; }
 
     }
 }

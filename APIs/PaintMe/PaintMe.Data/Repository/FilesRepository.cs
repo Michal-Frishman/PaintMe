@@ -17,27 +17,30 @@ namespace PaintMe.Data.Repository
             _dataContext = dataContext;
         }
 
+        // Retrieve all files from the database
         public List<File> GetAllData()
         {
             return _dataContext.Files.ToList();
         }
 
+        // Add a new file to the database
         public bool AddData(File file)
         {
             try
             {
-                file.CreatedAt = DateTime.Now;
-                _dataContext.Files.Add(file);
-                _dataContext.SaveChanges();
+                file.CreatedAt = DateTime.Now; // Set creation date
+                _dataContext.Files.Add(file); // Add file to the context
+                _dataContext.SaveChanges(); // Save changes to the database
                 return true;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                return false;
+                Console.WriteLine(e.Message); // Log error message
+                return false; // Return false if an error occurs
             }
         }
 
+        // Retrieve a file by its ID
         public File GetByIdData(int id)
         {
             return _dataContext.Files.FirstOrDefault(f => f.Id == id);
@@ -62,7 +65,8 @@ namespace PaintMe.Data.Repository
             }
         }
 
-        public bool UpdateData(int id, File file)
+        // Update an existing file's details
+        public bool UpdateData(int id, File file,File fileToUpdatez)
         {
             try
             {
@@ -71,25 +75,25 @@ namespace PaintMe.Data.Repository
                 {
                     return false;
                 }
-
                 fileToUpdate.Name = file.Name;
                 fileToUpdate.Category = file.Category;
                 fileToUpdate.FileUrl = file.FileUrl;
-                fileToUpdate.UpdatedAt = DateTime.Now;
+                fileToUpdate.UpdatedAt = DateTime.Now; 
                 fileToUpdate.UpdatedBy = file.UpdatedBy;
 
-                _dataContext.SaveChanges();
+                _dataContext.SaveChanges(); 
                 return true;
             }
             catch (Exception)
             {
-                return false;
+                return false; 
             }
         }
 
-        public bool isExist(int id)
-        {
-            return _dataContext.Files.Any(f => f.Id == id);
-        }
+        // Uncomment if needed to check existence of a file by ID
+        // public bool isExist(int id)
+        // {
+        //     return _dataContext.Files.Any(f => f.Id == id);
+        // }
     }
 }
