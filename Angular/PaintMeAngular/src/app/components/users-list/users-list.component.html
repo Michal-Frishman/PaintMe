@@ -1,0 +1,12 @@
+<a mat-button [routerLink]="['/users/add']" routerLinkActive="active">Add</a>
+hhhhhhhhhhh
+@for(user of users$ | async; track user) {
+<mat-card class="mat-card" appearance="outlined">
+    <mat-card-header>
+        <mat-card-title> {{user.firstName + ' ' + user.lastName }}</mat-card-title>
+        <!-- <mat-card-subtitle>{{user.description}}</mat-card-subtitle> -->
+        <!-- <mat-card-subtitle> {{user.teacherId}}</mat-card-subtitle> -->
+    </mat-card-header>
+    <br>
+</mat-card>
+}
