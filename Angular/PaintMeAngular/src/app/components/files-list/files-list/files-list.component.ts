@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
+import {File} from '../../../models/File';
 
 @Component({
   selector: 'app-files-list',

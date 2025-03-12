@@ -10,3 +10,15 @@ C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Core\obj\Debug\net7.0\refin
 C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Core\obj\Debug\net7.0\PaintMe.Core.pdb
 C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Core\obj\Debug\net7.0\ref\PaintMe.Core.dll
 C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.Core\obj\Debug\net7.0\PaintMe.Core.csproj.AssemblyReference.cache
+C:\Users\user\Downloads\PaintMe-main\PaintMe-main\APIs\PaintMe\PaintMe.Core\bin\Debug\net7.0\PaintMe.Core.deps.json
+C:\Users\user\Downloads\PaintMe-main\PaintMe-main\APIs\PaintMe\PaintMe.Core\bin\Debug\net7.0\PaintMe.Core.dll
+C:\Users\user\Downloads\PaintMe-main\PaintMe-main\APIs\PaintMe\PaintMe.Core\bin\Debug\net7.0\PaintMe.Core.pdb
+C:\Users\user\Downloads\PaintMe-main\PaintMe-main\APIs\PaintMe\PaintMe.Core\obj\Debug\net7.0\PaintMe.Core.csproj.AssemblyReference.cache
+C:\Users\user\Downloads\PaintMe-main\PaintMe-main\APIs\PaintMe\PaintMe.Core\obj\Debug\net7.0\PaintMe.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\Downloads\PaintMe-main\PaintMe-main\APIs\PaintMe\PaintMe.Core\obj\Debug\net7.0\PaintMe.Core.AssemblyInfoInputs.cache
+C:\Users\user\Downloads\PaintMe-main\PaintMe-main\APIs\PaintMe\PaintMe.Core\obj\Debug\net7.0\PaintMe.Core.AssemblyInfo.cs
+C:\Users\user\Downloads\PaintMe-main\PaintMe-main\APIs\PaintMe\PaintMe.Core\obj\Debug\net7.0\PaintMe.Core.csproj.CoreCompileInputs.cache
+C:\Users\user\Downloads\PaintMe-main\PaintMe-main\APIs\PaintMe\PaintMe.Core\obj\Debug\net7.0\PaintMe.Core.dll
+C:\Users\user\Downloads\PaintMe-main\PaintMe-main\APIs\PaintMe\PaintMe.Core\obj\Debug\net7.0\refint\PaintMe.Core.dll
+C:\Users\user\Downloads\PaintMe-main\PaintMe-main\APIs\PaintMe\PaintMe.Core\obj\Debug\net7.0\PaintMe.Core.pdb
+C:\Users\user\Downloads\PaintMe-main\PaintMe-main\APIs\PaintMe\PaintMe.Core\obj\Debug\net7.0\ref\PaintMe.Core.dll
