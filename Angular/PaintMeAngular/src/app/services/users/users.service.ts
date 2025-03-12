@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
-import { User } from '../../../../models/User';
+import { User } from '../../models/User';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -31,6 +31,7 @@ export class UsersService {
       );
   }
   addUser(user: User): Observable<User> {
+    user.role = parseInt(user.role.toString());
     return this.http.post<User>(this.apiUrl, user)
       .pipe(
         catchError(error => {
@@ -40,13 +41,13 @@ export class UsersService {
         tap(() => this.loadUsers()) // Reload users after adding a new user
       );
   }
-  
+
   // postLoginOrRegister( data : PartialUser, userStatus: string): Observable<{ token: string ,userId:number}>{
   //   return this.http.post<{ token: string, userId:number }>(`http://localhost:3000/api/auth/${userStatus}`, data);
   // }
 
   getUserById(id: number): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/:${id}`)
+    return this.http.get<User>(`${this.apiUrl}/${id}`)
       .pipe(
         catchError(error => {
           alert("getUserById failed: " + error.message);
@@ -66,7 +67,7 @@ export class UsersService {
   }
 
   deleteUser(id: number): Observable<void> {
-    return this.http.delete<void>(`http://localhost:3000/api/users/${id}`)
+    return this.http.delete<void>(`${this.apiUrl}/${id}`)
       .pipe(
         catchError(error => {
           alert("deleteUser failed: " + error.message);

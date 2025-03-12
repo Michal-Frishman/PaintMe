@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import {File} from "../models/File.ts";
+import { File } from "../models/File.ts";
 const FileList = () => {
-    const [files, setFiles] = useState([]as File[]);
+    const [files, setFiles] = useState([] as File[]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -14,7 +14,7 @@ const FileList = () => {
                 }
                 const data = await response.json();
                 setFiles(data);
-            } catch (error:any) {
+            } catch (error: any) {
                 setError(error.message);
             } finally {
                 setLoading(false);
@@ -37,7 +37,9 @@ const FileList = () => {
             <h1>File List</h1>
             <ul>
                 {files.map((file) => (
-                    <li key={file.id}>{file.name}</li> // Assuming file has 'id' and 'name' properties
+                    <div key={file.id}>{file.name}
+                        <img src={file.fileUrl} alt={file.name} />
+                    </div>
                 ))}
             </ul>
         </div>

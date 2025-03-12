@@ -1,4 +1,3 @@
-l;fkjweeeee
 <div class="form-container">
     <form [formGroup]="userForm" (submit)="addUser()">
         <mat-form-field appearance="fill">
@@ -44,18 +43,17 @@ l;fkjweeeee
             <mat-form-field appearance="fill">
                 <mat-label>Role</mat-label>
                 <mat-select formControlName="role" required>
-                    <mat-option value="admin">Admin</mat-option>
-                    <mat-option value="user">User</mat-option>
+                    <mat-option value="0">Admin</mat-option>
+                    <mat-option value="1">User</mat-option>
                 </mat-select>
+                @if(this.userForm.get('role')?.invalid && userForm.get('role')?.touched){
+                <mat-error>
+                    Role is required
+                </mat-error>}
             </mat-form-field>
-            @if(this.userForm.get('role')?.invalid && userForm.get('role')?.touched){
-            <mat-error>
-                Role is required
-            </mat-error>}
+
         </div>
-        <button mat-raised-button [disabled]="userForm.invalid" type="submit">Register</button>
+        <button mat-raised-button [disabled]="userForm.invalid" type="submit">Add</button>
         <br />
     </form>
 </div>
-
-

@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { UsersService } from '../../../services/users-sevice/files/users/users.service';
+import { UsersService } from '../../../services/users/users.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,7 +18,7 @@ import { MatSelectModule } from '@angular/material/select';
 })
 export class AddUserFormComponent implements OnInit {
   userForm!: FormGroup;
-  routerNavigate = inject(Router);
+  router = inject(Router);
 
   constructor(private fb: FormBuilder, private http: HttpClient, private usersService: UsersService) {
 
@@ -29,13 +29,14 @@ export class AddUserFormComponent implements OnInit {
       this.usersService.addUser(this.userForm.value).subscribe({
         next: res => {
           this.userForm.reset();
-          this.routerNavigate.navigate(['/users']);
+          this.router.navigate(['/users']);
         }
       });
     }
   }
 
-  ngOnInit(): void {    this.userForm = this.fb.group({
+  ngOnInit(): void {    
+    this.userForm = this.fb.group({
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],

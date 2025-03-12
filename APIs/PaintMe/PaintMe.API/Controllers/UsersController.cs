@@ -26,10 +26,6 @@ namespace PaintMe.API.Controllers
         public ActionResult<List<UserDto>> Get()
         {
             var result = _usersService.GetList();
-            if (result == null || result.Count == 0)
-            {
-                return NotFound("No users found.");
-            }
             return result;
         }
 

@@ -25,10 +25,6 @@ namespace PaintMe.API.Controllers
         public ActionResult<List<ColoredFileDto>> Get()
         {
             var result = _coloredFileService.GetList();
-            if (result == null || result.Count == 0)
-            {
-                return NotFound("No colored files found.");
-            }
             return Ok(result);
         }
 

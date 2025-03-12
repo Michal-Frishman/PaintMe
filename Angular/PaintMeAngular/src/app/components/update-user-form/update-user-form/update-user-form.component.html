@@ -1,1 +1,58 @@
-<p>update-user-form works!</p>
+<div class="form-container">
+    <form [formGroup]="userForm" (submit)="updateUser()">
+        <mat-form-field appearance="fill">
+            <mat-label>First Name</mat-label>
+            <input matInput type="text" formControlName="firstName" required>
+            @if(this.userForm.get('firstName')?.invalid && userForm.get('firstName')?.touched)
+            {
+            <mat-error>
+                First Name
+            </mat-error>}
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Last Name</mat-label>
+            <input matInput type="text" formControlName="lastName" required>
+            @if(this.userForm.get('lastName')?.invalid && userForm.get('lastName')?.touched)
+            {
+            <mat-error>
+                Last Name is required
+            </mat-error>}
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" required>
+            @if(this.userForm.get('email')?.invalid && userForm.get('email')?.touched)
+            {
+            <mat-error>
+                Email is required
+            </mat-error>}
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password">
+            @if(this.userForm.get('password')?.invalid && userForm.get('password')?.touched)
+            {
+            <mat-error>
+                Password is required
+            </mat-error>}
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Role</mat-label>
+            <mat-select formControlName="role" required>
+                <mat-option [value]="0">Admin</mat-option>
+                <mat-option [value]="1">User</mat-option>
+            </mat-select>
+            @if(this.userForm.get('role')?.invalid && userForm.get('role')?.touched){
+                <mat-error>
+                    Role is required
+                </mat-error>}
+        </mat-form-field>
+        <br />
+
+        <button mat-raised-button [disabled]="userForm.invalid" type="submit">Update</button>
+    </form>
+</div>

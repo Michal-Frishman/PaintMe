@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { User } from '../../models/User';
-import { UsersService } from '../../services/users-sevice/files/users/users.service';
+import { UsersService } from '../../services/users/users.service';
 import { AsyncPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,6 +27,8 @@ export class UsersListComponent implements OnInit {
   constructor(private usersService: UsersService) {}
 
   ngOnInit(): void {
-    this.users$ = this.usersService.users$; // Subscribe to the BehaviorSubject
+    this.users$ = this.usersService.users$; 
   }
+  deleteUser(userId: number): void {   
+    this.usersService.deleteUser(userId).subscribe(); }
 }

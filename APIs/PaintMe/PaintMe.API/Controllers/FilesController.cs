@@ -26,10 +26,6 @@ namespace PaintMe.API.Controllers
         public ActionResult<List<FileDto>> Get()
         {
             var result = _fileService.GetList();
-            if (result == null || result.Count == 0)
-            {
-                return NotFound("No files found.");
-            }
             return Ok(result);
         }
 
