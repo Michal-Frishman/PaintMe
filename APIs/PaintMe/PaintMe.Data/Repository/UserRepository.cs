@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore; // Add this for async methods
 
 namespace PaintMe.Data.Repository
 {
-    public class UsersRepository : IRepository<User>
+
+    public class UsersRepository : IUserRepository
     {
         private readonly DataContext _dataContext;
 
@@ -18,18 +19,18 @@ namespace PaintMe.Data.Repository
             return await _dataContext.Users.ToListAsync();
         }
 
-        public async Task<bool> AddDataAsync(User user)
+        public async Task<User> AddDataAsync(User user)
         {
             try
             {
                 await _dataContext.Users.AddAsync(user);
                 await _dataContext.SaveChangesAsync();
-                return true;
+                return user;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return false;
+                return null;
             }
         }
 
@@ -37,7 +38,6 @@ namespace PaintMe.Data.Repository
         {
             return await _dataContext.Users.FirstOrDefaultAsync(u => u.Id == id);
         }
-
         public async Task<bool> RemoveItemFromDataAsync(int id)
         {
             try
@@ -80,6 +80,35 @@ namespace PaintMe.Data.Repository
             {
                 return false;
             }
+        }
+        public async Task<User> FindByUsernameAsync(string username)
+        {
+            return await _dataContext.Users.SingleOrDefaultAsync(u => u.FirstName == username);
+        }
+
+
+
+        public async Task<bool> UpdateAsync(int id, User user)
+        {
+            User r = await GetByIdDataAsync(id);
+            if (r != null)
+            {
+                r.Email = user.Email;
+                r.FirstName = user.FirstName;
+                r.LastName = user.LastName;
+                r.Password = user.Password;
+                r.UpdatedAt = DateTime.UtcNow;
+                return true;
+            }
+            return false;
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var user = await GetByIdDataAsync(id);
+            _dataContext.Users.Remove(user);
+
+
         }
     }
 }

@@ -13,10 +13,10 @@ namespace PaintMe.API.Controllers
     [ApiController]
     public class FilesController : ControllerBase
     {
-        private readonly IService<FileDto> _fileService;
+        private readonly IFilesService _fileService;
         private readonly IMapper _mapper;
 
-        public FilesController(IService<FileDto> fileService, IMapper mapper)
+        public FilesController(IFilesService fileService, IMapper mapper)
         {
             _fileService = fileService;
             _mapper = mapper;
@@ -58,7 +58,7 @@ namespace PaintMe.API.Controllers
 
             var fileDto = _mapper.Map<FileDto>(filePostModal);
             var result = await _fileService.AddAsync(fileDto);
-            if (!result)
+            if (result==null)
             {
                 return BadRequest("Failed to create file.");
             }

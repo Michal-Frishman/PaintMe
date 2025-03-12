@@ -3,7 +3,7 @@ using PaintMe.Core.DTOs;
 using PaintMe.Core.Entities;
 using File = PaintMe.Core.Entities.File;
 
-namespace PaintMe.Service
+namespace PaintMe.Core
 {
     public class MappingProfile : Profile
     {

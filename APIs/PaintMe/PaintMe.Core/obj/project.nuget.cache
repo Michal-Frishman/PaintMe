@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "r6jVsE3qvW8uJYDGd64P6pRpZ4rKR0/kEJkZVRRqmS9sQ0QBMx3RjKdNhuYbrz/vivBM0pp1XaEwuWL1ox3b5Q==",
+  "dgSpecHash": "yZxyKmbRKWQA6T561WfO3GmvjOotOk9yCCwOr+tMiRJCZVvdyvRF5gtHutmVwZFsrQy9jBlqMZsg4BmdMN8QlQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\user\\Desktop\\practikum\\APIs\\PaintMe\\PaintMe.Core\\PaintMe.Core.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\user\\.nuget\\packages\\automapper\\7.0.0\\automapper.7.0.0.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
+    "C:\\Users\\user\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\7.0.0\\microsoft.entityframeworkcore.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\system.io\\4.3.0\\system.io.4.3.0.nupkg.sha512",

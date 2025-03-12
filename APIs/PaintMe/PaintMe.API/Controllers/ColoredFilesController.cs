@@ -13,10 +13,10 @@ namespace PaintMe.API.Controllers
     [ApiController]
     public class ColoredFilesController : ControllerBase
     {
-        private readonly IService<ColoredFileDto> _coloredFileService;
+        private readonly IColoredFilesService _coloredFileService;
         private readonly IMapper _mapper;
 
-        public ColoredFilesController(IService<ColoredFileDto> coloredFileService, IMapper mapper)
+        public ColoredFilesController(IColoredFilesService coloredFileService, IMapper mapper)
         {
             _coloredFileService = coloredFileService;
             _mapper = mapper;
@@ -57,7 +57,7 @@ namespace PaintMe.API.Controllers
             }
             var coloredFileDto = _mapper.Map<ColoredFileDto>(coloredFile);
             var result = await _coloredFileService.AddAsync(coloredFileDto);
-            if (!result)
+            if (result==null)
             {
                 return BadRequest("Failed to create the colored file.");
             }

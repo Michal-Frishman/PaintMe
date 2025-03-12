@@ -5,15 +5,18 @@ using PaintMe.Core.Entities;
 
 namespace PaintMe.Service.Services
 {
-    public class UsersService : IService<UserDto>
+    public class UsersService : IUserService
     {
+        private readonly IUserRepository _userRepository;
         readonly IRepository<User> _usersRepository;
         readonly IMapper _mapper;
-
-        public UsersService(IMapper mapper, IRepository<User> dataContext)
+        private readonly IUserRolesRepository _userRolesRepository;
+        public UsersService(IUserRepository userRepository, IMapper mapper, IUserRolesRepository userRolesRepository)
         {
+            _userRepository = userRepository;
             _mapper = mapper;
-            _usersRepository = dataContext;
+            _userRolesRepository = userRolesRepository;
+
         }
 
         public async Task<List<UserDto>> GetListAsync()
@@ -37,12 +40,14 @@ namespace PaintMe.Service.Services
             return await _usersRepository.UpdateDataAsync(id, data);
         }
 
-        public async Task<bool> AddAsync(UserDto user)
+        public async Task<UserDto> AddAsync(UserDto user)
         {
             user.CreatedAt = DateTime.Now;
             user.UpdatedAt = DateTime.Now;
-            var data = _mapper.Map<User>(user);
-            return await _usersRepository.AddDataAsync(data);
+            var a = _mapper.Map<User>(user);
+            var data = await _usersRepository.AddDataAsync(a);
+            var x = _mapper.Map<UserDto>(data);
+            return x;
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -51,5 +56,19 @@ namespace PaintMe.Service.Services
             if (item == null) return false;
             return await _usersRepository.RemoveItemFromDataAsync(id);
         }
+        public async Task<string> AuthenticateAsync(string username, string password)
+        {
+            User user = await _userRepository.FindByUsernameAsync(username);
+            if (user == null || !user.Password.Equals(password))
+            {
+                return null;
+            }
+            var userRole = await _userRolesRepository.GetByUserIdAsync(user.Id);
+            if (userRole == null)
+                return null;
+            return userRole.Role.RoleName;
+        }
+
+
     }
 }

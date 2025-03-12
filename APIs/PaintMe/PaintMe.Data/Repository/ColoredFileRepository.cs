@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PaintMe.Data.Repository
 {
-    public class ColoredFilesRepository : IRepository<ColoredFile>
+    public class ColoredFilesRepository : IColoredFileRepository
     {
         private readonly DataContext _dataContext;
 
@@ -20,19 +20,19 @@ namespace PaintMe.Data.Repository
                 .ToListAsync();
         }
 
-        public async Task<bool> AddDataAsync(ColoredFile coloredFile)
+        public async Task<ColoredFile> AddDataAsync(ColoredFile coloredFile)
         {
             try
             {
                 coloredFile.CreatedAt = DateTime.Now;
                 await _dataContext.ColoredFiles.AddAsync(coloredFile);
                 await _dataContext.SaveChangesAsync();
-                return true;
+                return coloredFile;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return false;
+                return null;
             }
         }
 
@@ -82,5 +82,7 @@ namespace PaintMe.Data.Repository
                 return false;
             }
         }
+
+      
     }
 }

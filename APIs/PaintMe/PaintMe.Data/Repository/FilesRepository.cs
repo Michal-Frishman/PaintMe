@@ -9,7 +9,7 @@ using File = PaintMe.Core.Entities.File;
 
 namespace PaintMe.Data.Repository
 {
-    public class FilesRepository : IRepository<File>
+    public class FilesRepository : IFilesRepository
     {
         private readonly DataContext _dataContext;
 
@@ -23,19 +23,19 @@ namespace PaintMe.Data.Repository
             return await _dataContext.Files.ToListAsync();
         }
 
-        public async Task<bool> AddDataAsync(File file)
+        public async Task<File> AddDataAsync(File file)
         {
             try
             {
                 file.CreatedAt = DateTime.Now;
                 await _dataContext.Files.AddAsync(file);
                 await _dataContext.SaveChangesAsync();
-                return true;
+                return file;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return false;
+                return null;
             }
         }
 

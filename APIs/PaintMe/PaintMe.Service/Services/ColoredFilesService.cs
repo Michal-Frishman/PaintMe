@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace PaintMe.Service.Services
 {
-    public class ColoredFilesService : IService<ColoredFileDto>
+    public class ColoredFilesService : IColoredFilesService
     {
-        readonly IRepository<ColoredFile> _coloredFilesRepository;
+        readonly IColoredFileRepository _coloredFilesRepository;
         readonly IMapper _mapper;
 
-        public ColoredFilesService(IMapper mapper, IRepository<ColoredFile> dataContext)
+        public ColoredFilesService(IMapper mapper, IColoredFileRepository dataContext)
         {
             _mapper = mapper;
             _coloredFilesRepository = dataContext;
@@ -42,14 +42,16 @@ namespace PaintMe.Service.Services
             return await _coloredFilesRepository.UpdateDataAsync(id, data);
         }
 
-        public async Task<bool> AddAsync(ColoredFileDto coloredFile)
+        public async Task<ColoredFileDto> AddAsync(ColoredFileDto coloredFile)
         {
             if (await _coloredFilesRepository.GetByIdDataAsync(coloredFile.Id) != null)
-                return false;
+                return null;
             coloredFile.CreatedAt = DateTime.Now;
             coloredFile.UpdatedAt = DateTime.Now;
             var data = _mapper.Map<ColoredFile>(coloredFile);
-            return await _coloredFilesRepository.AddDataAsync(data);
+            var a = await _coloredFilesRepository.AddDataAsync(data);
+            var x = _mapper.Map<ColoredFileDto>(a);
+            return x;
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -58,5 +60,6 @@ namespace PaintMe.Service.Services
             if (item == null) return false;
             return await _coloredFilesRepository.RemoveItemFromDataAsync(id);
         }
+
     }
 }

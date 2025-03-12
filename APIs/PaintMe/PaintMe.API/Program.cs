@@ -1,13 +1,15 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using PaintMe.API;
 using PaintMe.Core;
 using PaintMe.Core.DTOs;
 using PaintMe.Core.Entities;
 using PaintMe.Data;
 using PaintMe.Data.Repository;
-using PaintMe.Service;
 using PaintMe.Service.Services;
+using System.Text;
 using File = PaintMe.Core.Entities.File;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,13 +17,19 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddScoped<IService<UserDto>, UsersService>();
-builder.Services.AddScoped<IService<FileDto>, FilesService>();
-builder.Services.AddScoped<IService<ColoredFileDto>, ColoredFilesService>();
+builder.Services.AddScoped<IUserService, UsersService>();
+builder.Services.AddScoped<IFilesService, FilesService>();
+builder.Services.AddScoped<IColoredFilesService, ColoredFilesService>();
 
-builder.Services.AddScoped<IRepository<File>, FilesRepository>();
-builder.Services.AddScoped<IRepository<ColoredFile>, ColoredFilesRepository>();
-builder.Services.AddScoped<IRepository<User>, UsersRepository>();
+
+builder.Services.AddScoped<IFilesRepository, FilesRepository>();
+builder.Services.AddScoped<IColoredFileRepository, ColoredFilesRepository>();
+builder.Services.AddScoped<IUserRepository, UsersRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IUserRolesRepository, UserRoleRepository>();
+
+builder.Services.AddScoped<AuthService, AuthService>();
+
 
 builder.Services.AddDbContext<DataContext>(option =>
 {
@@ -29,7 +37,6 @@ builder.Services.AddDbContext<DataContext>(option =>
 });
 
 builder.Services.AddAutoMapper(typeof(MappingProfile), typeof(MappingProfileApi));
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -39,6 +46,32 @@ builder.Services.AddCors(options =>
         builder => builder.AllowAnyOrigin() // Allow all origins
                           .AllowAnyMethod()
                           .AllowAnyHeader());
+});
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
+
+// הוספת הרשאות מבוססות-תפקידים
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("EditorOrAdmin", policy => policy.RequireRole("Editor", "Admin"));
+    options.AddPolicy("ViewerOnly", policy => policy.RequireRole("Viewer"));
 });
 
 
@@ -56,6 +89,7 @@ app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

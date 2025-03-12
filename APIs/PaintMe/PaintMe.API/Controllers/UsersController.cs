@@ -11,12 +11,12 @@ namespace PaintMe.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IService<UserDto> _usersService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public UsersController(IService<UserDto> usersService, IMapper mapper)
+        public UsersController(IUserService usersService, IMapper mapper)
         {
-            _usersService = usersService;
+            _userService = usersService;
             _mapper = mapper;
         }
 
@@ -24,7 +24,7 @@ namespace PaintMe.API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<UserDto>>> Get()
         {
-            var result = await _usersService.GetListAsync();
+            var result = await _userService.GetListAsync();
             return result;
         }
 
@@ -37,7 +37,7 @@ namespace PaintMe.API.Controllers
                 return BadRequest("Invalid ID.");
             }
 
-            var result = await _usersService.GetByIdAsync(id);
+            var result = await _userService.GetByIdAsync(id);
             if (result == null)
             {
                 return NotFound("User not found.");
@@ -55,8 +55,8 @@ namespace PaintMe.API.Controllers
             }
 
             var userDto = _mapper.Map<UserDto>(userPostModal);
-            var result = await _usersService.AddAsync(userDto);
-            if (!result)
+            var result = await _userService.AddAsync(userDto);
+            if (result==null)
             {
                 return BadRequest("Failed to create user.");
             }
@@ -72,7 +72,7 @@ namespace PaintMe.API.Controllers
                 return BadRequest("Invalid ID or user data.");
             }
             var userDto = _mapper.Map<UserDto>(userPutModal);
-            var updated = await _usersService.UpdateAsync(id, userDto);
+            var updated = await _userService.UpdateAsync(id, userDto);
             if (updated)
             {
                 return Ok(true);
@@ -88,7 +88,7 @@ namespace PaintMe.API.Controllers
             {
                 return BadRequest("Invalid ID.");
             }
-            var deleted = await _usersService.DeleteAsync(id);
+            var deleted = await _userService.DeleteAsync(id);
             if (deleted)
             {
                 return Ok(true);

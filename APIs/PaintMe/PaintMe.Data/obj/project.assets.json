@@ -1188,7 +1188,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
-          "AutoMapper": "7.0.0"
+          "AutoMapper": "7.0.0",
+          "Microsoft.EntityFrameworkCore.Abstractions": "7.0.0"
         },
         "compile": {
           "bin/placeholder/PaintMe.Core.dll": {}

@@ -6,6 +6,6 @@
         Task<T> GetByIdAsync(int id);
         Task<bool> UpdateAsync(int id, T value);
         Task<bool> DeleteAsync(int id);
-        Task<bool> AddAsync(T value);
+        Task<T> AddAsync(T value);
     }
 }
