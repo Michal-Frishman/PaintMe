@@ -2,11 +2,10 @@
 {
     public interface IRepository<T>
     {
-        List<T> GetAllData();
-        T GetByIdData(int id);
-        bool AddData(T t);
-        bool UpdateData(int id, T item, T itemToUpdate);
-        bool RemoveItemFromData(int id);
-        //bool isExist(int id);
+        Task<List<T>> GetAllDataAsync();
+        Task<T> GetByIdDataAsync(int id);
+        Task<bool> AddDataAsync(T t);
+        Task<bool> UpdateDataAsync(int id, T item);
+        Task<bool> RemoveItemFromDataAsync(int id);
     }
 }

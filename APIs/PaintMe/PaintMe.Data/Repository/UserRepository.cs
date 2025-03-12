@@ -1,5 +1,6 @@
 ﻿using PaintMe.Core.Entities;
 using PaintMe.Core;
+using Microsoft.EntityFrameworkCore; // Add this for async methods
 
 namespace PaintMe.Data.Repository
 {
@@ -12,17 +13,17 @@ namespace PaintMe.Data.Repository
             _dataContext = dataContext;
         }
 
-        public List<User> GetAllData()
+        public async Task<List<User>> GetAllDataAsync()
         {
-            return _dataContext.Users.ToList();
+            return await _dataContext.Users.ToListAsync();
         }
 
-        public bool AddData(User user)
+        public async Task<bool> AddDataAsync(User user)
         {
             try
             {
-                _dataContext.Users.Add(user);
-                _dataContext.SaveChanges();
+                await _dataContext.Users.AddAsync(user);
+                await _dataContext.SaveChangesAsync();
                 return true;
             }
             catch (Exception e)
@@ -32,22 +33,22 @@ namespace PaintMe.Data.Repository
             }
         }
 
-        public User GetByIdData(int id)
+        public async Task<User> GetByIdDataAsync(int id)
         {
-            return _dataContext.Users.FirstOrDefault(u => u.Id == id);
+            return await _dataContext.Users.FirstOrDefaultAsync(u => u.Id == id);
         }
 
-        public bool RemoveItemFromData(int id)
+        public async Task<bool> RemoveItemFromDataAsync(int id)
         {
             try
             {
-                var item = GetByIdData(id);
+                var item = await GetByIdDataAsync(id);
                 if (item == null)
                 {
                     return false;
                 }
                 _dataContext.Users.Remove(item);
-                _dataContext.SaveChanges();
+                await _dataContext.SaveChangesAsync();
                 return true;
             }
             catch (Exception)
@@ -56,11 +57,11 @@ namespace PaintMe.Data.Repository
             }
         }
 
-        public bool UpdateData(int id, User user,User userToUpdateq)
+        public async Task<bool> UpdateDataAsync(int id, User user)
         {
             try
             {
-                var userToUpdate = GetByIdData(id);
+                var userToUpdate = await GetByIdDataAsync(id);
                 if (userToUpdate == null)
                 {
                     return false;
@@ -72,7 +73,7 @@ namespace PaintMe.Data.Repository
                 userToUpdate.UpdatedAt = DateTime.Now;
                 userToUpdate.UpdatedBy = user.UpdatedBy;
 
-                _dataContext.SaveChanges();
+                await _dataContext.SaveChangesAsync();
                 return true;
             }
             catch (Exception)
@@ -80,10 +81,5 @@ namespace PaintMe.Data.Repository
                 return false;
             }
         }
-
-        //public bool isExist(int id)
-        //{
-        //    return _dataContext.Users.Any(u => u.Id == id);
-        //}
     }
 }

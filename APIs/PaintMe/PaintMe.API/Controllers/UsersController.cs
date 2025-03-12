@@ -4,7 +4,6 @@ using PaintMe.Core;
 using PaintMe.Core.DTOs;
 using PaintMe.Core.Entities;
 using PaintMe.API.PostModals;
-using PaintMe.API.PutModels;
 
 namespace PaintMe.API.Controllers
 {
@@ -23,22 +22,22 @@ namespace PaintMe.API.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public ActionResult<List<UserDto>> Get()
+        public async Task<ActionResult<List<UserDto>>> Get()
         {
-            var result = _usersService.GetList();
+            var result = await _usersService.GetListAsync();
             return result;
         }
 
         // GET api/Users/5
         [HttpGet("{id}")]
-        public ActionResult<UserDto> GetById(int id)
+        public async Task<ActionResult<UserDto>> GetById(int id)
         {
             if (id <= 0)
             {
                 return BadRequest("Invalid ID.");
             }
 
-            var result = _usersService.GetById(id);
+            var result = await _usersService.GetByIdAsync(id);
             if (result == null)
             {
                 return NotFound("User not found.");
@@ -48,7 +47,7 @@ namespace PaintMe.API.Controllers
 
         // POST api/Users
         [HttpPost]
-        public ActionResult<UserDto> Post([FromBody] UserPostModal userPostModal)
+        public async Task<ActionResult<UserDto>> Post([FromBody] UserPostModal userPostModal)
         {
             if (userPostModal == null)
             {
@@ -56,7 +55,7 @@ namespace PaintMe.API.Controllers
             }
 
             var userDto = _mapper.Map<UserDto>(userPostModal);
-            var result = _usersService.Add(userDto);
+            var result = await _usersService.AddAsync(userDto);
             if (!result)
             {
                 return BadRequest("Failed to create user.");
@@ -66,14 +65,14 @@ namespace PaintMe.API.Controllers
 
         // PUT api/Users/5
         [HttpPut("{id}")]
-        public ActionResult<bool> Put(int id, [FromBody] UserPostModal userPutModal)
+        public async Task<ActionResult<bool>> Put(int id, [FromBody] UserPostModal userPutModal)
         {
             if (id <= 0 || userPutModal == null)
             {
                 return BadRequest("Invalid ID or user data.");
             }
             var userDto = _mapper.Map<UserDto>(userPutModal);
-             var updated = _usersService.Update(id, userDto);
+            var updated = await _usersService.UpdateAsync(id, userDto);
             if (updated)
             {
                 return Ok(true);
@@ -83,13 +82,13 @@ namespace PaintMe.API.Controllers
 
         // DELETE api/Users/5
         [HttpDelete("{id}")]
-        public ActionResult<bool> Delete(int id)
+        public async Task<ActionResult<bool>> Delete(int id)
         {
             if (id <= 0)
             {
                 return BadRequest("Invalid ID.");
             }
-            var deleted = _usersService.Delete(id);
+            var deleted = await _usersService.DeleteAsync(id);
             if (deleted)
             {
                 return Ok(true);

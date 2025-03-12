@@ -1,9 +1,10 @@
 ﻿using PaintMe.Core.Entities;
+using PaintMe.Core;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using PaintMe.Core;
+using System.Threading.Tasks;
 using File = PaintMe.Core.Entities.File;
 
 namespace PaintMe.Data.Repository
@@ -17,46 +18,43 @@ namespace PaintMe.Data.Repository
             _dataContext = dataContext;
         }
 
-        // Retrieve all files from the database
-        public List<File> GetAllData()
+        public async Task<List<File>> GetAllDataAsync()
         {
-            return _dataContext.Files.ToList();
+            return await _dataContext.Files.ToListAsync();
         }
 
-        // Add a new file to the database
-        public bool AddData(File file)
+        public async Task<bool> AddDataAsync(File file)
         {
             try
             {
-                file.CreatedAt = DateTime.Now; // Set creation date
-                _dataContext.Files.Add(file); // Add file to the context
-                _dataContext.SaveChanges(); // Save changes to the database
+                file.CreatedAt = DateTime.Now;
+                await _dataContext.Files.AddAsync(file);
+                await _dataContext.SaveChangesAsync();
                 return true;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message); // Log error message
-                return false; // Return false if an error occurs
+                Console.WriteLine(e.Message);
+                return false;
             }
         }
 
-        // Retrieve a file by its ID
-        public File GetByIdData(int id)
+        public async Task<File> GetByIdDataAsync(int id)
         {
-            return _dataContext.Files.FirstOrDefault(f => f.Id == id);
+            return await _dataContext.Files.FirstOrDefaultAsync(f => f.Id == id);
         }
 
-        public bool RemoveItemFromData(int id)
+        public async Task<bool> RemoveItemFromDataAsync(int id)
         {
             try
             {
-                var item = GetByIdData(id);
+                var item = await GetByIdDataAsync(id);
                 if (item == null)
                 {
                     return false;
                 }
                 _dataContext.Files.Remove(item);
-                _dataContext.SaveChanges();
+                await _dataContext.SaveChangesAsync();
                 return true;
             }
             catch (Exception)
@@ -65,12 +63,11 @@ namespace PaintMe.Data.Repository
             }
         }
 
-        // Update an existing file's details
-        public bool UpdateData(int id, File file,File fileToUpdatez)
+        public async Task<bool> UpdateDataAsync(int id, File file)
         {
             try
             {
-                var fileToUpdate = GetByIdData(id);
+                var fileToUpdate = await GetByIdDataAsync(id);
                 if (fileToUpdate == null)
                 {
                     return false;
@@ -78,22 +75,18 @@ namespace PaintMe.Data.Repository
                 fileToUpdate.Name = file.Name;
                 fileToUpdate.Category = file.Category;
                 fileToUpdate.FileUrl = file.FileUrl;
-                fileToUpdate.UpdatedAt = DateTime.Now; 
+                fileToUpdate.UpdatedAt = DateTime.Now;
                 fileToUpdate.UpdatedBy = file.UpdatedBy;
 
-                _dataContext.SaveChanges(); 
+                await _dataContext.SaveChangesAsync();
                 return true;
             }
             catch (Exception)
             {
-                return false; 
+                return false;
             }
         }
-
-        // Uncomment if needed to check existence of a file by ID
-        // public bool isExist(int id)
-        // {
-        //     return _dataContext.Files.Any(f => f.Id == id);
-        // }
     }
 }
+
+

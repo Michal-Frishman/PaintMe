@@ -4,7 +4,8 @@ using PaintMe.Core;
 using PaintMe.Core.DTOs;
 using PaintMe.Core.Entities;
 using PaintMe.API.PostModals;
-using PaintMe.API.PutModels;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PaintMe.API.Controllers
 {
@@ -23,22 +24,22 @@ namespace PaintMe.API.Controllers
 
         // GET: api/Files
         [HttpGet]
-        public ActionResult<List<FileDto>> Get()
+        public async Task<ActionResult<List<FileDto>>> Get()
         {
-            var result = _fileService.GetList();
+            var result = await _fileService.GetListAsync();
             return Ok(result);
         }
 
         // GET api/Files/5
         [HttpGet("{id}")]
-        public ActionResult<FileDto> GetById(int id)
+        public async Task<ActionResult<FileDto>> GetById(int id)
         {
             if (id <= 0)
             {
                 return BadRequest("Invalid ID.");
             }
 
-            var result = _fileService.GetById(id);
+            var result = await _fileService.GetByIdAsync(id);
             if (result == null)
             {
                 return NotFound("File not found.");
@@ -48,7 +49,7 @@ namespace PaintMe.API.Controllers
 
         // POST api/Files
         [HttpPost]
-        public ActionResult<FileDto> Post([FromBody] FilePostModal filePostModal)
+        public async Task<ActionResult<FileDto>> Post([FromBody] FilePostModal filePostModal)
         {
             if (filePostModal == null)
             {
@@ -56,7 +57,7 @@ namespace PaintMe.API.Controllers
             }
 
             var fileDto = _mapper.Map<FileDto>(filePostModal);
-            var result = _fileService.Add(fileDto);
+            var result = await _fileService.AddAsync(fileDto);
             if (!result)
             {
                 return BadRequest("Failed to create file.");
@@ -66,14 +67,14 @@ namespace PaintMe.API.Controllers
 
         // PUT api/Files/5
         [HttpPut("{id}")]
-        public ActionResult<bool> Put(int id, [FromBody] FilePostModal filePutModal)
+        public async Task<ActionResult<bool>> Put(int id, [FromBody] FilePostModal filePutModal)
         {
             if (id <= 0 || filePutModal == null)
             {
                 return BadRequest("Invalid ID or file data.");
             }
             var fileDto = _mapper.Map<FileDto>(filePutModal);
-            var updated = _fileService.Update(id, fileDto);
+            var updated = await _fileService.UpdateAsync(id, fileDto);
             if (updated)
             {
                 return Ok(true);
@@ -83,13 +84,13 @@ namespace PaintMe.API.Controllers
 
         // DELETE api/Files/5
         [HttpDelete("{id}")]
-        public ActionResult<bool> Delete(int id)
+        public async Task<ActionResult<bool>> Delete(int id)
         {
             if (id <= 0)
             {
                 return BadRequest("Invalid ID.");
             }
-            var deleted = _fileService.Delete(id);
+            var deleted = await _fileService.DeleteAsync(id);
             if (deleted)
             {
                 return Ok(true);

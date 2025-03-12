@@ -2,10 +2,10 @@
 {
     public interface IService<T>
     {
-        List<T> GetList();
-        T GetById(int id);
-        bool Update(int id, T value);
-        bool Delete(int id);
-        bool Add(T value);
+        Task<List<T>> GetListAsync();
+        Task<T> GetByIdAsync(int id);
+        Task<bool> UpdateAsync(int id, T value);
+        Task<bool> DeleteAsync(int id);
+        Task<bool> AddAsync(T value);
     }
 }

@@ -2,6 +2,9 @@
 using PaintMe.Core;
 using PaintMe.Core.DTOs;
 using PaintMe.Core.Entities;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using File = PaintMe.Core.Entities.File;
 
 namespace PaintMe.Service.Services
@@ -17,48 +20,43 @@ namespace PaintMe.Service.Services
             _filesRepository = dataContext;
         }
 
-        public List<FileDto> GetList()
+        public async Task<List<FileDto>> GetListAsync()
         {
-            var data = _filesRepository.GetAllData();
+            var data = await _filesRepository.GetAllDataAsync();
             return _mapper.Map<List<FileDto>>(data);
         }
 
-        public FileDto GetById(int id)
+        public async Task<FileDto> GetByIdAsync(int id)
         {
-            var data = _filesRepository.GetByIdData(id);
+            var data = await _filesRepository.GetByIdDataAsync(id);
             Console.WriteLine(data == null ? "File not found" : "File found");
-            var result = _mapper.Map<FileDto>(data);
-            Console.WriteLine(result);
-            return result;
+            return _mapper.Map<FileDto>(data);
         }
 
-        public bool Update(int id, FileDto file)
+        public async Task<bool> UpdateAsync(int id, FileDto file)
         {
-            var item = GetById(id);
+            var item = await GetByIdAsync(id);
             if (item == null) return false;
             file.UpdatedAt = DateTime.Now;
             var data = _mapper.Map<File>(file);
-            var dataToUpdate=_mapper.Map<File>(data);
-            return _filesRepository.UpdateData(id, data, dataToUpdate);
+            return await _filesRepository.UpdateDataAsync(id, data);
         }
 
-        public bool Add(FileDto file)
+        public async Task<bool> AddAsync(FileDto file)
         {
-            if (_filesRepository.GetByIdData(file.Id) != null)
+            if (await _filesRepository.GetByIdDataAsync(file.Id) != null)
                 return false;
             file.CreatedAt = DateTime.Now;
             file.UpdatedAt = DateTime.Now;
             var data = _mapper.Map<File>(file);
-            return _filesRepository.AddData(data);
+            return await _filesRepository.AddDataAsync(data);
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-
-            var item = GetById(id);
+            var item = await GetByIdAsync(id);
             if (item == null) return false;
-            var itemToDelete = _mapper.Map<File>(item);
-            return _filesRepository.RemoveItemFromData(id);
+            return await _filesRepository.RemoveItemFromDataAsync(id);
         }
     }
 }

@@ -16,43 +16,40 @@ namespace PaintMe.Service.Services
             _usersRepository = dataContext;
         }
 
-        public List<UserDto> GetList()
+        public async Task<List<UserDto>> GetListAsync()
         {
-            var data = _usersRepository.GetAllData();
+            var data = await _usersRepository.GetAllDataAsync();
             return _mapper.Map<List<UserDto>>(data);
         }
 
-        public UserDto GetById(int id)
+        public async Task<UserDto> GetByIdAsync(int id)
         {
-            var data = _usersRepository.GetByIdData(id);
+            var data = await _usersRepository.GetByIdDataAsync(id);
             return _mapper.Map<UserDto>(data);
-             
         }
 
-        public bool Update(int id, UserDto user)
+        public async Task<bool> UpdateAsync(int id, UserDto user)
         {
-            var item = GetById(id);
+            var item = await GetByIdAsync(id);
             if (item == null) return false;
             user.UpdatedAt = DateTime.Now;
             var data = _mapper.Map<User>(user);
-            var userToUpdate= _mapper.Map<User>(item);
-            return _usersRepository.UpdateData(id, data,userToUpdate);
+            return await _usersRepository.UpdateDataAsync(id, data);
         }
 
-        public bool Add(UserDto user)
+        public async Task<bool> AddAsync(UserDto user)
         {
             user.CreatedAt = DateTime.Now;
             user.UpdatedAt = DateTime.Now;
             var data = _mapper.Map<User>(user);
-            return _usersRepository.AddData(data);
+            return await _usersRepository.AddDataAsync(data);
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var item = GetById(id);
+            var item = await GetByIdAsync(id);
             if (item == null) return false;
-            var itemToDelete= _mapper.Map<User>(item);
-            return _usersRepository.RemoveItemFromData(id);
+            return await _usersRepository.RemoveItemFromDataAsync(id);
         }
     }
 }

@@ -1,7 +1,11 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
 using PaintMe.Core;
 using PaintMe.Core.DTOs;
 using PaintMe.Core.Entities;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PaintMe.Service.Services
 {
@@ -9,54 +13,50 @@ namespace PaintMe.Service.Services
     {
         readonly IRepository<ColoredFile> _coloredFilesRepository;
         readonly IMapper _mapper;
+
         public ColoredFilesService(IMapper mapper, IRepository<ColoredFile> dataContext)
         {
             _mapper = mapper;
             _coloredFilesRepository = dataContext;
         }
-        public List<ColoredFileDto> GetList()
+
+        public async Task<List<ColoredFileDto>> GetListAsync()
         {
-            var data = _coloredFilesRepository.GetAllData();
-            return _mapper.Map<List<ColoredFileDto>>(data); 
+            var data = await _coloredFilesRepository.GetAllDataAsync();
+            return _mapper.Map<List<ColoredFileDto>>(data);
         }
 
-
-        public ColoredFileDto GetById(int id)
+        public async Task<ColoredFileDto> GetByIdAsync(int id)
         {
-            var data = _coloredFilesRepository.GetByIdData(id);
+            var data = await _coloredFilesRepository.GetByIdDataAsync(id);
             Console.WriteLine(data == null ? "ColoredFile not found" : "ColoredFile found");
-            var result = _mapper.Map<ColoredFileDto>(data);
-            Console.WriteLine(result);
-            return result;
+            return _mapper.Map<ColoredFileDto>(data);
         }
 
-        public bool Update(int id, ColoredFileDto coloredFile)
+        public async Task<bool> UpdateAsync(int id, ColoredFileDto coloredFile)
         {
-            var item = GetById(id);
+            var item = await GetByIdAsync(id);
             if (item == null) return false;
             coloredFile.UpdatedAt = DateTime.Now;
-            var data=_mapper.Map<ColoredFile>(coloredFile);
-            var dataToUpdate=_mapper.Map<ColoredFile>(item);
-            return _coloredFilesRepository.UpdateData(id, data, dataToUpdate);
+            var data = _mapper.Map<ColoredFile>(coloredFile);
+            return await _coloredFilesRepository.UpdateDataAsync(id, data);
         }
 
-        public bool Add(ColoredFileDto coloredFile)
+        public async Task<bool> AddAsync(ColoredFileDto coloredFile)
         {
-            if (_coloredFilesRepository.GetByIdData(coloredFile.Id) != null)
+            if (await _coloredFilesRepository.GetByIdDataAsync(coloredFile.Id) != null)
                 return false;
             coloredFile.CreatedAt = DateTime.Now;
             coloredFile.UpdatedAt = DateTime.Now;
             var data = _mapper.Map<ColoredFile>(coloredFile);
-            return _coloredFilesRepository.AddData(data);
+            return await _coloredFilesRepository.AddDataAsync(data);
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-
-            var item = GetById(id);
+            var item = await GetByIdAsync(id);
             if (item == null) return false;
-            var itemToDelete = _mapper.Map<ColoredFile>(item);
-            return _coloredFilesRepository.RemoveItemFromData(id);
+            return await _coloredFilesRepository.RemoveItemFromDataAsync(id);
         }
     }
 }

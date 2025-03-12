@@ -4,6 +4,8 @@ using PaintMe.Core;
 using AutoMapper;
 using PaintMe.Core.DTOs;
 using PaintMe.API.PostModals;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PaintMe.API.Controllers
 {
@@ -22,22 +24,22 @@ namespace PaintMe.API.Controllers
 
         // GET: api/ColoredFiles
         [HttpGet]
-        public ActionResult<List<ColoredFileDto>> Get()
+        public async Task<ActionResult<List<ColoredFileDto>>> Get()
         {
-            var result = _coloredFileService.GetList();
+            var result = await _coloredFileService.GetListAsync();
             return Ok(result);
         }
 
         // GET api/ColoredFiles/5
         [HttpGet("{id}")]
-        public ActionResult<ColoredFileDto> GetById(int id)
+        public async Task<ActionResult<ColoredFileDto>> GetById(int id)
         {
             if (id <= 0)
             {
                 return BadRequest("Invalid ID.");
             }
 
-            var result = _coloredFileService.GetById(id);
+            var result = await _coloredFileService.GetByIdAsync(id);
             if (result == null)
             {
                 return NotFound("Colored file not found.");
@@ -47,14 +49,14 @@ namespace PaintMe.API.Controllers
 
         // POST api/ColoredFiles
         [HttpPost]
-        public ActionResult<ColoredFileDto> Post([FromBody] ColoredFilePostModal coloredFile)
+        public async Task<ActionResult<ColoredFileDto>> Post([FromBody] ColoredFilePostModal coloredFile)
         {
             if (coloredFile == null)
             {
                 return BadRequest("Invalid colored file data.");
             }
             var coloredFileDto = _mapper.Map<ColoredFileDto>(coloredFile);
-            var result = _coloredFileService.Add(coloredFileDto);
+            var result = await _coloredFileService.AddAsync(coloredFileDto);
             if (!result)
             {
                 return BadRequest("Failed to create the colored file.");
@@ -64,14 +66,14 @@ namespace PaintMe.API.Controllers
 
         // PUT api/ColoredFiles/5
         [HttpPut("{id}")]
-        public ActionResult<bool> Put(int id, [FromBody] ColoredFilePostModal coloredFile)
+        public async Task<ActionResult<bool>> Put(int id, [FromBody] ColoredFilePostModal coloredFile)
         {
             if (id <= 0 || coloredFile == null)
             {
                 return BadRequest("Invalid ID or colored file data.");
             }
             var coloredFileDto = _mapper.Map<ColoredFileDto>(coloredFile);
-            var updated = _coloredFileService.Update(id, coloredFileDto);
+            var updated = await _coloredFileService.UpdateAsync(id, coloredFileDto);
             if (updated)
             {
                 return Ok(true);
@@ -81,13 +83,13 @@ namespace PaintMe.API.Controllers
 
         // DELETE api/ColoredFiles/5
         [HttpDelete("{id}")]
-        public ActionResult<bool> Delete(int id)
+        public async Task<ActionResult<bool>> Delete(int id)
         {
             if (id <= 0)
             {
                 return BadRequest("Invalid ID.");
             }
-            var deleted = _coloredFileService.Delete(id);
+            var deleted = await _coloredFileService.DeleteAsync(id);
             if (deleted)
             {
                 return Ok(true);

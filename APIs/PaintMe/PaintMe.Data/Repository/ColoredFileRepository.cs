@@ -13,20 +13,20 @@ namespace PaintMe.Data.Repository
             _dataContext = dataContext;
         }
 
-        public List<ColoredFile> GetAllData()
+        public async Task<List<ColoredFile>> GetAllDataAsync()
         {
-            return _dataContext.ColoredFiles
+            return await _dataContext.ColoredFiles
                 .Include(cf => cf.User)
-                .ToList();
+                .ToListAsync();
         }
 
-        public bool AddData(ColoredFile coloredFile)
+        public async Task<bool> AddDataAsync(ColoredFile coloredFile)
         {
             try
             {
                 coloredFile.CreatedAt = DateTime.Now;
-                _dataContext.ColoredFiles.Add(coloredFile);
-                _dataContext.SaveChanges();
+                await _dataContext.ColoredFiles.AddAsync(coloredFile);
+                await _dataContext.SaveChangesAsync();
                 return true;
             }
             catch (Exception e)
@@ -36,22 +36,22 @@ namespace PaintMe.Data.Repository
             }
         }
 
-        public ColoredFile GetByIdData(int id)
+        public async Task<ColoredFile> GetByIdDataAsync(int id)
         {
-            return _dataContext.ColoredFiles.FirstOrDefault(cf => cf.Id == id);
+            return await _dataContext.ColoredFiles.FirstOrDefaultAsync(cf => cf.Id == id);
         }
 
-        public bool RemoveItemFromData(int id)
+        public async Task<bool> RemoveItemFromDataAsync(int id)
         {
             try
             {
-                var item = GetByIdData(id);
+                var item = await GetByIdDataAsync(id);
                 if (item == null)
                 {
                     return false;
                 }
                 _dataContext.ColoredFiles.Remove(item);
-                _dataContext.SaveChanges();
+                await _dataContext.SaveChangesAsync();
                 return true;
             }
             catch (Exception)
@@ -60,11 +60,11 @@ namespace PaintMe.Data.Repository
             }
         }
 
-        public bool UpdateData(int id, ColoredFile coloredFile, ColoredFile fileToUpdatea)
+        public async Task<bool> UpdateDataAsync(int id, ColoredFile coloredFile)
         {
             try
             {
-                var fileToUpdate = GetByIdData(id);
+                var fileToUpdate = await GetByIdDataAsync(id);
                 if (fileToUpdate == null)
                 {
                     return false;
@@ -74,8 +74,7 @@ namespace PaintMe.Data.Repository
                 fileToUpdate.UpdatedAt = DateTime.Now;
                 fileToUpdate.UserId = coloredFile.UserId;
 
-                _dataContext.SaveChanges();
-                Console.WriteLine("after save ");
+                await _dataContext.SaveChangesAsync();
                 return true;
             }
             catch (Exception)
@@ -83,10 +82,5 @@ namespace PaintMe.Data.Repository
                 return false;
             }
         }
-
-        //public bool isExist(int id)
-        //{
-        //    return _dataContext.ColoredFiles.Any(cf => cf.Id == id);
-        //}
     }
 }
