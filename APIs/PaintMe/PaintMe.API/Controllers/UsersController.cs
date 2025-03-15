@@ -24,7 +24,7 @@ namespace PaintMe.API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<UserDto>>> Get()
         {
-            var result = await _userService.GetListAsync();
+            var result = await _userService.GetListAsync() ?? new List<UserDto>();
             return result;
         }
 

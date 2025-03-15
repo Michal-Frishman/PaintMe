@@ -1,11 +1,11 @@
-﻿namespace PaintMe.Core
-{
-    public interface IRepository<T>
-    {
-        Task<List<T>> GetAllDataAsync();
-        Task<T> GetByIdDataAsync(int id);
-        Task<T> AddDataAsync(T t);
-        Task<bool> UpdateDataAsync(int id, T item);
-        Task<bool> RemoveItemFromDataAsync(int id);
-    }
-}
+﻿//namespace PaintMe.Core
+//{
+//    public interface IRepository<T>
+//    {
+//        Task<List<T>> GetAllDataAsync();
+//        Task<T> GetByIdDataAsync(int id);
+//        Task<T> AddDataAsync(T t);
+//        Task<bool> UpdateDataAsync(int id, T item);
+//        Task<bool> RemoveItemFromDataAsync(int id);
+//    }
+//}

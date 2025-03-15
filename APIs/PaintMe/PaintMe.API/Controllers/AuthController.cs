@@ -14,14 +14,14 @@ namespace PaintMe.API.Controllers
         private readonly AuthService _authService;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-        IUserRoleService _userRoleService;
-        public AuthController(IConfiguration configuration, AuthService authService, IUserService userService, IMapper mapper, IUserRoleService userRoleService)
+        //IUserRoleService _userRoleService;
+        public AuthController(IConfiguration configuration, AuthService authService, IUserService userService, IMapper mapper)
         {
             _configuration = configuration;
             _authService = authService;
             _userService = userService;
             _mapper = mapper;
-            _userRoleService = userRoleService;
+            //_userRoleService = userRoleService;
         }
 
         [HttpPost("login")]
@@ -57,9 +57,9 @@ namespace PaintMe.API.Controllers
             var existingUser = await _userService.AddAsync(modelD);
             if (existingUser == null)
                 return BadRequest();
-            var userRole = await _userRoleService.AddAsync(model.RoleName, existingUser.Id);
-            if (userRole == null)
-                return BadRequest();
+            //var userRole = await _userRoleService.AddAsync(model.RoleName, existingUser.Id);
+            //if (userRole == null)
+            //    return BadRequest();
             var token = _authService.GenerateJwtToken(model.Name, new[] { model.RoleName });
             return Ok(new { Token = token });
 
@@ -76,6 +76,8 @@ namespace PaintMe.API.Controllers
 
         public string Name { get; set; }
         public string Password { get; set; }
+        public string PasswordHash { get; set; }
+
         public string Email { get; set; }
         public string RoleName { get; set; }
     }

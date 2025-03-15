@@ -27,13 +27,14 @@ builder.Services.AddScoped<IColoredFileRepository, ColoredFilesRepository>();
 builder.Services.AddScoped<IUserRepository, UsersRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRolesRepository, UserRoleRepository>();
+//builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 
-builder.Services.AddScoped<AuthService, AuthService>();
+builder.Services.AddScoped<AuthService>();
 
 
 builder.Services.AddDbContext<DataContext>(option =>
 {
-    option.UseSqlServer("Data Source=DESKTOP-4R0K21U\\SQLEXPRESS;Initial Catalog=PaintMe;Integrated Security=false;  Trusted_Connection = SSPI; MultipleActiveResultSets = true; TrustServerCertificate = true");
+    option.UseSqlServer("Data Source=DESKTOP-4R0K21U\\SQLEXPRESS;Initial Catalog=PaintMe3;Integrated Security=false;  Trusted_Connection = SSPI; MultipleActiveResultSets = true; TrustServerCertificate = true");
 });
 
 builder.Services.AddAutoMapper(typeof(MappingProfile), typeof(MappingProfileApi));
@@ -83,13 +84,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-// Add CORS middleware here
+app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 
-app.UseHttpsRedirection();
-
-app.UseAuthentication();
+app.UseAuthentication();  // מאוד חשוב
 app.UseAuthorization();
 
 app.MapControllers();

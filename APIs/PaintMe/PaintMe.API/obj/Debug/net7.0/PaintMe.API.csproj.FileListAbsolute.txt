@@ -167,3 +167,4 @@ C:\Users\user\Downloads\PaintMe-main\PaintMe-main\APIs\PaintMe\PaintMe.API\obj\D
 C:\Users\user\Downloads\PaintMe-main\PaintMe-main\APIs\PaintMe\PaintMe.API\obj\Debug\net7.0\PaintMe.API.genruntimeconfig.cache
 C:\Users\user\Downloads\PaintMe-main\PaintMe-main\APIs\PaintMe\PaintMe.API\obj\Debug\net7.0\ref\PaintMe.API.dll
 C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.API\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\user\Downloads\PaintMe-main\PaintMe-main\APIs\PaintMe\PaintMe.API\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

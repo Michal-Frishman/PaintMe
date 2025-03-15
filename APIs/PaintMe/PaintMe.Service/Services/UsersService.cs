@@ -7,16 +7,12 @@ namespace PaintMe.Service.Services
 {
     public class UsersService : IUserService
     {
-        private readonly IUserRepository _userRepository;
-        readonly IRepository<User> _usersRepository;
-        readonly IMapper _mapper;
-        private readonly IUserRolesRepository _userRolesRepository;
-        public UsersService(IUserRepository userRepository, IMapper mapper, IUserRolesRepository userRolesRepository)
+        private readonly IUserRepository _usersRepository;
+        private readonly IMapper _mapper;
+        public UsersService(IUserRepository userRepository, IMapper mapper)
         {
-            _userRepository = userRepository;
+            _usersRepository = userRepository;
             _mapper = mapper;
-            _userRolesRepository = userRolesRepository;
-
         }
 
         public async Task<List<UserDto>> GetListAsync()
@@ -58,15 +54,16 @@ namespace PaintMe.Service.Services
         }
         public async Task<string> AuthenticateAsync(string username, string password)
         {
-            User user = await _userRepository.FindByUsernameAsync(username);
+            User user = await _usersRepository.FindByUsernameAsync(username);
             if (user == null || !user.Password.Equals(password))
             {
                 return null;
             }
-            var userRole = await _userRolesRepository.GetByUserIdAsync(user.Id);
-            if (userRole == null)
-                return null;
-            return userRole.Role.RoleName;
+            //var userRole = await _userRolesRepository.GetByUserIdAsync(user.Id);
+            //if (userRole == null)
+            //    return null;
+            //return userRole.Role.RoleName;
+            return "succed!!!";
         }
 
 

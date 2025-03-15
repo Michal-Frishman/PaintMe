@@ -16,7 +16,7 @@ namespace PaintMe.Data.Repository
 
         public async Task<List<User>> GetAllDataAsync()
         {
-            return await _dataContext.Users.ToListAsync();
+            return await _dataContext.Users.ToListAsync()??new List<User>();
         }
 
         public async Task<User> AddDataAsync(User user)
@@ -66,8 +66,7 @@ namespace PaintMe.Data.Repository
                 {
                     return false;
                 }
-                userToUpdate.FirstName = user.FirstName;
-                userToUpdate.LastName = user.LastName;
+                userToUpdate.Name = user.Name;
                 userToUpdate.Email = user.Email;
                 userToUpdate.Password = user.Password;
                 userToUpdate.UpdatedAt = DateTime.Now;
@@ -83,7 +82,7 @@ namespace PaintMe.Data.Repository
         }
         public async Task<User> FindByUsernameAsync(string username)
         {
-            return await _dataContext.Users.SingleOrDefaultAsync(u => u.FirstName == username);
+            return await _dataContext.Users.SingleOrDefaultAsync(u => u.Name == username);
         }
 
 
@@ -94,8 +93,8 @@ namespace PaintMe.Data.Repository
             if (r != null)
             {
                 r.Email = user.Email;
-                r.FirstName = user.FirstName;
-                r.LastName = user.LastName;
+                r.Name = user.Name;
+
                 r.Password = user.Password;
                 r.UpdatedAt = DateTime.UtcNow;
                 return true;
