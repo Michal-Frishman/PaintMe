@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { File } from "../models/File.ts";
 const FileList = () => {
     const [files, setFiles] = useState([] as File[]);
