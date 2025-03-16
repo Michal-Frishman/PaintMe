@@ -1,12 +1,10 @@
-import { createContext, Dispatch, useState } from 'react';
+import {useState } from 'react';
 import './App.css'
 import Categories from './components/Categories';
 import Header from './components/Header';
 import SearchBar from './components/SearchBar';
 import Watermark from './components/Watermark';
 import Login from './components/Login';
-import DrawingCanvas from './components/Sketch';
-import LoginForm from './components/LoginForm';
 export const buttonStyle = {
   color: "white",
   backgroundColor: "rgb(215, 155, 154)",

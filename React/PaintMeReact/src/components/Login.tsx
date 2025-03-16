@@ -119,6 +119,10 @@ const HomePage = () => {
                     Password: passwordRef.current?.value
                 }
             );
+            if(!res){
+                console.error("No response from server");
+                return;
+            }
             setLogin(true);
             setShowModal(false);
         } catch (e: AxiosError | any) {

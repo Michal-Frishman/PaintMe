@@ -1,6 +1,5 @@
 import React from "react";
 import "../App.css";
-import { Link } from "react-router";
 
 const Header: React.FC = () => {
   return (
