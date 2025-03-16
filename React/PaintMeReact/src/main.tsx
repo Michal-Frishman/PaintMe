@@ -1,10 +1,11 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client';
-import './index.css'
-import App from './App.tsx'
+import React from 'react';
+import ReactDOM from 'react-dom'; // ודא שאתה מייבא מ-react-dom
+import App from './App';
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+// Render the App component
+ReactDOM.render(
+  <React.StrictMode>
     <App />
-  </StrictMode>,
-)
+  </React.StrictMode>,
+  document.getElementById('root') // ודא שיש אלמנט עם ID 'root' ב-HTML
+);

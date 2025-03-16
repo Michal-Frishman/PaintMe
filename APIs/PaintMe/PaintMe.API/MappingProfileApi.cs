@@ -25,7 +25,7 @@ namespace PaintMe.API
             // מיפוי של UserDto ל- RegisterModel
             CreateMap<UserDto, RegisterModel>()
                 .ForMember(dest => dest.Password, opt => opt.Ignore()) // יתעלם משדה Password, לא קיים ב- RegisterModel
-                .ForMember(dest => dest.RoleName, opt => opt.Ignore()) // יתעלם משדה RoleName, לא קיים ב- RegisterModel
+                //.ForMember(dest => dest.RoleName, opt => opt.Ignore()) // יתעלם משדה RoleName, לא קיים ב- RegisterModel
                 .ReverseMap();
             CreateMap<CategoryPostModel, CategoryDto>().ReverseMap();
 

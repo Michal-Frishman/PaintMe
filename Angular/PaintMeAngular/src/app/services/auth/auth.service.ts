@@ -7,7 +7,7 @@ import { SignIn } from '../../models/SignIn';
 })
 export class AuthService {
 
-  private apiUrl = "http://localhost:7209/api/Auth";
+  private apiUrl = "https://localhost:7209/api/Auth";
   constructor(private http: HttpClient) { }
   signIn(details: SignIn) {
     console.log(details);

@@ -15,14 +15,16 @@ namespace PaintMe.Service.Services
             _configuration = configuration;
         }
 
-        public string GenerateJwtToken(string username, string[] roles)
+        public string GenerateJwtToken(string username, string[] roles, int userId)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, username)
+            new Claim(ClaimTypes.Name, username),
+            new Claim("id", userId.ToString()), // הוספת ה-ID כאן
+
         };
 
             // הוספת תפקידים כ-Claims
@@ -42,5 +44,5 @@ namespace PaintMe.Service.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
-    }
+}
 

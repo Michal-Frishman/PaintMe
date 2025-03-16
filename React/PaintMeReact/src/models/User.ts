@@ -6,8 +6,8 @@ export type User = {
     id: number;
     firstName: string;
     lastName: string;
-    email: string;
-    password: string;
+   Email: string;
+    Password: string;
     role: RoleEnum;
     createdAt: Date;
     createdBy?: number;

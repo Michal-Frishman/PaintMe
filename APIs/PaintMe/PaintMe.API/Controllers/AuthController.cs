@@ -25,9 +25,9 @@ namespace PaintMe.API.Controllers
             //IUserRoleService userRoleService
         }
 
-        [HttpPost("login")]
-        public async Task<UserDto> LoginAsync([FromBody] LoginModel model)
-        {
+        //[HttpPost("login")]
+        //public async Task<UserDto> LoginAsync([FromBody] LoginModel model)
+        
             //var roleName = await _userService.AuthenticateAsync(model.Name, model.Password);
             //if (roleName == "admin")
             //{
@@ -44,11 +44,24 @@ namespace PaintMe.API.Controllers
             //    var token = _authService.GenerateJwtToken(model.Name, new[] { "Viewer" });
             //    return Ok(new { Token = token });
             //}
-            await Console.Out.WriteLineAsync(model.Email+"--------");
-            //return Unauthorized();
-            //var a=  await _userService.AuthenticateAsync(model.Email, model.Password);
-            return await _userService.FindUserByEmailAsync(model.Email);
+        //    await Console.Out.WriteLineAsync(model.Email+"--------");
+        //    //return Unauthorized();
+        //    //var a=  await _userService.AuthenticateAsync(model.Email, model.Password);
+        //    return await _userService.FindUserByEmailAsync(model.Email)??new UserDto();
+        //}
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginAsync([FromBody] LoginModel model)
+        {
+            var user = await _userService.FindUserByEmailAsync(model.Email);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var token = _authService.GenerateJwtToken(user.Name, new[] { user.RoleName }, user.Id); // העברת ה-ID
+            return Ok(new { Token = token });
         }
+
         [HttpPost("register")]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterModel model)
         {
@@ -67,7 +80,9 @@ namespace PaintMe.API.Controllers
             //var userRole = await _userRoleService.AddAsync(model.RoleName, existingUser.Id);
             //if (userRole == null)
             //    return BadRequest();
-            var token = _authService.GenerateJwtToken(model.Name, new[] { model.RoleName });
+            //var token = _authService.GenerateJwtToken(model.Name, new[] { model.RoleName }, modelD.Id);
+
+            var token = _authService.GenerateJwtToken("", new[] { ""}, modelD.Id);
             return Ok(new { Token = token });
         }
     }
@@ -79,12 +94,12 @@ namespace PaintMe.API.Controllers
     public class RegisterModel
     {
 
-        public string Name { get; set; }
+        //public string Name { get; set; }
         public string Password { get; set; }
-        public string PasswordHash { get; set; }
+        //public string PasswordHash { get; set; }
 
         public string Email { get; set; }
-        public string RoleName { get; set; }
+        //public string RoleName { get; set; }
     }
 }
 

@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { User } from '../../../models/User';
 import { SignIn } from '../../../models/SignIn';
 import { AuthService } from '../../../services/auth/auth.service';
+import { log } from 'node:console';
 
 @Component({
   selector: 'app-sign-in',
@@ -31,19 +32,28 @@ export class SignInComponent implements OnInit {
   signInForm!: FormGroup;
 
   constructor(private fb: FormBuilder, private authService: AuthService) { }
-
+  getUserIdFromToken(token: string) {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.id; 
+  }
   signIn(): void {
     if (this.signInForm?.valid) {
       this.user = this.signInForm.value;
       if (this.user) {
-        console.log("details"+this.user);
-        
+        console.log("details" + this.user);
+
         this.authService.signIn(this.user).subscribe({
           next: (res) => {
+            // const id=this.getUserIdFromToken(res.token);
             sessionStorage.setItem('token', res.token);
-            // sessionStorage.setItem('userId', res.userId);               
+            sessionStorage.setItem('userId', this.getUserIdFromToken(res.token));
+            console.log(res);
+
+
             // sessionStorage.setItem('role', res.role);
-            this.router.navigate(['/']);
+            console.log("sessionStorage");
+
+            this.router.navigate(['/users']);
           },
           error: (error) => {
             alert("login failed");

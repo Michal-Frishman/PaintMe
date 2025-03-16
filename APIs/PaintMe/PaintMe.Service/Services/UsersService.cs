@@ -2,6 +2,7 @@
 using PaintMe.Core;
 using PaintMe.Core.DTOs;
 using PaintMe.Core.Entities;
+using System.Text;
 
 namespace PaintMe.Service.Services
 {
@@ -40,6 +41,9 @@ namespace PaintMe.Service.Services
         {
             user.CreatedAt = DateTime.Now;
             user.UpdatedAt = DateTime.Now;
+            user.PasswordHash = "ajdaklCJLAHCO";
+            user.RoleName = "sac";
+            user.Name = "";
             var a = _mapper.Map<User>(user);
             var data = await _usersRepository.AddDataAsync(a);
             var x = _mapper.Map<UserDto>(data);

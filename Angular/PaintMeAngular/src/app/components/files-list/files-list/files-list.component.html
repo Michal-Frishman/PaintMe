@@ -3,8 +3,8 @@
 
  <mat-card class="mat-card" appearance="outlined">
     <mat-card-header>
-      <mat-card-title>{{ file.name }}</mat-card-title>
-      <mat-card-subtitle>{{ file.fileUrl }}</mat-card-subtitle>
+      <mat-card-title>{{ file.Name }}</mat-card-title>
+      <mat-card-subtitle>{{ file.FileUrl }}</mat-card-subtitle>
       <button mat-button (click)="deleteFile(file.id)">Delete File</button>
       <a mat-button [routerLink]="['/files', file.id, 'update']" routerLinkActive="active">Update File</a>
     </mat-card-header>
