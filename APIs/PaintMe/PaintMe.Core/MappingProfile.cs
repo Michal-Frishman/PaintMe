@@ -12,6 +12,7 @@ namespace PaintMe.Core
             CreateMap<ColoredFile, ColoredFileDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<File, FileDto>().ReverseMap();
+            CreateMap<Category, CategoryDto>().ReverseMap();
         }
     }
 }

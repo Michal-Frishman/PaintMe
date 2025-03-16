@@ -24,10 +24,8 @@ export class AddFileFormComponent implements OnInit {
   ngOnInit(): void {
     this.fileForm = this.fb.group({
       name: ['', Validators.required],
-      category: ['', Validators.required],
+      categoryId: ['', Validators.required],
       fileUrl: ['', Validators.required],
-      createdBy: [null],
-      updatedBy: [null]
     });
   }
 

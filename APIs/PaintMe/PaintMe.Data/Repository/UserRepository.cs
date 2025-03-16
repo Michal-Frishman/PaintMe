@@ -80,10 +80,11 @@ namespace PaintMe.Data.Repository
                 return false;
             }
         }
-        public async Task<User> FindByUsernameAsync(string username)
+        public async Task<User> FindUserByEmailAsync(string email)
         {
-            return await _dataContext.Users.SingleOrDefaultAsync(u => u.Name == username);
+            return await _dataContext.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
+
 
 
 

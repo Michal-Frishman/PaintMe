@@ -10,7 +10,7 @@ namespace PaintMe.Core
         public Task<User> AddDataAsync(User user);
         public Task<bool> UpdateDataAsync(int id, User user);
         public Task<bool> RemoveItemFromDataAsync(int id);
-        Task<User> FindByUsernameAsync(string username);
+        Task<User> FindUserByEmailAsync(string email);
 
     }
 }

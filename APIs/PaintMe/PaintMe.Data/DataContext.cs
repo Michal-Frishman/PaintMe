@@ -17,6 +17,8 @@ namespace PaintMe.Data
         public DbSet<ColoredFile> ColoredFiles { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<Category> Categories { get; set; }
+
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }

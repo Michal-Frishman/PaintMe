@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "6IxVeJ7I/LR+cFSol7rAzlj3NyCU54TXnBtt+WaaplVMqR6+6y94TEVy8VnC1P+mjaXGtGyu/lec9P3XMX2Fow==",
+  "dgSpecHash": "sq7PNWItA9AVUPTWo0VQgEb1f1Pp1YNEGeTNpBKWwUm7rxyb05z7GRN58fXL9hLwj8JXfhklpHLgvWsQhw/mJw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\user\\Downloads\\PaintMe-main\\PaintMe-main\\APIs\\PaintMe\\PaintMe.Core\\PaintMe.Core.csproj",
+  "projectFilePath": "C:\\Users\\user\\Desktop\\practikum\\APIs\\PaintMe\\PaintMe.Core\\PaintMe.Core.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\user\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",

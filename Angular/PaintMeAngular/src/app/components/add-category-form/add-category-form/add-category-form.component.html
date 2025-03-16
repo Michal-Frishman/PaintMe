@@ -1,0 +1,27 @@
+<!-- components/add-category-form/add-category-form.component.html -->
+<div class="form-container">
+    <form [formGroup]="categoryForm" (ngSubmit)="addCategory()">
+      <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" required>
+        @if(this.categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched)
+        {
+        <mat-error>
+            name is required
+        </mat-error>}
+      </mat-form-field>
+  
+      <!-- <mat-form-field appearance="fill">
+        <mat-label>Description</mat-label>
+        <input matInput formControlName="description" required>
+        @if(this.categoryForm.get('description')?.invalid && categoryForm.get('description')?.touched)
+        {
+        <mat-error>
+            description is required
+        </mat-error>}
+      </mat-form-field>
+   -->
+      <button mat-raised-button [disabled]="categoryForm.invalid" type="submit">Add Category</button>
+    </form>
+  </div>
+  

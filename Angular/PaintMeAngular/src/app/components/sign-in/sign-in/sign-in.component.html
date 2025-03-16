@@ -1,0 +1,27 @@
+
+    <div class="form-container">
+        <form [formGroup]="signInForm" (submit)="signIn()">
+            
+            <mat-form-field appearance="fill">
+                <mat-label>Email</mat-label>
+                <input matInput type="email" formControlName="Email" required>
+                @if(this.signInForm.get('email')?.invalid && signInForm.get('email')?.touched)
+                {
+                <mat-error>
+                    Email is required
+                </mat-error>}
+            </mat-form-field>
+    
+            <mat-form-field appearance="fill">
+                <mat-label>Password</mat-label>
+                <input matInput type="password" formControlName="Password" required>
+                @if(this.signInForm.get('password')?.invalid && signInForm.get('password')?.touched)
+                {
+                <mat-error>
+                    Password is required
+                </mat-error>}
+            </mat-form-field>
+    
+            <button mat-raised-button [disabled]="signInForm.invalid" type="submit">Sign in</button>
+        </form>
+    </div>

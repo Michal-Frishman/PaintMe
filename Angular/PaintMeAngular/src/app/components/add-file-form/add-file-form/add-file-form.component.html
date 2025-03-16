@@ -11,16 +11,9 @@
       </mat-form-field>
   
       <mat-form-field appearance="fill">
-        <mat-label>Category</mat-label>
-        <mat-select formControlName="category" required>
-            <mat-option [value]="0">Animals</mat-option>
-            <mat-option [value]="1">Art</mat-option>
-            <mat-option [value]="2">Nature</mat-option>
-            <mat-option [value]="3">People</mat-option>
-            <mat-option [value]="4">Abstract</mat-option>
-          </mat-select>
-          
-        @if(this.fileForm.get('category')?.invalid && fileForm.get('category')?.touched){
+        <mat-label>Category ID</mat-label>
+        <input matInput formControlName="categoryId" required>
+                 @if(this.fileForm.get('categoryId')?.invalid && fileForm.get('categoryId')?.touched){
             <mat-error>
                 Category is required
             </mat-error>}

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "xFL3aX86ZYsJ3645FKGPcDvzlq3zJ/0FV/Rv/675hyZ51ksI3nI0iatpECUqZJKK5/p5eVAMIcbobps1S7Dvjw==",
+  "dgSpecHash": "zoDrUUATuutrhC+TZVtYIeFScNjmb+GxhEuXMpsxD769G2prHUBcuSbTWtXtrURsl85zOXloIhnGj7YcKEDG1A==",
   "success": true,
-  "projectFilePath": "C:\\Users\\user\\Downloads\\PaintMe-main\\PaintMe-main\\APIs\\PaintMe\\PaintMe.API\\PaintMe.API.csproj",
+  "projectFilePath": "C:\\Users\\user\\Desktop\\practikum\\APIs\\PaintMe\\PaintMe.API\\PaintMe.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\user\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\7.0.0\\automapper.extensions.microsoft.dependencyinjection.7.0.0.nupkg.sha512",

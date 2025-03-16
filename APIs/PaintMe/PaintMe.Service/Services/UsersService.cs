@@ -52,10 +52,11 @@ namespace PaintMe.Service.Services
             if (item == null) return false;
             return await _usersRepository.RemoveItemFromDataAsync(id);
         }
-        public async Task<string> AuthenticateAsync(string username, string password)
+        public async Task<string> AuthenticateAsync(string email, string password)
         {
-            User user = await _usersRepository.FindByUsernameAsync(username);
-            if (user == null || !user.Password.Equals(password))
+            var user = await _usersRepository.FindUserByEmailAsync(email);
+            var userDto=_mapper.Map<User>(user);
+            if (userDto == null || !userDto.Password.Equals(password))
             {
                 return null;
             }
@@ -65,7 +66,12 @@ namespace PaintMe.Service.Services
             //return userRole.Role.RoleName;
             return "succed!!!";
         }
-
+        public async Task<UserDto> FindUserByEmailAsync(string email)
+        {
+            var user = await _usersRepository.FindUserByEmailAsync(email);
+            var userDto = _mapper.Map<UserDto>(user);
+            return userDto;
+        }
 
     }
 }

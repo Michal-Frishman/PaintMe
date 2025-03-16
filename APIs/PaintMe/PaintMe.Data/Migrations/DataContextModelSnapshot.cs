@@ -22,6 +22,34 @@ namespace PaintMe.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("PaintMe.Core.Entities.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UpdateBy")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("PaintMe.Core.Entities.ColoredFile", b =>
                 {
                     b.Property<int>("Id")
@@ -61,9 +89,8 @@ namespace PaintMe.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -86,6 +113,8 @@ namespace PaintMe.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("CreatedBy");
 
@@ -207,6 +236,12 @@ namespace PaintMe.Data.Migrations
 
             modelBuilder.Entity("PaintMe.Core.Entities.File", b =>
                 {
+                    b.HasOne("PaintMe.Core.Entities.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("PaintMe.Core.Entities.User", "UserCreated")
                         .WithMany()
                         .HasForeignKey("CreatedBy");
@@ -214,6 +249,8 @@ namespace PaintMe.Data.Migrations
                     b.HasOne("PaintMe.Core.Entities.User", "UserUpdated")
                         .WithMany()
                         .HasForeignKey("UpdatedBy");
+
+                    b.Navigation("Category");
 
                     b.Navigation("UserCreated");
 

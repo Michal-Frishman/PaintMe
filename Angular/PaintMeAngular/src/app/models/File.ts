@@ -7,14 +7,9 @@ export enum FileCategoryEnum {
 }
 export class File {
     constructor(
-        public id: number,
-        public name: string,
-        public category: FileCategoryEnum,
-        public fileUrl: string,
-        public createdAt: Date,
-        public createdBy: number | null,
-        public updatedAt: Date,
-        public updatedBy: number | null,
+        public Name:string  ,
+        public CategoryId:number  ,
+        public FileUrl:string  
     ) { }
 }
 

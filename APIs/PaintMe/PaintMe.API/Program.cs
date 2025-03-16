@@ -8,25 +8,27 @@ using PaintMe.Core.DTOs;
 using PaintMe.Core.Entities;
 using PaintMe.Data;
 using PaintMe.Data.Repository;
+using PaintMe.Service.Repositories;
 using PaintMe.Service.Services;
 using System.Text;
 using File = PaintMe.Core.Entities.File;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<IUserService, UsersService>();
 builder.Services.AddScoped<IFilesService, FilesService>();
 builder.Services.AddScoped<IColoredFilesService, ColoredFilesService>();
-
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 builder.Services.AddScoped<IFilesRepository, FilesRepository>();
 builder.Services.AddScoped<IColoredFileRepository, ColoredFilesRepository>();
 builder.Services.AddScoped<IUserRepository, UsersRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRolesRepository, UserRoleRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoriesRepository>();
 //builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 
 builder.Services.AddScoped<AuthService>();
@@ -34,7 +36,7 @@ builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddDbContext<DataContext>(option =>
 {
-    option.UseSqlServer("Data Source=DESKTOP-4R0K21U\\SQLEXPRESS;Initial Catalog=PaintMe3;Integrated Security=false;  Trusted_Connection = SSPI; MultipleActiveResultSets = true; TrustServerCertificate = true");
+    option.UseSqlServer("Data Source=DESKTOP-4R0K21U\\SQLEXPRESS;Initial Catalog=PaintMe4;Integrated Security=false;  Trusted_Connection = SSPI; MultipleActiveResultSets = true; TrustServerCertificate = true");
 });
 
 builder.Services.AddAutoMapper(typeof(MappingProfile), typeof(MappingProfileApi));
