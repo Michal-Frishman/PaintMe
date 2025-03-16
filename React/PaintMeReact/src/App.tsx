@@ -1,13 +1,13 @@
 import './App.css'
 import PaintsList from './components/PaintsList'
-import Paints from './Paints'
+import DrawingCanvas from './components/Sketch'
 
 
 function App() {
 
   return (
     <>
-    <Paints/>
+    <DrawingCanvas/>
     <PaintsList/>
     </>
   )
