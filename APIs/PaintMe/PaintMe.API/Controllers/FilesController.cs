@@ -97,5 +97,23 @@ namespace PaintMe.API.Controllers
             }
             return NotFound("File not found.");
         }
+        // GET api/Files/category/{categoryId}
+        [HttpGet("category/{categoryId}")]
+        public async Task<ActionResult<List<FileDto>>> GetByCategory(int categoryId)
+        {
+            if (categoryId <= 0)
+            {
+                return BadRequest("Invalid category ID.");
+            }
+
+            var result = await _fileService.GetByCategoryDataAsync(categoryId);
+            if (result == null || result.Count == 0)
+            {
+                return new List<FileDto>();
+            }
+            return Ok(result);
+        }
     }
+
+
 }

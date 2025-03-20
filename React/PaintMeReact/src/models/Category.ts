@@ -1,7 +1,9 @@
 export interface Category {
-    id: number;
-    name: string;
-    icon: string;
-    bgColor: string;
+    Id: number;
+    Name: string;
+    CreatedAt?: Date;
+    updateAt?: Date;
+    // icon: string;
+    // bgColor: string;
   }
   

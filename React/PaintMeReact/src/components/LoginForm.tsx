@@ -785,8 +785,8 @@ function PaintMeLogin() {
               } 
               label="זכור אותי" 
               sx={styles.checkboxGroup}
-            />
-            
+            /> 
+           
             <Typography sx={styles.forgotPassword}>
               <a href="#" style={styles.a}>שכחת סיסמה?</a>
             </Typography>

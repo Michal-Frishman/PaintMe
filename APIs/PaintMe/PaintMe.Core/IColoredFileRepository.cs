@@ -9,10 +9,13 @@ namespace PaintMe.Core
 {
     public interface IColoredFileRepository
     {
-      public Task<List<ColoredFile>> GetAllDataAsync();
-      public Task<ColoredFile> GetByIdDataAsync(int id);
-      public Task<ColoredFile> AddDataAsync(ColoredFile t);
-      public Task<bool> UpdateDataAsync(int id, ColoredFile item);
+        public Task<List<ColoredFile>> GetAllDataAsync();
+        public Task<ColoredFile> GetByIdDataAsync(int id);
+
+        public Task<List<ColoredFile>> GetByUserIdDataAsync(int id);
+
+        public Task<ColoredFile> AddDataAsync(ColoredFile t);
+        public Task<bool> UpdateDataAsync(int id, ColoredFile item);
         public Task<bool> RemoveItemFromDataAsync(int id);
     }
 }

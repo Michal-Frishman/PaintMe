@@ -26,6 +26,12 @@ namespace PaintMe.Service.Services
             return _mapper.Map<List<ColoredFileDto>>(data);
         }
 
+        public async Task<List<ColoredFileDto>> GetByUserIdAsync(int id)
+        {
+            var data = await _coloredFilesRepository.GetByUserIdDataAsync(id);
+            Console.WriteLine(data == null ? "ColoredFile not found" : "ColoredFile found");
+            return _mapper.Map<List<ColoredFileDto>>(data);
+        }
         public async Task<ColoredFileDto> GetByIdAsync(int id)
         {
             var data = await _coloredFilesRepository.GetByIdDataAsync(id);

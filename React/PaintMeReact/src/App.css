@@ -5,234 +5,8 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-html, body {
-  direction: rtl;
-  height: 100%;
-  overflow-x: hidden; /* מונע גלילה אופקית */
-}
-
+html,
 body {
-  background-color: #fff;
-  color: #333;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.app {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* Header */
-.header {
-  background: linear-gradient(to left, #e9c8fa, #c8e4fa);
-  color: #555;
-  padding: 1.5rem;
-  text-align: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  position: relative;
-  width: 100%;
-}
-
-.logo-area {
-  padding: 0.5rem;
-}
-
-.logo-text {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-}
-
-.logo-text span:first-child {
-  color: #8B5CF6;
-}
-
-.logo-text span:last-child {
-  color: #F87171;
-}
-
-.logo-subtitle {
-  font-size: 1.2rem;
-  color: #666;
-  margin-bottom: 0.5rem;
-}
-
-.login-button {
-  position: absolute;
-  left: 20px;
-  top: 20px;
-  background-color: #FFF;
-  color: #8B5CF6;
-  padding: 8px 16px;
-  border-radius: 20px;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 0.9rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-}
-
-.login-button:hover {
-  background-color: #8B5CF6;
-  color: #FFF;
-}
-
-/* Search Bar */
-.search-container {
-  max-width: 800px;
-  margin: 2rem auto;
-  position: relative;
-  display: flex;
-  justify-content: center;
-}
-
-.search-bar {
-  width: 100%;
-  padding: 0.8rem 3rem 0.8rem 1rem;
-  border-radius: 50px;
-  border: 1px solid #eee;
-  font-size: 1rem;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-}
-
-.search-icon {
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #3B82F6;
-  font-size: 1.2rem;
-}
-
-/* Categories */
-.categories-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1.5rem;
-  flex-grow: 1; /* מאפשר לקטגוריות לתפוס את כל השטח הנדרש */
-}
-
-.category-card {
-  width: 180px;
-  height: 220px;
-  background-color: #FFF;
-  border-radius: 20px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  position: relative;
-}
-
-.category-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-}
-
-.category-icon {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-}
-
-.category-name {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: #555;
-}
-
-/* Watermark */
-.watermark {
-  position: fixed;
-  bottom: 30px;
-  left: 30px;
-  opacity: 0.5;
-  width: 120px;
-  height: 120px;
-  pointer-events: none;
-}
-
-/* Footer */
-.footer {
-  margin-top: auto;
-  text-align: center;
-  padding: 1rem;
-  color: #999;
-  font-size: 0.8rem;
-}
-
-/* Responsiveness */
-@media (max-width: 768px) {
-  .search-container {
-    max-width: 90%;
-  }
-
-  .categories-container {
-    justify-content: center;
-    gap: 1rem;
-  }
-
-  .category-card {
-    width: 150px;
-    height: 190px;
-  }
-
-  .logo-text {
-    font-size: 2rem;
-  }
-
-  .logo-subtitle {
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .header {
-    padding: 1rem;
-  }
-
-  .logo-text {
-    font-size: 1.8rem;
-  }
-
-  .logo-subtitle {
-    font-size: 0.9rem;
-  }
-
-  .categories-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .category-card {
-    width: 90%;
-    max-width: 300px;
-  }
-
-  .search-bar {
-    font-size: 0.9rem;
-    padding: 0.7rem 2rem 0.7rem 1rem;
-  }
-}
-/* App.css - גרסה רספונסיבית */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-html, body {
   direction: rtl;
   height: 100%;
   width: 100%;
@@ -418,20 +192,20 @@ body {
   .logo-text {
     font-size: 2rem;
   }
-  
+
   .logo-subtitle {
     font-size: 1rem;
   }
-  
+
   .category-card {
     width: 130px;
     height: 160px;
   }
-  
+
   .category-icon {
     font-size: 2rem;
   }
-  
+
   .watermark {
     width: 60px;
     height: 60px;
@@ -442,30 +216,30 @@ body {
   .header {
     padding: 0.5rem;
   }
-  
+
   .logo-text {
     font-size: 1.8rem;
   }
-  
+
   .login-button {
     font-size: 0.8rem;
     padding: 6px 12px;
   }
-  
+
   .search-bar {
     padding: 0.6rem 2.5rem 0.6rem 0.8rem;
   }
-  
+
   .category-card {
     width: 110px;
     height: 140px;
   }
-  
+
   .category-icon {
     font-size: 1.8rem;
     margin-bottom: 0.5rem;
   }
-  
+
   .category-name {
     font-size: 0.9rem;
   }
@@ -479,9 +253,26 @@ body {
     justify-content: flex-start;
     padding: 0 20px;
   }
-  
+
   .category-icon {
     margin-bottom: 0;
     margin-left: 20px;
   }
+}
+
+.canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  /* גובה מלא של חלון הדפדפן */
+  overflow: hidden;
+  /* מונע גלילה */
+}
+
+canvas {
+  max-width: 100%;
+  /* רספונסיבי */
+  height: auto;
+  /* שומר על יחס גובה-רוחב */
 }

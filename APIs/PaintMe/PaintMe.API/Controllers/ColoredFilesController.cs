@@ -46,7 +46,21 @@ namespace PaintMe.API.Controllers
             }
             return Ok(result);
         }
+        [HttpGet("user/{id}")]
+        public async Task<ActionResult<List<ColoredFileDto>>> GetByUserId(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Invalid ID.");
+            }
 
+            var result = await _coloredFileService.GetByUserIdAsync(id);
+            if (result == null)
+            {
+                return new List<ColoredFileDto>();
+            }
+            return Ok(result);
+        }
         // POST api/ColoredFiles
         [HttpPost]
         public async Task<ActionResult<ColoredFileDto>> Post([FromBody] ColoredFilePostModal coloredFile)

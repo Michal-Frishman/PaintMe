@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PaintMe.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,7 @@ namespace PaintMe.Core
       public Task<File> AddDataAsync(File t);
       public Task<bool> UpdateDataAsync(int id, File item);
         public Task<bool> RemoveItemFromDataAsync(int id);
+        Task<List<File>> GetByCategoryDataAsync(int categoryId);
+
     }
 }

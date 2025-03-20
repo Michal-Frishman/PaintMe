@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using PaintMe.Core;
 using PaintMe.Core.DTOs;
+using PaintMe.Core.Entities;
 using File = PaintMe.Core.Entities.File;
 
 namespace PaintMe.Service.Services
@@ -55,6 +56,11 @@ namespace PaintMe.Service.Services
             var item = await GetByIdAsync(id);
             if (item == null) return false;
             return await _filesRepository.RemoveItemFromDataAsync(id);
-        } 
+        }
+        public async Task<List<FileDto>> GetByCategoryDataAsync(int categoryId)
+        {
+            var data = await _filesRepository.GetByCategoryDataAsync(categoryId);
+            return _mapper.Map<List<FileDto>>(data);
+        }
     }
 }

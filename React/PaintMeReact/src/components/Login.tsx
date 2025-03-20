@@ -30,8 +30,8 @@
 //             console.log("email"+emailRef.current?.value);
 //             console.log("password"+passwordRef.current?.value);
 //             console.log(finalUrl);
-            
-            
+
+
 //             const res = await axios.post(
 //                 finalUrl,
 //                 {
@@ -86,6 +86,8 @@
 import axios, { AxiosError } from "axios";
 import { Button, Modal, Box, TextField, Typography, Checkbox, FormControlLabel } from "@mui/material";
 import { useState, useRef, FormEvent } from "react";
+import { useNavigate } from "react-router";
+import { jwtDecode } from "jwt-decode";
 
 export const style = {
     position: 'absolute',
@@ -108,7 +110,11 @@ const HomePage = () => {
     const [login, setLogin] = useState(false);
     const passwordRef = useRef<HTMLInputElement>(null);
     const emailRef = useRef<HTMLInputElement>(null);
-
+    const navigate = useNavigate();
+    const getUserIdFromToken = (token: string) => {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.id;
+    }
     const submit = async (e: FormEvent) => {
         e.preventDefault();
         try {
@@ -119,12 +125,18 @@ const HomePage = () => {
                     Password: passwordRef.current?.value
                 }
             );
-            if(!res){
+            if (!res) {
                 console.error("No response from server");
                 return;
             }
             setLogin(true);
             setShowModal(false);
+
+
+            const token = res.data.token; // הנח שהטוקן מגיע כאן
+            sessionStorage.setItem('userId', getUserIdFromToken(token));
+
+            navigate("/dashboard");
         } catch (e: AxiosError | any) {
             console.error("Error:", e);
             if (e.response?.status === 400) alert('User is already logged in');
@@ -135,10 +147,10 @@ const HomePage = () => {
 
     return (
         <div style={{ textAlign: 'center', background: 'linear-gradient(135deg, #e0f2fe 0%, #f5d0fe 100%)', height: '100vh', padding: '20px' }}>
-            <div style={{ background: 'linear-gradient(135deg, #c4b5fd 0%, #f5d0fe 100%)', padding: '20px', borderRadius: '15px', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)' }}>
+            {/* <div style={{ background: 'linear-gradient(135deg, #c4b5fd 0%, #f5d0fe 100%)', padding: '20px', borderRadius: '15px', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)' }}>
                 <Typography variant="h4" style={{ color: '#7c3aed' }}>Paint<span style={{ color: '#f43f5e' }}>Me</span></Typography>
                 <Typography variant="subtitle1" style={{ color: '#444' }}>עולם של צבע וקסם</Typography>
-            </div>
+            </div> */}
             {!login ?
                 <div>
                     <Button variant="contained" onClick={() => { setShowModal(true); setFinalUrl(url + '/login') }}>התחברות</Button>

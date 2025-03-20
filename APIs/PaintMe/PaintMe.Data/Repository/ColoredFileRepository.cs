@@ -40,6 +40,10 @@ namespace PaintMe.Data.Repository
         {
             return await _dataContext.ColoredFiles.FirstOrDefaultAsync(cf => cf.Id == id);
         }
+        public async Task<List<ColoredFile>> GetByUserIdDataAsync(int id)
+        {
+            return await _dataContext.ColoredFiles.Include(cf => cf.User).Where(cf => cf.UserId == id).ToListAsync();
+        }
 
         public async Task<bool> RemoveItemFromDataAsync(int id)
         {
@@ -83,6 +87,6 @@ namespace PaintMe.Data.Repository
             }
         }
 
-      
+
     }
 }

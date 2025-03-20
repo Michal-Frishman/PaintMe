@@ -1,4 +1,5 @@
 ﻿using PaintMe.Core.DTOs;
+using PaintMe.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,7 @@ namespace PaintMe.Core
       public Task<bool> UpdateAsync(int id, FileDto value);
       public Task<bool> DeleteAsync(int id);
         public Task<FileDto> AddAsync(FileDto value);
+        Task<List<FileDto>> GetByCategoryDataAsync(int categoryId);
+
     }
 }

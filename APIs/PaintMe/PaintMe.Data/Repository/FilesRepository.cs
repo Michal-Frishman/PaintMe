@@ -86,6 +86,10 @@ namespace PaintMe.Data.Repository
                 return false;
             }
         }
+        public async Task<List<File>> GetByCategoryDataAsync(int categoryId)
+        {
+            return await _dataContext.Files.Where(f => f.CategoryId == categoryId).ToListAsync();
+        }
     }
 }
 
