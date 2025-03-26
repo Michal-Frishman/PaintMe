@@ -17,12 +17,10 @@ class ArtStore {
     }
 
     loadCategories = action(async () => {
-        console.log("טעינת קטגוריות...");
         try {
             const fetchedCategories = await fetchCategories();
             if (Array.isArray(fetchedCategories)) {
                 this.categories = fetchedCategories;
-                console.log("קטגוריות מעודכנות:", this.categories.length);
             } else {
                 console.error('הקטגוריות שהתקבלו אינן מערך:', fetchedCategories);
             }
@@ -31,13 +29,11 @@ class ArtStore {
         }
     });
     loadColoredFiles = action(async () => {
-        console.log("טעינת קבצים צבועים...");
         try {
             const fetchedColoredFiles = await fetchColoredFiles(parseInt(sessionStorage.getItem("userId") ?? ''));
             if (Array.isArray(fetchedColoredFiles)) {
                 // Ensure that the state modification is within the action
                 this.coloredFiles = fetchedColoredFiles;
-                console.log("קבצים צבועים מעודכנים:", this.coloredFiles.length);
             } else {
                 console.error('צבועים שהתקבלו אינן מערך:', fetchedColoredFiles);
             }

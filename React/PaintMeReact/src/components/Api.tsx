@@ -6,7 +6,6 @@ const API_URL = 'https://localhost:7209/api';
 
 export const fetchCategories = async () => {
     const response = await axios.get(`${API_URL}/Categories`);
-    console.log(response.data);
     return response.data;
 };
 export const fetchColoredFiles = async (userId: number) => {
@@ -34,12 +33,9 @@ export const fetchAddColoredFile = async (coloredFile: ColoredFile) => {
     }
 };
 export const fetchAddFile = async (file:File) => {
-    // console.log(file.fileUrl);
-    console.log(file);
     
     try {
         const response = await axios.post(`${API_URL}/Files`, file)
-        console.log("response on the api"+response);
         return response.data;
         
     } catch (error) {

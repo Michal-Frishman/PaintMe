@@ -116,7 +116,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Card, CardContent, Typography, Box, TextField } from "@mui/material";
-import ShowImg from "./ShowImage";
 import artStore from "./ArtStore";
 import { observer } from "mobx-react-lite";
 
@@ -297,7 +296,7 @@ const FileUploader = observer(() => {
                 </Button>
                 {progress > 0 && <div>התקדמות: {progress}%</div>}
                 {file?.name}
-                {isFinished && <ShowImg fileName={file?.name ?? ''} setColor='black' />}
+                {/* {isFinished && <ShowImg fileName={file?.name ?? ''} setColor='black' />} */}
             </CardContent>
         </Card>
     );

@@ -1,8 +1,7 @@
 // import {useState } from 'react';
-import { Outlet, RouterProvider } from 'react-router';
+import { RouterProvider } from 'react-router';
 import './App.css'
 import { myRouter } from './Router';
-import FileUploader from './components/Upload';
 export const buttonStyle = {
   color: "white",
   backgroundColor: "rgb(215, 155, 154)",
