@@ -156,7 +156,7 @@ builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddDbContext<DataContext>(option =>
 {
-    option.UseSqlServer("Data Source=DESKTOP-4R0K21U\\SQLEXPRESS;Initial Catalog=PaintMe4;Integrated Security=false; Trusted_Connection = SSPI; MultipleActiveResultSets = true; TrustServerCertificate = true");
+    option.UseSqlServer("Data Source=DESKTOP-4R0K21U\\SQLEXPRESS;Initial Catalog=PaintMe5;Integrated Security=false; Trusted_Connection = SSPI; MultipleActiveResultSets = true; TrustServerCertificate = true");
 });
 
 builder.Services.AddAutoMapper(typeof(MappingProfile), typeof(MappingProfileApi));
@@ -219,8 +219,8 @@ builder.Services.AddSingleton<IAmazonS3>(serviceProvider =>
     var options = serviceProvider.GetRequiredService<IOptions<AWSOptions>>().Value;
 
     var credentials = new Amazon.Runtime.BasicAWSCredentials(
-        builder.Configuration["AWS_SECRET_ACCESS_KEY"],
-        builder.Configuration["AWS_ACCESS_KEY_ID"]
+        builder.Configuration["AWS_ACCESS_KEY_ID"],
+        builder.Configuration["AWS_SECRET_ACCESS_KEY"]
     );
 
     var region = Amazon.RegionEndpoint.GetBySystemName(builder.Configuration["AWS_REGION"]);
@@ -231,7 +231,6 @@ builder.Services.AddSingleton<IAmazonS3>(serviceProvider =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -83,7 +83,7 @@ public class UploadController : ControllerBase
     private readonly IAmazonS3 _s3Client;
     private readonly HashSet<string> _allowedExtensions = new() { ".jpg", ".jpeg", ".png", ".gif", ".bmp" }; // סיומות תמונה
     private readonly IConfiguration _configuration;
-    public UploadController(IAmazonS3 s3Client,IConfiguration configuration)
+    public UploadController(IAmazonS3 s3Client, IConfiguration configuration)
     {
         _configuration = configuration;
         _s3Client = s3Client;
@@ -94,7 +94,6 @@ public class UploadController : ControllerBase
     {
         var extension = Path.GetExtension(fileName).ToLower();
 
-        // אם הסיומת לא ברשימה, החזרת שגיאה
         if (!_allowedExtensions.Contains(extension))
         {
             return BadRequest("Only image files are allowed (.jpg, .jpeg, .png, .gif, .bmp)");
@@ -107,15 +106,15 @@ public class UploadController : ControllerBase
             ".png" => "image/png",
             ".gif" => "image/gif",
             ".bmp" => "image/bmp",
-            _ => "application/octet-stream" // ברירת מחדל (לא אמור לקרות בגלל הבדיקה)
+            _ => "application/octet-stream"
         };
 
         var request = new GetPreSignedUrlRequest
         {
-            BucketName = _configuration["AWS_BUCKET_NAME"], // שינוי שם הבקט
+            BucketName = "paintmebuket",
             Key = fileName,
             Verb = HttpVerb.PUT,
-            Expires = DateTime.UtcNow.AddMinutes(60),
+            Expires = DateTime.UtcNow.AddMinutes(15),
             ContentType = contentType
         };
 
@@ -123,13 +122,14 @@ public class UploadController : ControllerBase
         return Ok(new { url });
     }
     [HttpGet("download-url/{fileName}")]
-    public async Task<string> GetDownloadUrlAsync([FromQuery] string fileName)
+    public async Task<string> GetDownloadUrlAsync(string fileName)
     {
         var request = new GetPreSignedUrlRequest
         {
-            BucketName = _configuration["AWS_BUCKET_NAME"], // שינוי שם הבקט
+            BucketName = "paintmebuket",
             Key = fileName,
             Verb = HttpVerb.GET,
+            Expires = DateTime.UtcNow.AddDays(300),
         };
 
         return _s3Client.GetPreSignedURL(request);

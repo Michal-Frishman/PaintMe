@@ -65,6 +65,10 @@ namespace PaintMe.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("OriginalDrawingId")
                         .HasColumnType("int");
 
@@ -75,6 +79,8 @@ namespace PaintMe.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OriginalDrawingId");
 
                     b.HasIndex("UserId");
 
@@ -225,11 +231,19 @@ namespace PaintMe.Data.Migrations
 
             modelBuilder.Entity("PaintMe.Core.Entities.ColoredFile", b =>
                 {
+                    b.HasOne("PaintMe.Core.Entities.File", "File")
+                        .WithMany()
+                        .HasForeignKey("OriginalDrawingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("PaintMe.Core.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("File");
 
                     b.Navigation("User");
                 });

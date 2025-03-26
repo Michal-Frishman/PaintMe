@@ -24,7 +24,6 @@ namespace PaintMe.Service.Services
         {
             new Claim(ClaimTypes.Name, username),
             new Claim("id", userId.ToString()), // הוספת ה-ID כאן
-
         };
 
             // הוספת תפקידים כ-Claims

@@ -87,7 +87,6 @@ import axios, { AxiosError } from "axios";
 import { Button, Modal, Box, TextField, Typography, Checkbox, FormControlLabel } from "@mui/material";
 import { useState, useRef, FormEvent } from "react";
 import { useNavigate } from "react-router";
-import { jwtDecode } from "jwt-decode";
 
 export const style = {
     position: 'absolute',
@@ -134,9 +133,11 @@ const HomePage = () => {
 
 
             const token = res.data.token; // הנח שהטוקן מגיע כאן
+            console.log(token);
+            
             sessionStorage.setItem('userId', getUserIdFromToken(token));
 
-            navigate("/dashboard");
+            navigate("/");
         } catch (e: AxiosError | any) {
             console.error("Error:", e);
             if (e.response?.status === 400) alert('User is already logged in');

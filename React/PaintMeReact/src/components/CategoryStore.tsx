@@ -1,6 +1,6 @@
 import axios from "axios";
 import { makeAutoObservable, action } from "mobx";
-import { File } from '../models/File';
+import {  FileSmall } from '../models/File';
 
 export type CategoryType = {
     id: number;
@@ -12,7 +12,7 @@ export type CategoryType = {
 class CategoryStore {
     categories: CategoryType[] = [];
     selectedCategory: CategoryType | null = null;
-    selectedArtwork: File[] | null = null;
+    selectedArtwork: FileSmall[] = [];
 
     constructor() {
         makeAutoObservable(this);
@@ -27,6 +27,9 @@ class CategoryStore {
         }
 
     });
+    getSelectedArtwork(){
+        return this.selectedArtwork;
+    }
     loadCategories = action(async () => {
         try {
             const response = await axios.get("https://localhost:7209/api/Categories");

@@ -19,7 +19,7 @@
 //     return (
 //         <div>
 //             <h2>ציורים בקטגוריה</h2>
-           
+
 //         </div>
 //     );
 // });
@@ -45,15 +45,20 @@ const ArtworkDisplay = observer(() => {
 
     return (
         <div className="categories-container">
-                {CategoryStore.selectedArtwork.map((artwork) => (
-                    <div key={artwork.id}> {/* הנחה שיש לכל ציור ID ייחודי */}
-                        <h3>{artwork.name}</h3> {/* הנחה שיש לכל ציור כותרת */}
-                        <Link to={`/drawing/${artwork.id}`}  className="category-card"> {/* קישור לעמוד הצביעה עם ה-ID של התמונה */}
-                            <img src={artwork.fileUrl} alt={artwork.name} /> {/* הנחה שיש לכל ציור URL לתמונה */}
+        {CategoryStore.getSelectedArtwork().length === 0 ?
+            <option>טוען ציורי קטגוריה...</option>
+            : (
+                CategoryStore.getSelectedArtwork().map((artwork) => (
+                    <div key={artwork.id} >
+                        {/* <h3>{artwork.name}</h3> */}
+                        <Link to={`/drawing/${artwork.id}`} className="category-card">
+                            <img src={artwork.fileUrl} alt={artwork.name} />
                         </Link>
                     </div>
-                ))}
-        </div>
+                ))
+            )}
+    </div>
+    
     );
 });
 

@@ -10,11 +10,8 @@ const ShowImg = ({ fileName, setColor }: { fileName: string, setColor: null | st
             try {
                 const response = await axios.get(`https://localhost:7209/api/upload/download-url/${fileName}`);
                 console.log(response);
-
                 setImgUrl(response.data);
                 console.log(response.data);
-                console.log("colololololollo");
-
             } catch (error) {
                 console.error('שגיאה בהבאת ה-URL:', error);
             }

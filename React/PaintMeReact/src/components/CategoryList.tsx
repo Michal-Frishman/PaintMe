@@ -91,7 +91,7 @@
 // export default CategoryList;
 import  { useEffect } from "react";
 import { observer } from "mobx-react-lite";
-import { Link, Outlet } from 'react-router-dom'; // ייבוא Link
+import { Link} from 'react-router-dom'; // ייבוא Link
 import "../App.css"; // ודא שהקובץ קיים
 import categoryStore, { CategoryType } from "./CategoryStore"; // ודא שאתה משתמש בסטור המעודכן
 
@@ -106,7 +106,8 @@ const CategoryList = observer(() => {
                     {categoryStore.categories.map((category: CategoryType) => {
                         return (
                             <div key={category.id}>
-                                <Link to={`/categories/${category.id}`}  className="category-card">{category.name}</Link> {/* קישור לקטגוריה */}
+                              
+                                <Link to={`/categories/${category.id}`}  className="category-card">↙️ {category.name}</Link> {/* קישור לקטגוריה */}
                             </div>
                         );
                     })}

@@ -35,13 +35,13 @@ const FileList = () => {
     return (
         <div>
             <h1>File List</h1>
-            <ul>
+            {/* <ul>
                 {files.map((file) => (
-                    <div key={file.id}>{file.name}
-                        <img src={file.fileUrl} alt={file.name} />
+                    <div key={file.Id}>{file.Name}
+                        <img src={file.FileUrl} alt={file.Name} />
                     </div>
                 ))}
-            </ul>
+            </ul> */}
         </div>
     );
 };

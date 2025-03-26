@@ -1,9 +1,7 @@
 export type ColoredFile = {
-    id: number;
+    id?: number;
+    name: string;
     originalDrawingId: number;
     coloredImageUrl: string;
-    createdAt: Date;
-    updatedAt: Date;
     userId: number;
-    // user: UserType;
 };

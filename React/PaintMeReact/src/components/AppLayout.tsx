@@ -1,7 +1,5 @@
 import { Outlet, useLocation } from "react-router";
-import { Toolbar } from "@mui/material";
 import Header from "./Header";
-import Login from "./Login";
 import CategoryList from "./CategoryList";
 const AppLayout = () => {
     const location = useLocation();

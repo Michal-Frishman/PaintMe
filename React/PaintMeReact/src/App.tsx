@@ -1,16 +1,8 @@
 // import {useState } from 'react';
 import { Outlet, RouterProvider } from 'react-router';
 import './App.css'
-import CategoryList from './components/CategoryList';
 import { myRouter } from './Router';
-import Login from './components/Login';
-import SearchBar from './components/SearchBar';
-import Watermark from './components/Watermark';
-import Header from './components/Header';
 import FileUploader from './components/Upload';
-import ShowImg from './components/ShowImage';
-import ColoredFilesList from './components/ColoredFiles';
-import ColoredFiles from './components/ColoredFiles';
 export const buttonStyle = {
   color: "white",
   backgroundColor: "rgb(215, 155, 154)",

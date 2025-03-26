@@ -11,6 +11,8 @@ namespace PaintMe.Core.DTOs
     public class ColoredFileDto
     {
         public int Id { get; set; }
+        public string Name { get; set; }
+
         public int OriginalDrawingId { get; set; }
         public string ColoredImageUrl { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;

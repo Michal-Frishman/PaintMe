@@ -81,8 +81,7 @@ namespace PaintMe.API.Controllers
             //if (userRole == null)
             //    return BadRequest();
             //var token = _authService.GenerateJwtToken(model.Name, new[] { model.RoleName }, modelD.Id);
-
-            var token = _authService.GenerateJwtToken("", new[] { ""}, modelD.Id);
+            var token = _authService.GenerateJwtToken("", new[] { ""}, existingUser.Id);
             return Ok(new { Token = token });
         }
     }
