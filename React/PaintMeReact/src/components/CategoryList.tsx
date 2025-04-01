@@ -91,7 +91,7 @@
 // export default CategoryList;
 import  { useEffect } from "react";
 import { observer } from "mobx-react-lite";
-import { Link} from 'react-router-dom'; // ייבוא Link
+import { Link, Outlet} from 'react-router-dom'; // ייבוא Link
 import "../App.css"; // ודא שהקובץ קיים
 import categoryStore, { CategoryType } from "./CategoryStore"; // ודא שאתה משתמש בסטור המעודכן
 
@@ -112,6 +112,7 @@ const CategoryList = observer(() => {
                         );
                     })}
             </div>
+            <Outlet/>
      </>
     );
 });

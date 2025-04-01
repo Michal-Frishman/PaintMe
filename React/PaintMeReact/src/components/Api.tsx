@@ -43,3 +43,13 @@ export const fetchAddFile = async (file:File) => {
         throw error; 
     }
 };
+export const fetchDeleteColoredFile = async (id: number) => {
+    try {
+        const response = await axios.delete(`${API_URL}/ColoredFiles/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetchDeleteColoredFile:', error);
+        throw error; 
+    }
+};
+

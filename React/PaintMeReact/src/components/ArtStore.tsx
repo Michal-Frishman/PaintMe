@@ -1,7 +1,7 @@
 import { makeAutoObservable, action } from 'mobx';
 import { Category } from '../models/Category';
-import {  File } from '../models/File';
-import { fetchCategories, fetchArtworksByCategory, fetchArtworkById, fetchAddColoredFile, fetchAddFile, fetchColoredFiles } from './Api';
+import { File } from '../models/File';
+import { fetchCategories, fetchArtworksByCategory, fetchArtworkById, fetchAddColoredFile, fetchAddFile, fetchColoredFiles, fetchDeleteColoredFile } from './Api';
 import { ColoredFile } from '../models/ColoredFile';
 
 class ArtStore {
@@ -66,13 +66,22 @@ class ArtStore {
         }
     });
     saveFile = action(async (file: File) => {
-        try {           
+        try {
             await fetchAddFile(file);
         } catch (error) {
             console.error('שגיאה בשמירת הציור הצבוע:', error);
         }
     });
-    getCategories(){
+    deleteColoredFile = action(async (id: number) => {
+        try {
+            await fetchDeleteColoredFile(id);
+            this.coloredFiles = this.coloredFiles?.filter(file => file.id !== id) || null;
+        } catch (error) {
+            console.error('שגיאה במחיקת הציור הצבוע:', error);
+        }
+    });
+
+    getCategories() {
         return this.categories;
     }
 }

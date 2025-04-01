@@ -8,10 +8,10 @@ const Home = () => {
             {/* <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleSearch={handleSearch} /> */}
             {/* <CategoryList /> */}
             {/* <Watermark /> */}
-            <Login /> 
-            <Outlet/>
+            <Login />
+            <Outlet />
             {/* <CategoryList />  */}
-    </div>
+        </div>
     );
 };
 
