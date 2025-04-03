@@ -123,6 +123,7 @@ using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using PaintMe.API;
@@ -161,11 +162,13 @@ builder.Services.AddScoped<AuthService>();
 //    //option.UseSqlServer("Data Source=DESKTOP-4R0K21U\\SQLEXPRESS;Initial Catalog=PaintMe5;Integrated Security=false; Trusted_Connection = SSPI; MultipleActiveResultSets = true; TrustServerCertificate = true");
 //});
 
-var connectionString = "server=bi3apewaqacstqkikzoz-mysql.services.clever-cloud.com;port=3306;database=bi3apewaqacstqkikzoz;user=urnmykvabrbo50v5;password=6VDQV4vQZp7TPItpS35M;";
+var connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
+
+
 
 builder.Services.AddAutoMapper(typeof(MappingProfile), typeof(MappingProfileApi));
 builder.Services.AddEndpointsApiExplorer();
