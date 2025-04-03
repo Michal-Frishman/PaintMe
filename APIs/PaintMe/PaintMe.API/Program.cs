@@ -133,6 +133,7 @@ using PaintMe.Data;
 using PaintMe.Data.Repository;
 using PaintMe.Service.Repositories;
 using PaintMe.Service.Services;
+using Sprache;
 using System.Text;
 Env.Load();
 
@@ -154,9 +155,16 @@ builder.Services.AddScoped<ICategoryRepository, CategoriesRepository>();
 
 builder.Services.AddScoped<AuthService>();
 
-builder.Services.AddDbContext<DataContext>(option =>
+//builder.Services.AddDbContext<DataContext>(option =>
+//{
+//    option.UseSqlServer("server=bi3apewaqacstqkikzoz-mysql.services.clever-cloud.com;port=3306;database=bi3apewaqacstqkikzoz;user=urnmykvabrbo50v5;password=6VDQV4vQZp7TPItpS35M;");
+//    //option.UseSqlServer("Data Source=DESKTOP-4R0K21U\\SQLEXPRESS;Initial Catalog=PaintMe5;Integrated Security=false; Trusted_Connection = SSPI; MultipleActiveResultSets = true; TrustServerCertificate = true");
+//});
+
+var connectionString = "server=bi3apewaqacstqkikzoz-mysql.services.clever-cloud.com;port=3306;database=bi3apewaqacstqkikzoz;user=urnmykvabrbo50v5;password=6VDQV4vQZp7TPItpS35M;";
+builder.Services.AddDbContext<DataContext>(options =>
 {
-    option.UseSqlServer("Data Source=DESKTOP-4R0K21U\\SQLEXPRESS;Initial Catalog=PaintMe5;Integrated Security=false; Trusted_Connection = SSPI; MultipleActiveResultSets = true; TrustServerCertificate = true");
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
 
 builder.Services.AddAutoMapper(typeof(MappingProfile), typeof(MappingProfileApi));

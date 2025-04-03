@@ -173,3 +173,5 @@ C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.API\bin\Debug\net7.0\AWSSDK
 C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.API\bin\Debug\net7.0\AWSSDK.Extensions.NETCore.Setup.dll
 C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.API\bin\Debug\net7.0\DotNetEnv.dll
 C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.API\bin\Debug\net7.0\Sprache.dll
+C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.API\bin\Debug\net7.0\MySqlConnector.dll
+C:\Users\user\Desktop\practikum\APIs\PaintMe\PaintMe.API\bin\Debug\net7.0\Pomelo.EntityFrameworkCore.MySql.dll
