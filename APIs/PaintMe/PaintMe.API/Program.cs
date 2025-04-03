@@ -161,11 +161,13 @@ builder.Services.AddScoped<AuthService>();
 //    option.UseSqlServer("server=bi3apewaqacstqkikzoz-mysql.services.clever-cloud.com;port=3306;database=bi3apewaqacstqkikzoz;user=urnmykvabrbo50v5;password=6VDQV4vQZp7TPItpS35M;");
 //    //option.UseSqlServer("Data Source=DESKTOP-4R0K21U\\SQLEXPRESS;Initial Catalog=PaintMe5;Integrated Security=false; Trusted_Connection = SSPI; MultipleActiveResultSets = true; TrustServerCertificate = true");
 //});
-
-var connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
+//builder.Configuration["AWS_REGION"]
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+    var x = builder.Configuration["CONNECTION_SRRING"];
+    options.UseMySql(x,
+                   ServerVersion.AutoDetect(x)
+        );
 });
 
 
