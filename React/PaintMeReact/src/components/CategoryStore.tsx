@@ -13,7 +13,7 @@ class CategoryStore {
     categories: CategoryType[] = [];
     selectedCategory: CategoryType | null = null;
     selectedArtwork: FileSmall[] = [];
-    url: string = `${import.meta.env.VITE_API_URL}/api/`; 
+    url: string = `${import.meta.env.VITE_API_URL}/api`; 
 
     constructor() {
         makeAutoObservable(this);
