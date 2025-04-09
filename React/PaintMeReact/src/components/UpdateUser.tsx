@@ -1,7 +1,7 @@
 import { Dispatch, FormEvent, useRef, useState } from "react"
-import { Button, Box, Modal } from '@mui/material';
+import {  Box, Modal } from '@mui/material';
 import axios, { AxiosError } from "axios"
-import { buttonStyle } from "../App";
+// import { buttonStyle } from "../App";
 const style = {
     position: 'absolute',
     top: '50%',
@@ -15,7 +15,9 @@ const style = {
 };
 const UpdateUser = ({ setClose }: { setClose: Dispatch<boolean> }) => {
     const [open, setOpen] = useState(true);
-    const url = 'http://localhost:3000/api/user'
+    const url = `${import.meta.env.VITE_API_URL}/api/user`; 
+
+    // const url = 'http://localhost:3000/api/user'
     const firstNameRef = useRef<HTMLInputElement>(null);
     const lastNameRef = useRef<HTMLInputElement>(null);
     const emailRef = useRef<HTMLInputElement>(null);
@@ -55,7 +57,7 @@ const UpdateUser = ({ setClose }: { setClose: Dispatch<boolean> }) => {
                         <TextField label="address" inputRef={addressRef} defaultValue={user.address} />
                         <TextField label="phone" inputRef={phoneRef} defaultValue={user.phone} />
                         <TextField label="password" inputRef={passwordRef} defaultValue={user.password} /> */}
-                        <Button type="submit" sx={{ buttonStyle }}>Save</Button>
+                        {/* <Button type="submit" sx={{ buttonStyle }}>Save</Button> */}
                     </form>
                 </Box>
             </Modal>

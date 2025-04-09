@@ -154,7 +154,7 @@ const FileUploader = observer(() => {
     const [file, setFile] = useState<File | null>(null);
     const [fileName, setFileName] = useState("");
     const [progress, setProgress] = useState(0);
-    const [isFinished, setIsFinished] = useState(false);
+    const [_, setIsFinished] = useState(false);
     const [dragOver, setDragOver] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
     const [artworkName, setArtworkName] = useState("");
@@ -189,11 +189,12 @@ const FileUploader = observer(() => {
         console.log("artStore.categories:", artStore.categories);
     }, [artStore.categories]);
     const handleUpload = async () => {
+        const url = `${import.meta.env.VITE_API_URL}/api/upload/presigned-url`; 
 
         if (!file || selectedCategory === null || !artworkName) return;
 
         try {
-            const response = await axios.get('https://localhost:7209/api/upload/presigned-url', {
+            const response = await axios.get(url, {
                 params: { fileName: file.name }
             });
 
@@ -210,7 +211,8 @@ const FileUploader = observer(() => {
                     setProgress(percent);
                 },
             });
-            const downloadResponse = await axios.get(`https://localhost:7209/api/upload/download-url/${file.name}`);
+            const dowload=`${url}/api/upload/download-url/${file.name}`
+            const downloadResponse = await axios.get(dowload);
             const downloadUrl = downloadResponse.data;
             console.log('Download URL:', downloadUrl);
             console.log(downloadResponse + " downloaded");

@@ -1,6 +1,6 @@
-import { Button } from "@mui/material";
+// import { Button } from "@mui/material";
 import { createContext, Dispatch, useState } from "react";
-import { buttonStyle } from "../App";
+// import { buttonStyle } from "../App";
 import UpdateUser from "./UpdateUser";
 export const CloseUpdate = createContext<[boolean, Dispatch<boolean>]>([false, () => { }])
 const LoggedIn = () => {
@@ -35,12 +35,12 @@ const LoggedIn = () => {
                 Hello
                 {/* {user.firstName} */}
             </h4>
-            <Button sx={buttonStyle} onClick={() => setUpdate(!update)}>
+            {/* <Button sx={buttonStyle} onClick={() => setUpdate(!update)}>
                 Update
             </Button>
             <Button sx={buttonStyle} onClick={() => { window.location.href = "/" }}>
                 sign out
-            </Button>
+            </Button> */}
             {update &&
                 <UpdateUser setClose={setUpdate} />
             }

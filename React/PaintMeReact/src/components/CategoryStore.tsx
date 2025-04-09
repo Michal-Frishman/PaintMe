@@ -1,6 +1,6 @@
 import axios from "axios";
 import { makeAutoObservable, action } from "mobx";
-import {  FileSmall } from '../models/File';
+import { FileSmall } from '../models/File';
 
 export type CategoryType = {
     id: number;
@@ -13,6 +13,7 @@ class CategoryStore {
     categories: CategoryType[] = [];
     selectedCategory: CategoryType | null = null;
     selectedArtwork: FileSmall[] = [];
+    url: string = `${import.meta.env.VITE_API_URL}/api/`; 
 
     constructor() {
         makeAutoObservable(this);
@@ -20,30 +21,30 @@ class CategoryStore {
     }
     addCategory = action(async (category: string) => {
         try {
-            await axios.post("https://localhost:7209/api/Categories", { name: category });
+            await axios.post(`${this.url}/Categories`, { name: category });
             this.loadCategories();
         } catch (error) {
             console.error("Error adding category:", error);
         }
 
     });
-    getSelectedArtwork(){
+    getSelectedArtwork() {
         return this.selectedArtwork;
     }
     loadCategories = action(async () => {
         try {
-            const response = await axios.get("https://localhost:7209/api/Categories");
-            this.setCategories(response.data); 
+            const response = await axios.get(`${this.url}/Categories`);
+            this.setCategories(response.data);
         } catch (error) {
             console.error("Error loading categories:", error);
         }
     });
     setCategories = action((categories: CategoryType[]) => {
-        this.categories = categories; 
+        this.categories = categories;
     });
     loadCategoryById = action(async (categoryId: number) => {
         try {
-            const response = await axios.get(`https://localhost:7209/api/Categories/${categoryId}`);
+            const response = await axios.get(`${this.url}/Categories/${categoryId}`);
             this.selectedCategory = response.data;
         } catch (error) {
             console.error("Error loading category:", error);
@@ -55,7 +56,7 @@ class CategoryStore {
     }
     loadArtworkById = async (artworkId: number) => {
         try {
-            const response = await axios.get(`https://localhost:7209/api/Files/category/${artworkId}`);
+            const response = await axios.get(`${this.url}/Files/category/${artworkId}`);
             this.selectedArtwork = response.data;
             console.log(this.selectedArtwork);
 

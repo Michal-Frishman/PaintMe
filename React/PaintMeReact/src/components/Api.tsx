@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ColoredFile } from '../models/ColoredFile';
 import {File} from '../models/File';
 
-const API_URL = 'https://localhost:7209/api'; 
+const API_URL = `${import.meta.env.VITE_API_URL}/api`; 
 
 export const fetchCategories = async () => {
     const response = await axios.get(`${API_URL}/Categories`);

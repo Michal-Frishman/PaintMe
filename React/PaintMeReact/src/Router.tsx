@@ -4,7 +4,7 @@ import ModernDrawingCanvas from "./components/Sketch";
 import AppLayout from "./components/AppLayout";
 import Login from "./components/Login";
 import ColoredFiles from "./components/ColoredFiles";
-import FileUploader from "./components/Upload";
+// import FileUploader from "./components/Upload";
 import CategoryList from "./components/CategoryList";
 import UploadForm from "./components/Upload";
 

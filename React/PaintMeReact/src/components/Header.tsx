@@ -35,7 +35,7 @@
 
 import { Link } from "react-router-dom";
 import { Button, AppBar, Toolbar, Typography, Box, Container } from "@mui/material";
-import { Palette, Upload, Category, Login, Dashboard } from "@mui/icons-material";
+import { Palette, Upload, Category, Login } from "@mui/icons-material";
 
 const Header = () => {
   const isLoggedIn = sessionStorage.getItem("userId") !== null;

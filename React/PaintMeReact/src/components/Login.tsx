@@ -103,7 +103,8 @@ export const style = {
 };
 
 const HomePage = () => {
-    const url = "https://localhost:7209/api/Auth";
+    const url = `${import.meta.env.VITE_API_URL}/api/Auth`; 
+    // const url = "https://localhost:7209/api/Auth";
     const [finalUrl, setFinalUrl] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [login, setLogin] = useState(false);

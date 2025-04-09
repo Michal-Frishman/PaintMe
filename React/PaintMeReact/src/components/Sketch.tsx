@@ -1179,18 +1179,19 @@ const colorMap = {
 
 const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
   const canvasRef = useRef<CanvasDraw | null>(null);
-  const [brushColor, setBrushColor] = useState("rgba(0, 0, 0, 0.5)");
+  const [_, setBrushColor] = useState("rgba(0, 0, 0, 0.5)");
   const [brushRadius, setBrushRadius] = useState(5);
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
   const [fileName, setFileName] = useState("");
   const { id } = useParams<{ id: string }>();
+  const url = import.meta.env.VITE_API_URL; 
 
   useEffect(() => {
     const loadArtworkById = async (artworkId: number) => {
       try {
         const response = isColored
-          ? await axios.get(`https://localhost:7209/api/ColoredFiles/${artworkId}`)
-          : await axios.get(`https://localhost:7209/api/Files/${artworkId}`);
+          ? await axios.get(`${url}/api/ColoredFiles/${artworkId}`)
+          : await axios.get(`${url}/api/Files/${artworkId}`);
         setBackgroundImage(response.data.coloredImageUrl || response.data.fileUrl);
         setFileName(response.data.name);
       } catch (error) {
@@ -1213,32 +1214,25 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
     newCanvas.width = canvas.width;
     newCanvas.height = canvas.height;
 
-    // אם יש רקע, טען אותו קודם
     if (backgroundImage) {
       const img = new Image();
-      img.crossOrigin = "Anonymous";  // זה חשוב אם מדובר בתמונה משרת חיצוני
+      img.crossOrigin = "Anonymous"; 
       img.src = backgroundImage;
 
       img.onload = async () => {
         requestAnimationFrame(() => {
-          // צייר את הרקע
           context.drawImage(img, 0, 0, newCanvas.width, newCanvas.height);
-
-          // צייר את הציור מעל הרקע
           context.drawImage(canvas, 0, 0, newCanvas.width, newCanvas.height);
-
-          saveCanvas(newCanvas);  // שמור את הציור עם הרקע
+          saveCanvas(newCanvas);  
         });
       };
 
       img.onerror = () => {
         console.error("Error loading background image");
-        // אם לא הצלחנו לטעון את הרקע, פשוט צייר את הציור בלבד
         context.drawImage(canvas, 0, 0, newCanvas.width, newCanvas.height);
-        saveCanvas(newCanvas);  // שמור את הציור בלי הרקע אם נכשל
+        saveCanvas(newCanvas);  
       };
     } else {
-      // אם אין רקע, פשוט שמור את הציור
       context.drawImage(canvas, 0, 0, newCanvas.width, newCanvas.height);
       saveCanvas(newCanvas);
     }
@@ -1250,7 +1244,7 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
     const fileName2 = fileName + "colored" + Date.now() + ".png";
 
     try {
-      const response = await axios.get('https://localhost:7209/api/upload/presigned-url', {
+      const response = await axios.get(`${url}/api/upload/presigned-url`, {
         params: { fileName: fileName2 },
       });
 
@@ -1259,7 +1253,7 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
       await axios.put(presignedUrl, blob, {
         headers: { 'Content-Type': 'image/png' },
       });
-      const downloadResponse = await axios.get(`https://localhost:7209/api/upload/download-url/${fileName2}`);
+      const downloadResponse = await axios.get(`${url}/api/upload/download-url/${fileName2}`);
       const downloadUrl = downloadResponse.data;
       await artStore.saveColoredFile({ name: fileName2, coloredImageUrl: downloadUrl, originalDrawingId: parseInt(id || ''), userId: parseInt(sessionStorage.getItem("userId") || '') });
       alert(`הציור הועלה בהצלחה!`);
@@ -1342,7 +1336,7 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
           <Slider min={1} max={20} value={brushRadius} onChange={(_, value) => setBrushRadius(value as number)} />
         </Stack>
 
-        <Box
+        {/* <Box
           display="flex"
           justifyContent="center"
           alignItems="center"
@@ -1362,7 +1356,7 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
             lazyRadius={0}
             style={{ background: "transparent" }}
           />
-        </Box>
+        </Box> */}
         {/* <Box
           display="flex"
           justifyContent="center"
