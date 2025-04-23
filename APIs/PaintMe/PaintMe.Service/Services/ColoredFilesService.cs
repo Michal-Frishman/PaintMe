@@ -66,6 +66,14 @@ namespace PaintMe.Service.Services
             if (item == null) return false;
             return await _coloredFilesRepository.RemoveItemFromDataAsync(id);
         }
+        public async Task<Dictionary<string, int>> GetColoredDrawingsPerDayAsync()
+        {
+            return await _coloredFilesRepository.GetColoredDrawingsPerDayAsync();
+        }
+        public async Task<Dictionary<int, int>> GetPopularActivityHoursAsync()
+        {
+            return await _coloredFilesRepository.GetPopularActivityHoursAsync();
+        }
 
     }
 }

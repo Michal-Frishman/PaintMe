@@ -110,5 +110,17 @@ namespace PaintMe.Data.Repository
 
 
         }
+        public async Task<Dictionary<string, int>> GetNewUsersPerMonthAsync()
+        {
+            return await _dataContext.Users
+                .GroupBy(u => new { u.CreatedAt.Year, u.CreatedAt.Month })
+                .OrderBy(g => g.Key.Year).ThenBy(g => g.Key.Month)
+                .Select(g => new
+                {
+                    Month = $"{g.Key.Month:D2}/{g.Key.Year}",
+                    Count = g.Count()
+                })
+                .ToDictionaryAsync(g => g.Month, g => g.Count);
+        }
     }
 }

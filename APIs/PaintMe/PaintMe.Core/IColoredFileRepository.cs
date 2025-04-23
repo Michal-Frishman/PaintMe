@@ -17,5 +17,7 @@ namespace PaintMe.Core
         public Task<ColoredFile> AddDataAsync(ColoredFile t);
         public Task<bool> UpdateDataAsync(int id, ColoredFile item);
         public Task<bool> RemoveItemFromDataAsync(int id);
+        Task<Dictionary<int, int>> GetPopularActivityHoursAsync();
+        Task<Dictionary<string, int>> GetColoredDrawingsPerDayAsync();
     }
 }

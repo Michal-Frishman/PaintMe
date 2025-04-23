@@ -1,0 +1,15 @@
+<mat-card class="chart-card">
+    <mat-card-title>ציורים שצבעו לפי יום</mat-card-title>
+    <canvas baseChart [data]="lineChartData" chartType="line"></canvas>
+</mat-card>
+
+<mat-card class="chart-card">
+    <mat-card-title>שעות פעילות פופולריות</mat-card-title>
+    <canvas baseChart [data]="barChartData" chartType="bar"></canvas>
+</mat-card>
+
+<!-- <mat-card class="chart-card">
+    <mat-card-title>משתמשים חדשים לפי חודש</mat-card-title>
+    <canvas baseChart [data]="pieChartData" chartType="pie"></canvas>
+    
+</mat-card> -->

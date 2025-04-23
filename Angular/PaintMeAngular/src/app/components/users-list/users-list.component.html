@@ -1,12 +1,11 @@
-<a mat-button [routerLink]="['/users/add']" routerLinkActive="active"> ➕ Add user</a>
+<a mat-button [routerLink]="['/users/add']" routerLinkActive="active"> ➕ הוסף משתמש</a>
 @for(user of users$ | async; track user.id) {
 <mat-card class="mat-card" appearance="outlined">
     <mat-card-header>
-        <mat-card-subtitle> {{user.firstName + ' ' + user.lastName+' '+ user.email+' '+user.password+'
-            '+user.role }}
+        <mat-card-subtitle> {{user.name + ' '+ user.email+' '+user.password}}
         </mat-card-subtitle>
-        <button mat-button (click)="deleteUser(user.id)">Delete user</button>
-        <a mat-button [routerLink]="['/users', user.id, 'update']" routerLinkActive="active">Update user</a>
+        <button mat-button (click)="deleteUser(user.id)">הסר משתמש</button>
+        <a mat-button [routerLink]="['/users', user.id, 'update']" routerLinkActive="active">עדכן פרטי משתמש</a>
     </mat-card-header>
     <br>
 </mat-card>

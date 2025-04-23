@@ -10,10 +10,11 @@ export type CategoryType = {
 }
 
 class CategoryStore {
+    isLoading = false;
     categories: CategoryType[] = [];
     selectedCategory: CategoryType | null = null;
     selectedArtwork: FileSmall[] = [];
-    url: string = `${import.meta.env.VITE_API_URL}/api`; 
+    url: string = `${import.meta.env.VITE_API_URL}/api`;
 
     constructor() {
         makeAutoObservable(this);
@@ -32,23 +33,31 @@ class CategoryStore {
         return this.selectedArtwork;
     }
     loadCategories = action(async () => {
+        this.isLoading = true;
+
         try {
             const response = await axios.get(`${this.url}/Categories`);
             this.setCategories(response.data);
         } catch (error) {
             console.error("Error loading categories:", error);
         }
+        this.isLoading = false;
+
     });
     setCategories = action((categories: CategoryType[]) => {
         this.categories = categories;
     });
     loadCategoryById = action(async (categoryId: number) => {
+        this.isLoading = true;
+
         try {
             const response = await axios.get(`${this.url}/Categories/${categoryId}`);
             this.selectedCategory = response.data;
         } catch (error) {
             console.error("Error loading category:", error);
         }
+        this.isLoading = false;
+
     });
 
     getCategoriesList() {

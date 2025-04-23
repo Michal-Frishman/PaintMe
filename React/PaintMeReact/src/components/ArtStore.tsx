@@ -5,6 +5,8 @@ import { fetchCategories, fetchArtworksByCategory, fetchArtworkById, fetchAddCol
 import { ColoredFile } from '../models/ColoredFile';
 
 class ArtStore {
+    isLoading = false;
+
     categories: Category[] = [];
     artworks: File[] = [];
     selectedCategory: number | null = null;
@@ -29,6 +31,8 @@ class ArtStore {
         }
     });
     loadColoredFiles = action(async () => {
+        this.isLoading = true;
+
         try {
             const fetchedColoredFiles = await fetchColoredFiles(parseInt(sessionStorage.getItem("userId") ?? ''));
             if (Array.isArray(fetchedColoredFiles)) {
@@ -40,15 +44,21 @@ class ArtStore {
         } catch (error) {
             console.error('שגיאה בטעינת צבועים:', error);
         }
+        this.isLoading = false;
+
     });
 
     loadArtworksByCategory = action(async (categoryId: number) => {
+        this.isLoading = true;
+
         this.selectedCategory = categoryId;
         try {
             this.artworks = await fetchArtworksByCategory(categoryId);
         } catch (error) {
             console.error('שגיאה בטעינת עבודות אמנות:', error);
         }
+        this.isLoading = false;
+
     });
 
     loadArtworkById = action(async (artworkId: number) => {

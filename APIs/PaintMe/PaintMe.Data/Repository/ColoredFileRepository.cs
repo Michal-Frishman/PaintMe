@@ -86,7 +86,31 @@ namespace PaintMe.Data.Repository
                 return false;
             }
         }
+        public async Task<Dictionary<int, int>> GetPopularActivityHoursAsync()
+        {
+            return await _dataContext.ColoredFiles
+                .GroupBy(cf => cf.CreatedAt.Hour)
+                .OrderBy(g => g.Key)
+                .Select(g => new
+                {
+                    Hour = g.Key,
+                    Count = g.Count()
+                })
+                .ToDictionaryAsync(g => g.Hour, g => g.Count);
+        }
 
+        public async Task<Dictionary<string, int>> GetColoredDrawingsPerDayAsync()
+        {
+            return await _dataContext.ColoredFiles
+                .GroupBy(cf => cf.CreatedAt.Date)
+                .OrderBy(g => g.Key)
+                .Select(g => new
+                {
+                    Date = g.Key.ToString("yyyy-MM-dd"),
+                    Count = g.Count()
+                })
+                .ToDictionaryAsync(g => g.Date, g => g.Count);
+        }
 
     }
 }

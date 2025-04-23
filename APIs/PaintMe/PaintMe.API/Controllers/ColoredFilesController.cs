@@ -110,5 +110,17 @@ namespace PaintMe.API.Controllers
             }
             return NotFound("Colored file not found.");
         }
+        [HttpGet("stats/colored-drawings-per-day")]
+        public async Task<ActionResult<Dictionary<string, int>>> GetColoredDrawingsPerDay()
+        {
+            var result = await _coloredFileService.GetColoredDrawingsPerDayAsync();
+            return Ok(result);
+        }
+        [HttpGet("stats/activity-hours")]
+        public async Task<ActionResult<Dictionary<int, int>>> GetActivityHours()
+        {
+            var result = await _coloredFileService.GetPopularActivityHoursAsync();
+            return Ok(result);
+        }
     }
 }

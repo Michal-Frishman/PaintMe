@@ -1,11 +1,10 @@
-<a mat-button [routerLink]="['/categories/add']" routerLinkActive="active"> ➕ Add Category</a>
+<a mat-button [routerLink]="['/categories/add']" routerLinkActive="active"> ➕ הוסף קטגוריה</a>
 @for(category of categories$ | async; track category.id) {
 <mat-card class="mat-card" appearance="outlined">
     <mat-card-header>
         <mat-card-title>{{ category.name }}</mat-card-title>
         <!-- <mat-card-subtitle>{{ category.description }}</mat-card-subtitle> -->
-        <button mat-button (click)="deleteCategory(category.id)">Delete Category</button>
-        <a mat-button [routerLink]="['/categories', category.id, 'update']" routerLinkActive="active">Update
-            Category</a>
+        <button mat-button (click)="deleteCategory(category.id)">מחק קטגוריה</button>
+        <a mat-button [routerLink]="['/categories', category.id, 'update']" routerLinkActive="active">עדכן קטגוריה</a>
     </mat-card-header>
 </mat-card>}

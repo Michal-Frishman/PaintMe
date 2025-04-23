@@ -96,5 +96,12 @@ namespace PaintMe.API.Controllers
             }
             return NotFound("User not found.");
         }
+        [HttpGet("stats/new-users-per-month")]
+        public async Task<ActionResult<Dictionary<string, int>>> GetNewUsersPerMonth()
+        {
+            var result = await _userService.GetNewUsersPerMonthAsync();
+            return Ok(result);
+        }
+
     }
 }

@@ -1,16 +1,15 @@
-import { Outlet, useLocation } from "react-router";
-import Header from "./Header";
-import CategoryList from "./CategoryList";
+import { Outlet } from "react-router";
+import Header from "../pages/Header";
+import { Box } from "@mui/material";
 const AppLayout = () => {
-    const location = useLocation();
-    const showCategoryList = location.pathname === '/';
-
     return (
         <>
-       <Header />
-       {showCategoryList && <CategoryList />}
-       <Outlet />
-       </>
+            <Header />
+            <Box sx={{ pt: 15 }}> {/* Padding top to create space below the header */}
+                <Outlet />
+            </Box>
+        </>
     );
 };
+
 export default AppLayout

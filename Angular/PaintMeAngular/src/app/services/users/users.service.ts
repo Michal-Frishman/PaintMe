@@ -31,7 +31,7 @@ export class UsersService {
       );
   }
   addUser(user: User): Observable<User> {
-    user.role = parseInt(user.role.toString());
+    // user.role = parseInt(user.role.toString());
     return this.http.post<User>(this.apiUrl, user)
       .pipe(
         catchError(error => {

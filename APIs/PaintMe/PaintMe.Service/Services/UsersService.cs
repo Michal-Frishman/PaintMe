@@ -32,7 +32,10 @@ namespace PaintMe.Service.Services
         {
             var item = await GetByIdAsync(id);
             if (item == null) return false;
+            var user2 = _mapper.Map<User>(user);
+            user2.UpdatedBy = id;
             user.UpdatedAt = DateTime.Now;
+
             var data = _mapper.Map<User>(user);
             return await _usersRepository.UpdateDataAsync(id, data);
         }
@@ -44,7 +47,9 @@ namespace PaintMe.Service.Services
             user.PasswordHash = "ajdaklCJLAHCO";
             user.RoleName = "sac";
             user.Name = "";
+
             var a = _mapper.Map<User>(user);
+            a.CreatedBy = user.Id;
             var data = await _usersRepository.AddDataAsync(a);
             var x = _mapper.Map<UserDto>(data);
             return x;
@@ -59,7 +64,7 @@ namespace PaintMe.Service.Services
         public async Task<string> AuthenticateAsync(string email, string password)
         {
             var user = await _usersRepository.FindUserByEmailAsync(email);
-            var userDto=_mapper.Map<User>(user);
+            var userDto = _mapper.Map<User>(user);
             if (userDto == null || !userDto.Password.Equals(password))
             {
                 return null;
@@ -76,6 +81,9 @@ namespace PaintMe.Service.Services
             var userDto = _mapper.Map<UserDto>(user);
             return userDto;
         }
-
+        public async Task<Dictionary<string, int>> GetNewUsersPerMonthAsync()
+        {
+            return await _usersRepository.GetNewUsersPerMonthAsync();
+        }
     }
 }

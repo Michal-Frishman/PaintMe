@@ -1159,7 +1159,7 @@
 import { useRef, useState, useEffect } from "react";
 import CanvasDraw from "react-canvas-draw";
 import axios from "axios";
-import { Box, Stack, Button, Slider, Paper, IconButton, Tooltip } from "@mui/material";
+import { Box, Stack, Button, Slider, Paper, IconButton, Tooltip, CircularProgress } from "@mui/material";
 import { useParams } from "react-router-dom";
 import artStore from "./ArtStore";
 import { Delete, Download, Save, Print } from "@mui/icons-material";
@@ -1178,13 +1178,15 @@ const colorMap = {
 };
 
 const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const canvasRef = useRef<CanvasDraw | null>(null);
-  const [_, setBrushColor] = useState("rgba(0, 0, 0, 0.5)");
+  const [brushColor, setBrushColor] = useState("rgba(0, 0, 0, 0.5)");
   const [brushRadius, setBrushRadius] = useState(5);
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
   const [fileName, setFileName] = useState("");
   const { id } = useParams<{ id: string }>();
-  const url = import.meta.env.VITE_API_URL; 
+  const url = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const loadArtworkById = async (artworkId: number) => {
@@ -1204,6 +1206,7 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
   }, [id, isColored]);
 
   const handleSave = async () => {
+    setIsLoading(true);
     if (!canvasRef.current) return;
 
     const canvas = canvasRef.current.canvasContainer.childNodes[1] as HTMLCanvasElement;
@@ -1216,26 +1219,28 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
 
     if (backgroundImage) {
       const img = new Image();
-      img.crossOrigin = "Anonymous"; 
+      img.crossOrigin = "Anonymous";
       img.src = backgroundImage;
 
       img.onload = async () => {
         requestAnimationFrame(() => {
           context.drawImage(img, 0, 0, newCanvas.width, newCanvas.height);
           context.drawImage(canvas, 0, 0, newCanvas.width, newCanvas.height);
-          saveCanvas(newCanvas);  
+          saveCanvas(newCanvas);
         });
       };
 
       img.onerror = () => {
         console.error("Error loading background image");
         context.drawImage(canvas, 0, 0, newCanvas.width, newCanvas.height);
-        saveCanvas(newCanvas);  
+        saveCanvas(newCanvas);
       };
     } else {
       context.drawImage(canvas, 0, 0, newCanvas.width, newCanvas.height);
       saveCanvas(newCanvas);
     }
+    setIsLoading(false);
+
   };
 
   const saveCanvas = async (canvas: HTMLCanvasElement) => {
@@ -1325,16 +1330,35 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
   return (
     <Box display="flex" flexDirection="column" alignItems="center" height="calc(100vh - 60px)">
       <Stack direction="row" spacing={3} alignItems="center" justifyContent="center" width="100%">
-        <Stack spacing={1} alignItems="center" pr={3}>
-          {Object.keys(colorMap).map((color) => (
-            <Button
-              key={color}
-              style={{ backgroundColor: color, width: 1, height: 20 }}
-              onClick={() => setBrushColor(colorMap[color as ColorKey])}
-            />
+        <Stack spacing={2} alignItems="center" pr={3}>
+          {Object.entries(colorMap).map(([key, color]) => (
+            <Tooltip title={key} arrow key={key}>
+              <IconButton
+                onClick={() => setBrushColor(color)}
+                sx={{
+                  bgcolor: color,
+                  border: brushColor === color ? '2px solid #333' : '1px solid #ccc',
+                  width: 30,
+                  height: 30,
+                  borderRadius: "50%",
+                  '&:hover': {
+                    opacity: 0.9,
+                    borderColor: '#000',
+                  }
+                }}
+              />
+            </Tooltip>
           ))}
-          <Slider min={1} max={20} value={brushRadius} onChange={(_, value) => setBrushRadius(value as number)} />
+          <Slider
+            min={1}
+            max={20}
+            value={brushRadius}
+            onChange={(_, value) => setBrushRadius(value as number)}
+            sx={{ width: 60 }}
+            aria-label="Brush size"
+          />
         </Stack>
+
 
         {/* <Box
           display="flex"
@@ -1357,7 +1381,7 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
             style={{ background: "transparent" }}
           />
         </Box> */}
-        {/* <Box
+        <Box
           display="flex"
           justifyContent="center"
           alignItems="center"
@@ -1385,7 +1409,7 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
               background: "transparent" // הוסף את זה
             }}
           />
-        </Box> */}
+        </Box>
         {/* //   <Stack spacing={2} alignItems="center" pl={3}>
       //     <Button variant="contained" color="primary" onClick={() => canvasRef.current?.clear()}>
       //       ניקוי
@@ -1442,21 +1466,27 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
             </IconButton>
           </Tooltip>
 
-          {sessionStorage.getItem("userId") && (
-            <Tooltip title="שמירה" arrow>
+          <Tooltip title="שמירה" arrow>
+            <div>
               <IconButton
                 color="error"
                 onClick={handleSave}
-                // disabled={isSaving}
+                disabled={isLoading}
                 sx={{
                   bgcolor: "#f5f5f5",
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
+                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                  position: "relative"
                 }}
               >
-                <Save />
+                {isLoading ? (
+                  <CircularProgress size={24} sx={{ position: "absolute" }} />
+                ) : (
+                  <Save />
+                )}
               </IconButton>
-            </Tooltip>
-          )}
+            </div>
+          </Tooltip>
+
 
           <Tooltip title="הדפסה" arrow>
             <IconButton
@@ -1472,9 +1502,9 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
           </Tooltip>
         </Paper>
         {/* </Box> */}
-        </Stack>
-        </Box>
-        );
+      </Stack>
+    </Box>
+  );
 };
 
-        export default DrawingCanvas;
+export default DrawingCanvas;
