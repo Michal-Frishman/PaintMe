@@ -410,7 +410,7 @@ export default function AuthPage() {
       const email = result.user.email;
 
       const url = `${import.meta.env.VITE_API_URL}/api/Auth/${mode}`;
-      const password = "GoogleAuth123!"; 
+      const password = "GoogleAuth123!";
 
       const res = await axios.post(url, {
         Email: email,
@@ -459,7 +459,7 @@ export default function AuthPage() {
           <ToggleButton value="login" sx={{ fontWeight: "bold" }}>התחברות</ToggleButton>
         </ToggleButtonGroup>
 
-        <Typography variant="h4" sx={{ mb: 2, fontFamily: 'Comic Sans MS', color: mode === 'register' ? theme.palette.primary.main :  theme.palette.secondary.main }}>
+        <Typography variant="h4" sx={{ mb: 2, fontFamily: 'Comic Sans MS', color: mode === 'register' ? theme.palette.primary.main : theme.palette.secondary.main }}>
           {mode === 'register' ? "ברוכים הבאים ל-PaintMe!" : "ברוכים השבים ל-PaintMe!"}
         </Typography>
         <Typography variant="h6" sx={{ mb: 4, color: '#555' }}>
@@ -488,7 +488,7 @@ export default function AuthPage() {
             variant="contained"
             fullWidth
             sx={{
-              backgroundColor: mode === 'register' ?theme.palette.primary.main:theme.palette.secondary.main,
+              backgroundColor: mode === 'register' ? theme.palette.primary.main : theme.palette.secondary.main,
               color: "white",
               paddingY: 1.2,
               borderRadius: 3,
@@ -498,7 +498,7 @@ export default function AuthPage() {
               boxShadow: 2,
               mb: 2,
               '&:hover': {
-                backgroundColor: mode === 'register' ? theme.palette.primary.main:theme.palette.secondary.main
+                backgroundColor: mode === 'register' ? theme.palette.primary.main : theme.palette.secondary.main
               },
             }}
           >

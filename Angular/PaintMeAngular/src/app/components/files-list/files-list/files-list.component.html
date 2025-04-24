@@ -1,4 +1,4 @@
-<a mat-button [routerLink]="['/files/add']" routerLinkActive="active"> ➕ הוסף קובץ</a>
+<!-- <a mat-button [routerLink]="['/files/add']" routerLinkActive="active"> ➕ הוסף קובץ</a>
 @for(file of files$ | async; track file.id) {
 
  <mat-card class="mat-card" appearance="outlined">
@@ -9,4 +9,75 @@
       <a mat-button [routerLink]="['/files', file.id, 'update']" routerLinkActive="active">הוסף קובץ</a>
     </mat-card-header>
   </mat-card>
+} -->
+<!-- <app-loading-spinner></app-loading-spinner> -->
+
+@if(!(files$ | async) ){
+
+<app-loading-spinner></app-loading-spinner>
+}
+@else{
+  <div class="file-list-container" dir="rtl">
+    <div class="toolbar">
+      <a mat-raised-button color="primary" [routerLink]="['/files/add']">
+        <mat-icon class="rtl-icon">cloud_upload</mat-icon>
+        הוסף קובץ
+      </a>
+    </div>
+  
+    <div class="file-card-grid">
+      @for (file of files$ | async; track file.id) {
+      <mat-card class="file-card">
+        <img mat-card-image [src]="file.fileUrl" alt="{{file.name}}" class="file-image" />
+  
+        <div class="file-footer">
+          <div class="file-name" title="{{file.name}}">
+            {{ file.name }}
+          </div>
+          <div class="file-actions">
+            <button mat-icon-button color="warn" (click)="deleteFile(file.id)">
+              <mat-icon class="rtl-icon">delete</mat-icon>
+            </button>
+            <a mat-icon-button color="accent" [routerLink]="['/files', file.id, 'update']">
+              <mat-icon class="rtl-icon">edit</mat-icon>
+            </a>
+          </div>
+        </div>
+      </mat-card>
+      }
+    </div>
+  </div>
+  
+<!-- <div class="file-list-container" dir="rtl">
+
+  <div class="toolbar">
+    <a mat-raised-button color="primary" [routerLink]="['/files/add']" routerLinkActive="active">
+      <mat-icon class="rtl-icon">cloud_upload</mat-icon>
+      הוסף קובץ
+    </a>
+  </div>
+
+
+  <div class="file-card-grid">
+    @for (file of files$ | async; track file.id) {
+    <mat-card class="file-card" appearance="outlined">
+      <img mat-card-image [src]="file.fileUrl" alt="{{file.name}}" class="preview-image" />
+      <mat-card-header class="name">
+        <mat-card-title class="name">{{ file.name }}</mat-card-title>
+        <mat-card-subtitle>{{ file.fileUrl }}</mat-card-subtitle> -->
+      <!-- </mat-card-header>
+      <mat-card-actions align="start">
+        <button mat-icon-button color="warn" (click)="deleteFile(file.id)">
+          <mat-icon class="rtl-icon">delete</mat-icon>
+        </button>
+
+        <a mat-icon-button color="accent" [routerLink]="['/files', file.id, 'update']">
+          <mat-icon class="rtl-icon">edit</mat-icon>
+        </a>
+      </mat-card-actions>
+    </mat-card>
+    } -->
+  <!-- </div>
+
+</div> -->
 }

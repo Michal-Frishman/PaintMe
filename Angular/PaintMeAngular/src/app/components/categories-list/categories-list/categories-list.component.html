@@ -1,10 +1,48 @@
-<a mat-button [routerLink]="['/categories/add']" routerLinkActive="active"> ➕ הוסף קטגוריה</a>
+<!-- <a mat-button [routerLink]="['/categories/add']" routerLinkActive="active"> ➕ הוסף קטגוריה</a>
 @for(category of categories$ | async; track category.id) {
 <mat-card class="mat-card" appearance="outlined">
     <mat-card-header>
         <mat-card-title>{{ category.name }}</mat-card-title>
-        <!-- <mat-card-subtitle>{{ category.description }}</mat-card-subtitle> -->
         <button mat-button (click)="deleteCategory(category.id)">מחק קטגוריה</button>
         <a mat-button [routerLink]="['/categories', category.id, 'update']" routerLinkActive="active">עדכן קטגוריה</a>
     </mat-card-header>
-</mat-card>}
+</mat-card>} -->
+
+@if(!(categories$| async) ){
+
+<app-loading-spinner></app-loading-spinner>
+}
+
+@else{
+<div class="category-list-container" dir="rtl">
+
+    <div class="toolbar">
+        <a mat-raised-button color="primary" [routerLink]="['/categories/add']" routerLinkActive="active">
+            <mat-icon class="rtl-icon">add</mat-icon>
+            הוסף קטגוריה
+        </a>
+    </div>
+
+    <div class="category-card-grid">
+        @for(category of categories$ | async; track category.id) {
+        <mat-card class="category-card" appearance="outlined">
+            <mat-card-header>
+                <mat-icon mat-card-avatar color="accent">label</mat-icon>
+                <mat-card-title>{{ category.name }}</mat-card-title>
+            </mat-card-header>
+
+            <mat-card-actions align="start">
+                <button mat-icon-button color="warn" (click)="deleteCategory(category.id)">
+                    <mat-icon class="rtl-icon">delete</mat-icon>
+                </button>
+
+                <a mat-icon-button color="accent" [routerLink]="['/categories', category.id, 'update']">
+                    <mat-icon class="rtl-icon">edit</mat-icon>
+                </a>
+            </mat-card-actions>
+        </mat-card>
+        }
+    </div>
+
+</div>
+}

@@ -5,6 +5,8 @@ import {File} from '../models/File';
 const API_URL = `${import.meta.env.VITE_API_URL}/api`; 
 
 export const fetchCategories = async () => {
+        // const response = await axios.get(`https://localhost:7209/api/Categories`);
+
     const response = await axios.get(`${API_URL}/Categories`);
     return response.data;
 };

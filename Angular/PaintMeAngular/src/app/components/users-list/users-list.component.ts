@@ -14,21 +14,27 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbar, MatToolbarModule } from '@angular/material/toolbar';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatTableModule } from '@angular/material/table';
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
+
 @Component({
   selector: 'app-users-list',
   standalone: true,
-  imports: [RouterModule,MatButtonModule,MatCardModule,AsyncPipe],
+  imports: [MatFormFieldModule,RouterModule, MatButtonModule, MatCardModule, AsyncPipe, MatToolbarModule, MatMenuModule, MatButtonModule, MatTableModule, MatListModule, MatDividerModule, MatGridListModule, MatCardModule, MatIconModule,LoadingSpinnerComponent],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.css'
 })
 export class UsersListComponent implements OnInit {
   users$!: Observable<User[]>;
 
-  constructor(private usersService: UsersService) {}
+  constructor(private usersService: UsersService) { }
 
   ngOnInit(): void {
-    this.users$ = this.usersService.users$; 
+    this.users$ = this.usersService.users$;
   }
-  deleteUser(userId: number): void {   
-    this.usersService.deleteUser(userId).subscribe(); }
+  deleteUser(userId: number): void {
+    this.usersService.deleteUser(userId).subscribe();
+  }
 }

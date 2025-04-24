@@ -1,4 +1,4 @@
-<a mat-button [routerLink]="['/users/add']" routerLinkActive="active"> ➕ הוסף משתמש</a>
+<!-- <a mat-button [routerLink]="['/users/add']" routerLinkActive="active"> ➕ הוסף משתמש</a>
 @for(user of users$ | async; track user.id) {
 <mat-card class="mat-card" appearance="outlined">
     <mat-card-header>
@@ -9,4 +9,93 @@
     </mat-card-header>
     <br>
 </mat-card>
+} -->
+<!-- <div class="user-list-container">
+
+    <div class="toolbar">
+      <a mat-raised-button color="primary" [routerLink]="['/users/add']" routerLinkActive="active">
+        <mat-icon>person_add</mat-icon>
+        הוסף משתמש
+      </a>
+    </div>
+  
+    <div class="user-card-grid">
+      @for (user of users$ | async; track user.id) {
+        <mat-card class="user-card" appearance="outlined">
+          <mat-card-header>
+            <mat-icon mat-card-avatar color="accent">person</mat-icon>
+            <mat-card-title>{{ user.name }}</mat-card-title>
+            <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
+          </mat-card-header>
+  
+          <mat-card-content>
+            <p><strong>סיסמה:</strong> {{ user.password }}</p>
+          </mat-card-content>
+  
+          <mat-card-actions align="end">
+            <button mat-icon-button color="warn" (click)="deleteUser(user.id)" aria-label="הסר משתמש">
+              <mat-icon>delete</mat-icon>
+            </button>
+  
+            <a mat-icon-button color="accent" [routerLink]="['/users', user.id, 'update']" aria-label="עדכן פרטים">
+              <mat-icon>edit</mat-icon>
+            </a>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+  
+  </div>
+   --> <!-- <div class="search-fields">
+        <mat-form-field appearance="outline">
+          <mat-label>חיפוש לפי שם</mat-label>
+          <input matInput [(ngModel)]="searchName" placeholder="הקלד שם">
+        </mat-form-field>
+    
+        <mat-form-field appearance="outline">
+          <mat-label>חיפוש לפי סיסמה</mat-label>
+          <input matInput [(ngModel)]="searchPassword" placeholder="הקלד סיסמה">
+        </mat-form-field>
+      </div> -->
+      @if(!(users$| async) ){
+
+<app-loading-spinner></app-loading-spinner>
+}
+@else{
+<div class="user-list-container" dir="rtl">
+
+    <div class="toolbar">
+        <a mat-raised-button color="primary" [routerLink]="['/users/add']" routerLinkActive="active">
+            <mat-icon class="rtl-icon">person_add</mat-icon>
+            הוסף משתמש
+        </a>
+    </div>
+
+    <div class="user-card-grid">
+        @for (user of users$ | async; track user.id) {
+        <mat-card class="user-card" appearance="outlined">
+            <mat-card-header>
+                <mat-icon mat-card-avatar color="accent">person</mat-icon>
+                <mat-card-title>{{ user.name }}</mat-card-title>
+                <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+                <p><strong>סיסמה:</strong> {{ user.password }}</p>
+            </mat-card-content>
+
+            <mat-card-actions align="start">
+                <button mat-icon-button color="warn" (click)="deleteUser(user.id)" aria-label="הסר משתמש">
+                    <mat-icon class="rtl-icon">delete</mat-icon>
+                </button>
+
+                <a mat-icon-button color="accent" [routerLink]="['/users', user.id, 'update']" aria-label="עדכן פרטים">
+                    <mat-icon class="rtl-icon">edit</mat-icon>
+                </a>
+            </mat-card-actions>
+        </mat-card>
+        }
+    </div>
+
+</div>
 }

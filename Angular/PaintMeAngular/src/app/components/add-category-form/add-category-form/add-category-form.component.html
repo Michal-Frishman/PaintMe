@@ -1,5 +1,4 @@
-<!-- components/add-category-form/add-category-form.component.html -->
-<div class="form-container">
+<!-- <div class="form-container">
     <form [formGroup]="categoryForm" (ngSubmit)="addCategory()">
       <mat-form-field appearance="fill">
         <mat-label>Name</mat-label>
@@ -10,18 +9,42 @@
             name is required
         </mat-error>}
       </mat-form-field>
-  
-      <!-- <mat-form-field appearance="fill">
-        <mat-label>Description</mat-label>
-        <input matInput formControlName="description" required>
-        @if(this.categoryForm.get('description')?.invalid && categoryForm.get('description')?.touched)
-        {
-        <mat-error>
-            description is required
-        </mat-error>}
-      </mat-form-field>
-   -->
+
       <button mat-raised-button [disabled]="categoryForm.invalid" type="submit">Add Category</button>
     </form>
   </div>
-  
+   -->
+<div class="form-container" dir="rtl">
+  <form [formGroup]="categoryForm" (ngSubmit)="addCategory()" class="styled-form">
+
+    <h2 class="form-title">הוספת קטגוריה</h2>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>שם הקטגוריה</mat-label>
+      <input matInput formControlName="name" required>
+      @if(categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched) {
+      <mat-error>שדה חובה</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="form-actions">
+    @if(isLoading){
+
+
+    <mat-progress-spinner mode="indeterminate" diameter="20" strokeWidth="3" color="accent" class="btn-spinner">
+    </mat-progress-spinner> }
+    @else{
+
+    <!-- <span>
+        <mat-icon class="rtl-icon">add</mat-icon>
+        הוסף קטגוריה
+      </span>     -->
+    <button mat-raised-button [disabled]="categoryForm.invalid" type="submit" class="rtl-icon"> הוסף קטגוריה
+    </button>
+
+    }
+</div>
+
+
+</form>
+</div>

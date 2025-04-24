@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class UsersService {
-  apiUrl = 'https://localhost:7209/api/Users';
+  apiUrl = 'https://paintme-server.onrender.com/api/Users';
   private usersSubject = new BehaviorSubject<User[]>([]);
   users$ = this.usersSubject.asObservable();
 

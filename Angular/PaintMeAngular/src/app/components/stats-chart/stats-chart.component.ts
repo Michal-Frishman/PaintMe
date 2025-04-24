@@ -25,7 +25,7 @@ export class StatsChartComponent implements OnInit {
   }
 
   getColoredDrawingsPerDay() {
-    this.http.get<{ [key: number]: number }>('https://localhost:7209/api/ColoredFiles/stats/colored-drawings-per-day').subscribe(data => {
+    this.http.get<{ [key: number]: number }>('https://paintme-server.onrender.com/api/ColoredFiles/stats/colored-drawings-per-day').subscribe(data => {
       const labels = Object.keys(data);
       const values = Object.values(data);
       this.coloredDrawingsChart = new Chart('coloredDrawingsChart', {
@@ -33,7 +33,7 @@ export class StatsChartComponent implements OnInit {
         data: {
           labels: labels,
           datasets: [{
-            label: 'Colored Drawings Per Day',
+            label: 'ציורים צבועים לפי ימים',
             data: values,
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
             borderColor: 'rgba(75, 192, 192, 1)',
@@ -53,7 +53,7 @@ export class StatsChartComponent implements OnInit {
   }
 
   getActivityHours() {
-    this.http.get<{ [key: number]: number }>('https://localhost:7209/api/ColoredFiles/stats/activity-hours').subscribe(data => {
+    this.http.get<{ [key: number]: number }>('https://paintme-server.onrender.com/api/ColoredFiles/stats/activity-hours').subscribe(data => {
       const labels = Object.keys(data);
       const values = Object.values(data);
       this.activityHoursChart = new Chart('activityHoursChart', {
@@ -76,7 +76,7 @@ export class StatsChartComponent implements OnInit {
   }
 
   getNewUsersPerMonth() {
-    this.http.get<{ [key: number]: number }>('https://localhost:7209/api/Users/stats/new-users-per-month').subscribe(data => {
+    this.http.get<{ [key: number]: number }>('https://paintme-server.onrender.com/api/Users/stats/new-users-per-month').subscribe(data => {
       const labels = Object.keys(data);
       const values = Object.values(data);
       this.newUsersChart = new Chart('newUsersChart', {

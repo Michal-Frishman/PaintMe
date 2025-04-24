@@ -1159,7 +1159,7 @@
 import { useRef, useState, useEffect } from "react";
 import CanvasDraw from "react-canvas-draw";
 import axios from "axios";
-import { Box, Stack, Button, Slider, Paper, IconButton, Tooltip, CircularProgress } from "@mui/material";
+import { Box, Stack, Slider, Paper, IconButton, Tooltip, CircularProgress } from "@mui/material";
 import { useParams } from "react-router-dom";
 import artStore from "./ArtStore";
 import { Delete, Download, Save, Print } from "@mui/icons-material";
@@ -1268,7 +1268,7 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
       alert('שגיאה בהעלאת הציור');
     }
   };
-  type ColorKey = keyof typeof colorMap;
+  // type ColorKey = keyof typeof colorMap;
 
   const handleDownload = async () => {
     if (!canvasRef.current) return;

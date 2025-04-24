@@ -1,9 +1,9 @@
 export class File {
     constructor(
         public id:number,
-        public Name:string  ,
-        public CategoryId:number  ,
-        public FileUrl:string  
+        public name:string  ,
+        public categoryId:number  ,
+        public fileUrl:string  
     ) { }
 }
 
