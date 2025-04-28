@@ -507,7 +507,7 @@ export default function AuthPage() {
         </form>
 
         <Button
-          onClick={handleGoogle}
+          // onClick={handleGoogle}
           variant="outlined"
           fullWidth
           sx={{

@@ -115,7 +115,7 @@ public class UploadController : ControllerBase
             Key = fileName,
             Verb = HttpVerb.PUT,
             Expires = DateTime.UtcNow.AddMinutes(15),
-            ContentType = "application/octet-stream"
+            ContentType = contentType
         };
 
         string url = _s3Client.GetPreSignedURL(request);

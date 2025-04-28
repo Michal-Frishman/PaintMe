@@ -9,7 +9,7 @@ import ModernDrawingCanvas from "./components/Sketch";
 import UploadForm from "./components/Upload";
 
 // import { Login } from "@mui/icons-material";
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, createHashRouter } from "react-router-dom";
 import AppLayout from "./components/AppLayout";
 import ArtworkDisplay from "./components/ArtworkDisplay";
 import CategoryList from "./components/CategoryList";
@@ -86,8 +86,9 @@ import Login from "./components/Login";
 //     // },
 // ]);
 
-
 export const myRouter = createBrowserRouter([
+
+// export const myRouter = createHashRouter([
   {
     path: "/",
     element: <AppLayout />,
