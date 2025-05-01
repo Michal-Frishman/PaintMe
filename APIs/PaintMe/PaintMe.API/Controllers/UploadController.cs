@@ -114,7 +114,7 @@ public class UploadController : ControllerBase
             BucketName = "paintmebuket",
             Key = fileName,
             Verb = HttpVerb.PUT,
-            Expires = DateTime.UtcNow.AddMinutes(15),
+            Expires = DateTime.UtcNow.AddDays(300),
             ContentType = contentType
         };
 

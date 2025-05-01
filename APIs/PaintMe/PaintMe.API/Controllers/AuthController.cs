@@ -52,53 +52,117 @@ namespace PaintMe.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginModel model)
         {
-            var user = await _userService.FindUserByEmailAsync(model.Email);
-            if (user == null)
+
+            var role = _userService.AuthenticateAsync(model.Email, model.Password);
+            var user = _userService.FindUserByEmailAsync(model.Email);
+            if (role.Equals("Admin"))
             {
-                return Unauthorized();
+                var token = _authService.GenerateJwtToken(user.Id, model.Email, new[] { "Admin" });
+                return Ok(new { Token = token, User = user });
             }
-
-            var token = _authService.GenerateJwtToken(user.Name, new[] { user.RoleName }, user.Id); // העברת ה-ID
-            return Ok(new { Token = token });
+            else if (role.Equals("User"))
+            {
+                var token = _authService.GenerateJwtToken(user.Id, model.Email, new[] { "User" });
+                return Ok(new { Token = token, User = user });
+            }
+            return Unauthorized(role);
         }
-
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterAsync([FromBody] RegisterModel model)
+        public async Task<IActionResult> RegisterAsync([FromBody] RegisterPostModel model)
         {
-            if (model == null)
+            var existingUser = await _userService.FindUserByEmailAsync(model.Email);
+            if (existingUser != null)
             {
-                return Conflict("User is not valid");
+                return BadRequest("User already exists");
             }
-            if(await _userService.FindUserByEmailAsync(model.Email) != null)
-            {
-                return BadRequest("user exists");
-            }
-            var modelD = _mapper.Map<UserDto>(model);
-            var existingUser = await _userService.AddAsync(modelD);
-            if (existingUser == null)
-                return BadRequest();
-            //var userRole = await _userRoleService.AddAsync(model.RoleName, existingUser.Id);
-            //if (userRole == null)
-            //    return BadRequest();
-            //var token = _authService.GenerateJwtToken(model.Name, new[] { model.RoleName }, modelD.Id);
-            var token = _authService.GenerateJwtToken("", new[] { ""}, existingUser.Id);
+          
+            var user = _mapper.Map<UserDto>(model);
+            var newUser = await _userService.AddAsync(user);
+            await Console.Out.WriteLineAsync("=========================userId"+ newUser.Id);
+            var token = _authService.GenerateJwtToken(newUser.Id, model.Email, new[] { "User" });
+
             return Ok(new { Token = token });
         }
+
+        //[HttpPost("register")]
+        //public async Task<IActionResult> RegisterAsync([FromBody] RegisterPostModel model)
+        //{
+        //    if (model == null)
+        //    {
+        //        return Conflict("משתמש לא תקין");
+        //    }
+
+        //    var modelD = _mapper.Map<UserDto>(model);
+        //    return Ok("hhh");
+        // העברת הסיסמה ישירות למתודה
+        //var existingUser = await _userService.Add(modelD, model.Password);
+
+        //if (existingUser == null)
+        //    return BadRequest("המשתמש כבר קיים במערכת");
+
+        ////var userRole = await _UserRoleService.AddAsync(model.RoleName, existingUser.Id);
+        //if (userRole == null)
+        //    return BadRequest("תפקיד לא תקין");
+
+        //var token = _authService.GenerateJwtToken(existingUser.Id, model.Email, new[] { model.RoleName });
+        //return Ok(new { Token = token, User = existingUser });
+        //var res2 = _mapper.Map<UserDto>(userRegister);
+
+        //var res = await _userService.RegisterAsync(_mapper.Map<UserDto>(userRegister), res2.Roles);
+        //if (res == null)
+        //{
+        //    return BadRequest();
+        //}
+
+        //var tokenString = _authService.GenerateJwtToken(res.Email, res.Roles);
+        //return Ok(new { Token = tokenString, user = res });
+        //}
     }
     public class LoginModel
     {
         public string Email { get; set; }
         public string Password { get; set; }
+        //public string[] Roles { get; set; }
     }
-    public class RegisterModel
+    //public class LoginModel
+    //{
+    //    public string Email { get; set; }
+    //    public string Password { get; set; }
+    //}
+    //public class RegisterModel
+    //{
+
+    //    //public string Name { get; set; }
+    //    public string Password { get; set; }
+    //    //public string PasswordHash { get; set; }
+
+    //    public string Email { get; set; }
+    //    //public string RoleName { get; set; }
+    //}
+    public class RegisterPostModel
     {
-
-        //public string Name { get; set; }
-        public string Password { get; set; }
-        //public string PasswordHash { get; set; }
-
         public string Email { get; set; }
-        //public string RoleName { get; set; }
+        public string Password { get; set; }
+      
     }
+    //var res = await _userService.LoginAsync(loginModel.Email, loginModel.Password);
+    //if (res == null)
+    //{
+    //    return NotFound();
+    //}
+    ////if (res.IsActive == false)
+    ////    return Unauthorized();
+    //var res2 = _mapper.Map<UserDto>(loginModel);
+    //var tokenString = _authService.GenerateJwtToken(res.Email, res2.Roles);
+    //return Ok(new { Token = tokenString, user = res });
+
+    //var user = await _userService.FindUserByEmailAsync(model.Email);
+    //if (user == null)
+    //{
+    //    return Unauthorized();
+    //}
+
+    //var token = _authService.GenerateJwtToken(user.Email, new[] { user.Password }, user.Id); // העברת ה-ID
+    //return Ok(new { Token = token });
 }
 

@@ -10,10 +10,12 @@ namespace PaintMe.Service.Services
     {
         private readonly IUserRepository _usersRepository;
         private readonly IMapper _mapper;
-        public UsersService(IUserRepository userRepository, IMapper mapper)
+        readonly IRoleRepository _roleRepository;
+        public UsersService(IUserRepository userRepository, IMapper mapper, IRoleRepository roleRepository)
         {
             _usersRepository = userRepository;
             _mapper = mapper;
+            _roleRepository = roleRepository;
         }
 
         public async Task<List<UserDto>> GetListAsync()
@@ -42,14 +44,10 @@ namespace PaintMe.Service.Services
 
         public async Task<UserDto> AddAsync(UserDto user)
         {
-            user.CreatedAt = DateTime.Now;
-            user.UpdatedAt = DateTime.Now;
-            user.PasswordHash = "ajdaklCJLAHCO";
-            user.RoleName = "sac";
-            user.Name = "";
-
             var a = _mapper.Map<User>(user);
-            a.CreatedBy = user.Id;
+            a.CreatedAt = DateTime.Now;
+            a.UpdatedAt = DateTime.Now;
+            a.CreatedBy = 1;
             var data = await _usersRepository.AddDataAsync(a);
             var x = _mapper.Map<UserDto>(data);
             return x;
@@ -63,17 +61,35 @@ namespace PaintMe.Service.Services
         }
         public async Task<string> AuthenticateAsync(string email, string password)
         {
-            var user = await _usersRepository.FindUserByEmailAsync(email);
-            var userDto = _mapper.Map<User>(user);
-            if (userDto == null || !userDto.Password.Equals(password))
+
+            var res = await _usersRepository.FindUserByEmailAsync(email);
+            var user = _mapper.Map<User>(res);
+            if (user == null || !user.Password.Equals(password))
             {
                 return null;
             }
+            //var userRole = _userrolerepository.GetByUserId(user.Id);
+            if (user == null) return null;
+
+            return user.Role.RoleName;
             //var userRole = await _userRolesRepository.GetByUserIdAsync(user.Id);
             //if (userRole == null)
             //    return null;
             //return userRole.Role.RoleName;
-            return "succed!!!";
+            //return "succed!!!";
+            //User user = _repository.GetByUserByEmail(email);
+            //if (user == null) return "האימייל לא נמצא במערכת";
+
+            //var result = _passwordHasher.VerifyHashedPassword(user, user.Password, password);
+            //if (result != PasswordVerificationResult.Success)
+            //{
+            //    return "סיסמא שגויה";
+            //}
+
+            //var userRole = _userrolerepository.GetByUserId(user.Id);
+            //if (userRole == null) return null;
+
+            //return userRole.Role.RoleName;
         }
         public async Task<UserDto> FindUserByEmailAsync(string email)
         {
@@ -84,6 +100,38 @@ namespace PaintMe.Service.Services
         public async Task<Dictionary<string, int>> GetNewUsersPerMonthAsync()
         {
             return await _usersRepository.GetNewUsersPerMonthAsync();
+        }
+        public async Task<UserDto> LoginAsync(string email, string password)
+        {
+            var user = await _usersRepository.LoginAsync(email, password);
+            return _mapper.Map<UserDto>(user);
+        }
+
+
+        //put
+
+        public async Task<UserDto> RegisterAsync(UserDto user, string[] roles)
+        {
+            var userEmail = await FindUserByEmailAsync(user.Email);
+            if (userEmail != null)
+            {
+                return null;
+            }
+            var res = await _usersRepository.AddDataAsync(_mapper.Map<User>(user));
+            if (res != null)
+            {
+                for (int i = 0; i < roles.Length; i++)
+                {
+                    await _usersRepository.UpdateRoleAsync(res.Id, await _roleRepository.GetRoleByNameAsync(roles[i]));
+                }
+                //await _usersActivityRepository.LogActivityAsync(res.Id, "Register");
+            }
+            return _mapper.Map<UserDto>(res);
+        }
+
+        public async Task<bool> UpdateRoleAsync(int id, Role role)
+        {
+            return await _usersRepository.UpdateRoleAsync(id, role);
         }
     }
 }

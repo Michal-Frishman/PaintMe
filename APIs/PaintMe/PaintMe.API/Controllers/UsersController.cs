@@ -55,9 +55,9 @@ namespace PaintMe.API.Controllers
             }
 
             var userDto = _mapper.Map<UserDto>(userPostModal);
-            userDto.PasswordHash = "";
+            //userDto.PasswordHash = "";
             var result = await _userService.AddAsync(userDto);
-            if (result==null)
+            if (result == null)
             {
                 return BadRequest("Failed to create user.");
             }

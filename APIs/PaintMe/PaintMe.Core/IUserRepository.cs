@@ -12,7 +12,8 @@ namespace PaintMe.Core
         public Task<bool> RemoveItemFromDataAsync(int id);
         Task<User> FindUserByEmailAsync(string email);
         Task<Dictionary<string, int>> GetNewUsersPerMonthAsync();
-
+        Task<User> LoginAsync(string email, string password);
+        Task<bool> UpdateRoleAsync(int id, Role role);
 
     }
 }

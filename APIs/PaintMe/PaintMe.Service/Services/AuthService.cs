@@ -14,19 +14,17 @@ namespace PaintMe.Service.Services
         {
             _configuration = configuration;
         }
-
-        public string GenerateJwtToken(string username, string[] roles, int userId)
+        public string GenerateJwtToken(int userId, string username, string[] roles)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, username),
-            new Claim("id", userId.ToString()), // הוספת ה-ID כאן
-        };
+                    {
+                         new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+                             new Claim(ClaimTypes.Email, username)
+                 };
 
-            // הוספת תפקידים כ-Claims
             foreach (var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
@@ -36,12 +34,40 @@ namespace PaintMe.Service.Services
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.UtcNow.AddHours(2),
                 signingCredentials: credentials
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        //public string GenerateJwtToken(string username, string[] roles, int userId)
+        //{
+        //    var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+        //    var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+        //    var claims = new List<Claim>
+        //{
+        //    new Claim(ClaimTypes.Name, username),
+        //    new Claim("id", userId.ToString()), // הוספת ה-ID כאן
+        //};
+
+        //    // הוספת תפקידים כ-Claims
+        //    foreach (var role in roles)
+        //    {
+        //        claims.Add(new Claim(ClaimTypes.Role, role));
+        //    }
+
+        //    var token = new JwtSecurityToken(
+        //        issuer: _configuration["Jwt:Issuer"],
+        //        audience: _configuration["Jwt:Audience"],
+        //        claims: claims,
+        //        expires: DateTime.Now.AddMinutes(30),
+        //        signingCredentials: credentials
+        //    );
+
+        //    return new JwtSecurityTokenHandler().WriteToken(token);
+        //}
     }
 }
 

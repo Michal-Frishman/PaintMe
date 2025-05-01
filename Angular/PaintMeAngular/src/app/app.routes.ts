@@ -10,7 +10,7 @@ import { SignInComponent } from './components/sign-in/sign-in/sign-in.component'
 import { CategoriesListComponent } from './components/categories-list/categories-list/categories-list.component';
 import { AddCategoryFormComponent } from './components/add-category-form/add-category-form/add-category-form.component';
 import { UpdateCategoryFormComponent } from './components/update-category-form/update-category-form/update-category-form.component';
-import { StatsChartComponent } from './components/stats-chart/stats-chart.component';
+// import { StatsChartComponent } from './components/stats-chart/stats-chart.component';
 import { HomePageComponent } from './components/home-page/home-page.component';
 
 export const routes: Routes = [
@@ -27,7 +27,7 @@ export const routes: Routes = [
             { path: 'categories', component: CategoriesListComponent }, // נתיב לרשימת הקטגוריות
             { path: 'categories/add', component: AddCategoryFormComponent }, // נתיב להוספת קטגוריה
             { path: 'categories/:id/update', component: UpdateCategoryFormComponent },// נתיב לעדכון קטגוריה,
-            { path: 'stats', component: StatsChartComponent },
+            // { path: 'stats', component: StatsChartComponent },
             { path: 'login', component: SignInComponent }
 
         // ]

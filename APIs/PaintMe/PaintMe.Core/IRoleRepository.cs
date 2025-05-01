@@ -1,18 +1,19 @@
-﻿using PaintMe.Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using PaintMe.Core.Entities;
 
 namespace PaintMe.Core
 {
     public interface IRoleRepository
     {
-      public Task<List<Role>> GetAllDataAsync();
-      public Task<Role> GetByIdDataAsync(int id);
-      public Task<Role> AddDataAsync(Role t);
-      public Task<bool> UpdateDataAsync(int id, Role item);
-        public Task<bool> RemoveItemFromDataAsync(int id);
+
+        public Task<bool> IsRoleHasPermissinAsync(string roleName, string permission);
+        public Task<IEnumerable<Role>> GetRolesAsync();
+        public Task<Role> GetRoleByNameAsync(string roleName);
+        public Task<bool> AddPermissinForRoleAsync(string roleName, Permission permission);
+        public Task<bool> AddRoleAsync(Role role);
+        public Task<bool> UpdateRoleAsync(int id, Role role);
+        public Task<bool> DeleteRoleAsync(int id);
+
+
     }
 }

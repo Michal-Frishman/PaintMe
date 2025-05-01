@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 using System.Xml.Linq;
 
 
@@ -12,10 +13,8 @@ namespace PaintMe.Core.Entities
     {
         [Key]
         public int Id { get; set; }
-        public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public string PasswordHash { get; set; }
 
         [Column(TypeName = "nvarchar(50)")]
         public DateTime CreatedAt { get; set; }
@@ -28,6 +27,9 @@ namespace PaintMe.Core.Entities
 
         [ForeignKey(nameof(UpdatedBy))]
         public User UserUpdated { get; set; }
-        public string RoleName { get; set; }
+        [Required]
+        public int RoleId { get; set; }
+        [ForeignKey(nameof(RoleId))]
+        public Role Role { get; set; }
     }
 }

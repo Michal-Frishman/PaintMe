@@ -1,67 +1,107 @@
-﻿using PaintMe.Core.Entities;
+﻿
+
+
+using Microsoft.EntityFrameworkCore;
 using PaintMe.Core;
-using Microsoft.EntityFrameworkCore; // Ensure you have this using directive for EF Core
+using PaintMe.Core.Entities;
 
 namespace PaintMe.Data.Repository
 {
     public class RoleRepository : IRoleRepository
     {
-        protected readonly DataContext _dataContext;
-
+        readonly DataContext _context;
         public RoleRepository(DataContext context)
         {
-            _dataContext = context;
+            _context = context;
         }
 
-        public async Task<Role> AddDataAsync(Role role)
+        //GET
+        public async Task<IEnumerable<Role>> GetRolesAsync()
         {
-            role.CreatedAt = DateTime.UtcNow; // Set CreatedAt before adding
-            await _dataContext.Roles.AddAsync(role);
-            await _dataContext.SaveChangesAsync(); // Persist changes
-            return role; // Return true to indicate success
+            return await _context.Roles.ToListAsync();
         }
 
-        public async Task<bool> RemoveItemFromDataAsync(int id)
+
+        public async Task<Role> GetRoleByNameAsync(string roleName)
         {
-            var role = await GetByIdDataAsync(id);
-            if (role != null)
+            var res = await _context.Roles.Where(role => role.RoleName == roleName).FirstOrDefaultAsync();
+            return res;
+        }
+
+        //POST
+        public async Task<bool> IsRoleHasPermissinAsync(string roleName, string permission)
+        {
+            var res = await _context.Roles.AnyAsync(r => r.RoleName == roleName && r.Permissions.Any(p => p.PermissionName == permission));
+            return res;
+        }
+              
+        
+        public async Task<bool> AddRoleAsync(Role role)
+        {
+            try
             {
-                _dataContext.Roles.Remove(role);
-                await _dataContext.SaveChangesAsync(); // Persist changes
-                return true; // Return true to indicate success
+                _context.Roles.Add(role);
+
+                await _context.SaveChangesAsync();
+
+                return true;
             }
-            return false; // Return false if the role was not found
-        }
-
-        public async Task<List<Role>> GetAllDataAsync()
-        {
-            return await _dataContext.Roles.ToListAsync(); // Use ToListAsync
-        }
-
-        public async Task<Role> GetByIdDataAsync(int id)
-        {
-            return await _dataContext.Roles.FindAsync(id);
-        }
-
-        public async Task<bool> UpdateDataAsync(int id, Role role)
-        {
-            Role existingRole = await GetByIdDataAsync(id);
-            if (existingRole != null)
+            catch
             {
-                existingRole.RoleName = role.RoleName;
-                existingRole.Description = role.Description;
-                existingRole.UpdatedAt = DateTime.UtcNow;
-
-                await _dataContext.SaveChangesAsync(); // Persist changes
-                return true; // Return true to indicate success
+                throw new Exception("failed to add role");
             }
-            return false; // Return false if the role was not found
         }
 
-        // Optional: If you want to keep the method to get role by name
-        public async Task<Role> GetIdByRoleAsync(string roleName)
+
+        public async Task<bool> AddPermissinForRoleAsync(string roleName, Permission permission)
         {
-            return await _dataContext.Roles.FirstOrDefaultAsync(r => r.RoleName == roleName);
+            var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == roleName);
+            if (role == null)
+                return false;
+
+            role.Permissions.Add(permission);
+            role.UpdatedAt = DateOnly.FromDateTime(DateTime.Now);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+
+        public async Task<bool> UpdateRoleAsync(int id, Role role)
+        {
+            try
+            {
+                var res = await _context.Roles.FirstOrDefaultAsync(role => role.Id == id);
+                if (res == null)
+                    return false;
+                res.Permissions = role.Permissions;
+                res.UpdatedAt = DateOnly.FromDateTime(DateTime.Now);
+                res.Description = role.Description;
+               await _context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+        //DELETE
+
+        public async Task<bool> DeleteRoleAsync(int id)
+        {
+            try
+            {
+                var role = await _context.Roles.FirstOrDefaultAsync(role => role.Id == id);
+                _context.Roles.Remove(role);
+                await _context.SaveChangesAsync();
+                return true;
+
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

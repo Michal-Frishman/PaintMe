@@ -27,9 +27,10 @@ namespace PaintMe.Data.Repository
                 await _dataContext.SaveChangesAsync();
                 return user;
             }
+         
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine("ייי"+e.Message);
                 return null;
             }
         }
@@ -66,7 +67,6 @@ namespace PaintMe.Data.Repository
                 {
                     return false;
                 }
-                userToUpdate.Name = user.Name;
                 userToUpdate.Email = user.Email;
                 userToUpdate.Password = user.Password;
                 userToUpdate.UpdatedAt = DateTime.Now;
@@ -94,8 +94,6 @@ namespace PaintMe.Data.Repository
             if (r != null)
             {
                 r.Email = user.Email;
-                r.Name = user.Name;
-
                 r.Password = user.Password;
                 r.UpdatedAt = DateTime.UtcNow;
                 return true;
@@ -122,5 +120,28 @@ namespace PaintMe.Data.Repository
                 })
                 .ToDictionaryAsync(g => g.Month, g => g.Count);
         }
+        public async Task<User> LoginAsync(string email, string password)
+        {
+            var res = await _dataContext.Users.FirstOrDefaultAsync(user => user.Email == email && user.Password == password);
+            return res;
+        }
+        public async Task<bool> UpdateRoleAsync(int id, Role role)
+        {
+            try
+            {
+                var user = await _dataContext.Users.FirstOrDefaultAsync(user => user.Id == id);
+                if (user == null) return false;
+
+                user.Role=role;
+                await _dataContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+        }
+
     }
 }

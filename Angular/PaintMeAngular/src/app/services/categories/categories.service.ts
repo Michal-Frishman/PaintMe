@@ -36,7 +36,9 @@ export class CategoriesService {
 //   deleteCategory(id: number): Observable<any> {
 //     return this.http.delete(`${this.apiUrl}/${id}`);
 //   }
-apiUrl = 'https://paintme-server.onrender.com/api/Categories'; 
+// apiUrl = 'https://paintme-server.onrender.com/api/Categories'; 
+apiUrl = 'https://localhost:7209/api/Categories'; 
+
 private categoriesSubject = new BehaviorSubject<any[]>([]);
 categories$ = this.categoriesSubject.asObservable();
 
