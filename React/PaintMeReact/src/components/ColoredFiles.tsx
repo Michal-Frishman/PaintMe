@@ -228,15 +228,15 @@ const ColoredFiles = observer(() => {
             </Box>
         );
     }
-    else if (artStore.coloredFiles?.length == 0) {
-        return (
+    // else if (artStore.coloredFiles?.length == 0) {
+    //     return (
 
-            Swal.fire({
-                icon: "warning",
-                title: "אין ציורים שמורים..."
-            }));
+    //         Swal.fire({
+    //             icon: "warning",
+    //             title: "אין ציורים שמורים..."
+    //         }));
 
-    }
+    // }
     const deleteColoredFile = (id: number) => {
         artStore.deleteColoredFile(id);
     };
