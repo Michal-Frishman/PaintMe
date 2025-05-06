@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PaintMe.Core.Entities;
-using PaintMe.Core;
 using AutoMapper;
 using PaintMe.Core.DTOs;
 using PaintMe.API.PostModals;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using PaintMe.Service.Services;
+using PaintMe.Core.IServices;
+using PaintMe.Core;
 
 namespace PaintMe.API.Controllers
 {
@@ -15,11 +18,13 @@ namespace PaintMe.API.Controllers
     {
         private readonly IColoredFilesService _coloredFileService;
         private readonly IMapper _mapper;
+        private readonly ITokenContextService _tokenContextService;
 
-        public ColoredFilesController(IColoredFilesService coloredFileService, IMapper mapper)
+        public ColoredFilesController(IColoredFilesService coloredFileService, IMapper mapper, ITokenContextService tokenContextService)
         {
             _coloredFileService = coloredFileService;
             _mapper = mapper;
+            _tokenContextService = tokenContextService;
         }
 
         // GET: api/ColoredFiles
@@ -47,14 +52,20 @@ namespace PaintMe.API.Controllers
             return Ok(result);
         }
         [HttpGet("user/{id}")]
+        [Authorize(Policy = "UserOnly")]
         public async Task<ActionResult<List<ColoredFileDto>>> GetByUserId(int id)
         {
-            if (id <= 0)
-            {
-                return BadRequest("Invalid ID.");
-            }
+            //var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Id");
+            //if (userIdClaim == null)
+            //{
+            //    return Unauthorized("User ID not found in token.");
+            //}
+            //int userId = int.Parse(userIdClaim.Value);
+            var userId = _tokenContextService.GetUserId();
+            if (userId == 0) throw new UnauthorizedAccessException();
+            await Console.Out.WriteLineAsync("userId: "+ userId);
 
-            var result = await _coloredFileService.GetByUserIdAsync(id);
+            var result = await _coloredFileService.GetByUserIdAsync(userId);
             if (result == null)
             {
                 return new List<ColoredFileDto>();
@@ -63,6 +74,8 @@ namespace PaintMe.API.Controllers
         }
         // POST api/ColoredFiles
         [HttpPost]
+        [Authorize]
+
         public async Task<ActionResult<ColoredFileDto>> Post([FromBody] ColoredFilePostModal coloredFile)
         {
             if (coloredFile == null)
@@ -80,6 +93,8 @@ namespace PaintMe.API.Controllers
 
         // PUT api/ColoredFiles/5
         [HttpPut("{id}")]
+        [Authorize]
+
         public async Task<ActionResult<bool>> Put(int id, [FromBody] ColoredFilePostModal coloredFile)
         {
             if (id <= 0 || coloredFile == null)
@@ -97,6 +112,8 @@ namespace PaintMe.API.Controllers
 
         // DELETE api/ColoredFiles/5
         [HttpDelete("{id}")]
+        [Authorize]
+
         public async Task<ActionResult<bool>> Delete(int id)
         {
             if (id <= 0)

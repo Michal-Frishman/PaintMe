@@ -119,7 +119,7 @@
 //         document.body.removeChild(link);
 //     };
 
- 
+
 //     return (
 //         <Box
 //             sx={{
@@ -155,7 +155,7 @@
 //                                 />
 //                             </CardActionArea>
 //                             <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: 1 }}>
-                              
+
 //                                 <Tooltip title="ערוך ציור" color="error">
 //                                     <IconButton >
 //                                         <EditIcon />
@@ -195,6 +195,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import DownloadIcon from '@mui/icons-material/Download';
 import PrintIcon from '@mui/icons-material/Print';
+import Swal from "sweetalert2";
 
 const pastelColors = [
     "#ffd1dc", "#b2ebf2", "#f8bbd0", "#c8e6c9",
@@ -227,7 +228,15 @@ const ColoredFiles = observer(() => {
             </Box>
         );
     }
+    else if (artStore.coloredFiles?.length == 0) {
+        return (
 
+            Swal.fire({
+                icon: "warning",
+                title: "אין ציורים שמורים..."
+            }));
+
+    }
     const deleteColoredFile = (id: number) => {
         artStore.deleteColoredFile(id);
     };

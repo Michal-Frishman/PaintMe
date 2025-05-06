@@ -366,6 +366,7 @@ import { useNavigate } from "react-router";
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
 import { auth } from "../pages/firebase"; // אם לא עשית export כבר
 import theme from "../pages/Theme";
+import Swal from "sweetalert2";
 
 export default function AuthPage() {
   const [mode, setMode] = useState("register");
@@ -393,12 +394,18 @@ export default function AuthPage() {
       });
 
       const token = res.data.token;
-      sessionStorage.setItem('userId', getUserIdFromToken(token));
+      sessionStorage.setItem('token', token);
       navigate("/");
     } catch (e: any) {
       console.error("Error:", e);
-      if (e.response?.status === 400) alert('משתמש כבר קיים');
-      if (e.response?.status === 401) alert('אימייל או סיסמה שגויים');
+      if (e.response?.status === 400) {
+        Swal.fire({
+          title: "משתמש כבר נרשם למערכת, יש להתחבר",
+          icon: "error",
+        });
+      }
+      // alert('משתמש כבר קיים');
+      if (e.response?.status === 401) alert('Unauthrized/אימייל או סיסמה שגויים');
     }
   };
 

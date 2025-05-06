@@ -1,0 +1,102 @@
+<!-- <div class="form-container">
+    <form [formGroup]="fileForm" (ngSubmit)="addFile()">
+      <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" required>
+        @if(this.fileForm.get('name')?.invalid && fileForm.get('name')?.touched)
+        {
+        <mat-error>
+            First Name is required
+        </mat-error>}
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Category ID</mat-label>
+        <input matInput formControlName="categoryId" required>
+                 @if(this.fileForm.get('categoryId')?.invalid && fileForm.get('categoryId')?.touched){
+            <mat-error>
+                Category is required
+            </mat-error>}
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>File URL</mat-label>
+        <input matInput formControlName="fileUrl" required>
+        @if(this.fileForm.get('fileUrl')?.invalid && fileForm.get('fileUrl')?.touched){
+            <mat-error>
+                File URL is required
+            </mat-error>}
+      </mat-form-field>
+  
+      <button mat-raised-button [disabled]="fileForm.invalid" type="submit">Add File</button>
+    </form>
+  </div>
+   -->
+   <div class="form-container">
+    <form [formGroup]="fileForm" (ngSubmit)="addFile()">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>שם</mat-label>
+        <input matInput formControlName="name" required>
+
+          @if(this.fileForm.get('name')?.invalid && fileForm.get('name')?.touched){
+        <mat-error>
+
+          שם הוא שדה חובה
+        </mat-error>}
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>קטגוריה</mat-label>
+        <input matInput formControlName="categoryId" required>
+        @if(this.fileForm.get('categoryId')?.invalid && fileForm.get('categoryId')?.touched)
+      {  <mat-error>
+
+        קטגוריה היא שדה חובה
+        </mat-error>}
+      </mat-form-field>
+  
+      <!-- <mat-form-field appearance="fill" class="full-width">
+        <mat-label>URL של הקובץ</mat-label>
+        <input matInput formControlName="fileUrl" required>
+        <mat-error *ngIf="fileForm.get('fileUrl')?.invalid && fileForm.get('fileUrl')?.touched">
+          URL של הקובץ הוא שדה חובה
+        </mat-error>
+      </mat-form-field> -->
+  
+      <div
+        class="drop-area"
+        (dragover)="handleDragOver($event)"
+        (dragleave)="handleDragLeave()"
+        (drop)="handleDrop($event)"
+      >
+        <p>גרור ושחרר כאן קובץ, או בחר מתוך המחשב</p>
+      </div>
+  
+      <input
+        type="file"
+        (change)="handleFileChange($event)"
+        id="file-input"
+        style="display: none"
+      />
+      <label for="file-input">
+        <button mat-raised-button>בחר קובץ</button>
+      </label>
+      @if(file)
+{
+
+
+        <p>קובץ שנבחר: <strong>{{ fileName }}</strong></p>
+        <!-- <img *ngIf="file.type.startsWith('image/')" [src]="file | safeUrl" alt="preview" /> -->
+  }
+      <button mat-raised-button [disabled]="fileForm.invalid || isUploading" type="submit">
+        {{ isUploading ? 'מעלה...' : 'העלה קובץ' }}
+      </button>
+  
+      <!-- <mat-progress-bar
+        *ngIf="isUploading"
+        mode="determinate"
+        [value]="progress"
+      ></mat-progress-bar> -->
+    </form>
+  </div>
+  

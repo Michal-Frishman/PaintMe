@@ -7,8 +7,8 @@ import {File} from '../../models/File';
   providedIn: 'root'
 })
 export class FilesService {
-  // apiUrl = 'https://paintme-server.onrender.com/api/Files';
-    apiUrl = 'https://localhost:7209/api/Files';
+  apiUrl = 'https://paintme-server.onrender.com/api/Files';
+    // apiUrl = 'https://localhost:7209/api/Files';
 
   private filesSubject = new BehaviorSubject<File[]>([]);
   files$ = this.filesSubject.asObservable();

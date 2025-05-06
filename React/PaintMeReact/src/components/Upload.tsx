@@ -1030,29 +1030,245 @@
 // });
 
 // // export default FileUploader;
-// import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import {
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  TextField,
+  MenuItem,
+  Paper
+} from "@mui/material";
+import { CloudUpload, Image, FolderOpen } from "@mui/icons-material";
+import artStore from "./ArtStore";
+import { observer } from "mobx-react-lite";
+import CategoryStore from "./CategoryStore";
+import axiosInstance from "./axiosInstance";
+
+const FileUploader = observer(() => {
+  const [file, setFile] = useState<File | null>(null);
+  const [fileName, setFileName] = useState("");
+  const [progress, setProgress] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [artworkName, setArtworkName] = useState("");
+  const [dragOver, setDragOver] = useState(false);
+  // useEffect(() => {
+  //   CategoryStore.loadCategories();
+  // }, []);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+      setFileName(e.target.files[0].name);
+    }
+  };
+
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setDragOver(true);
+  };
+
+  const handleDragLeave = () => {
+    setDragOver(false);
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setDragOver(false);
+    if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
+      setFile(event.dataTransfer.files[0]);
+      setFileName(event.dataTransfer.files[0].name);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!file || selectedCategory === null || !artworkName) return;
+
+    try {
+      const url = `${import.meta.env.VITE_API_URL}/api/upload/presigned-url`;
+      const response = await axiosInstance.get(url, { params: { fileName: file.name } });
+
+      await axios.put(response.data.url, file, {
+        headers: { 'Content-Type': file.type },
+        onUploadProgress: (e) => {
+          const percent = Math.round((e.loaded * 100) / (e.total || 1));
+          setProgress(percent);
+        },
+      });
+
+      const downloadResponse = await axiosInstance.get(
+        `${import.meta.env.VITE_API_URL}/api/upload/download-url/${file.name}`
+      );
+      const downloadUrl = downloadResponse.data;
+
+      await artStore.saveFile({
+        CategoryId: selectedCategory,
+        FileUrl: downloadUrl,
+        Name: file.name,
+      });
+
+      alert("הקובץ הועלה בהצלחה!");
+      setFile(null);
+      setFileName("");
+      setArtworkName("");
+      setProgress(0);
+    } catch (error) {
+      console.error("שגיאה בהעלאה:", error);
+      alert("שגיאה בהעלאת הקובץ");
+    }
+  };
+
+  return (
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        // background: "linear-gradient(135deg, #fbe5f0 0%, #e0f7fa 100%)",
+        padding: 2,
+      }}
+    >
+      <Paper
+        elevation={4}
+        sx={{
+          padding: 4,
+          borderRadius: 5,
+          width: "100%",
+          maxWidth: 420,
+          backgroundColor: "#ffffffdd",
+          textAlign: "center",
+        }}
+      >
+        <Typography variant="h5" sx={{ mb: 3, fontWeight: "bold", color: "#444" }}>
+          <CloudUpload sx={{ verticalAlign: "middle", mr: 1 ,ml: 1 }} />
+          העלאת ציור
+        </Typography>
+
+        <Box
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          sx={{
+            border: `2px dashed ${dragOver ? "#448aff" : "#ccc"}`,
+            borderRadius: 3,
+            p: 3,
+            mb: 2,
+            textAlign: "center",
+            backgroundColor: dragOver ? "#e3f2fd" : "#fafafa",
+            transition: "0.3s",
+            cursor: "pointer",
+          }}
+        >
+          <Typography color="textSecondary">
+            גרור ושחרר כאן קובץ, או בחר מתוך המחשב
+          </Typography>
+          <FolderOpen sx={{ fontSize: 40, color: "#aaa", mt: 1 }} />
+        </Box>
+
+        <input
+          type="file"
+          onChange={handleFileChange}
+          style={{ display: "none" }}
+          id="file-input"
+        />
+        <label htmlFor="file-input">
+          <Button variant="outlined" component="span" fullWidth startIcon={<Image sx={{ ml: 1 }}  />}>
+            בחר קובץ
+          </Button>
+        </label>
+
+        {file && (
+          <Typography sx={{ mt: 1 }} variant="body2">
+            קובץ שנבחר: <b>{fileName}</b>
+          </Typography>
+        )}
+
+        <TextField
+          select
+          fullWidth
+          label="בחר קטגוריה"
+          value={selectedCategory || ""}
+          onChange={(e) => setSelectedCategory(parseInt(e.target.value))}
+          sx={{ mt: 3, backgroundColor: "#fff" }}
+        >
+          {CategoryStore.categories ==null ?(
+            <MenuItem disabled>טוען קטגוריות...</MenuItem>
+          ) : (
+            CategoryStore.categories.map((cat) => (
+              <MenuItem key={cat.id} value={cat.id}>
+                {cat.name}
+              </MenuItem>
+            ))
+          )}
+        </TextField>
+
+        <TextField
+          fullWidth
+          label="שם/תיאור הציור"
+          value={artworkName}
+          onChange={(e) => setArtworkName(e.target.value)}
+          sx={{ mt: 2, backgroundColor: "#fff" }}
+        />
+
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          onClick={handleUpload}
+          sx={{
+            mt: 3,
+            py: 1.2,
+            fontWeight: "bold",
+            fontSize: "1rem",
+            borderRadius: 3,
+            textTransform: "none",
+            boxShadow: 2,
+          }}
+        >
+          העלה ציור
+        </Button>
+
+        {progress > 0 && (
+          <Typography sx={{ mt: 2 }} variant="body2" color="textSecondary">
+            התקדמות העלאה: {progress}%
+          </Typography>
+        )}
+      </Paper>
+    </Box>
+  );
+});
+
+export default FileUploader;
+// import React, { useState } from "react";
 // import axios from "axios";
 // import {
+//   Box,
 //   Button,
 //   Card,
 //   CardContent,
-//   Typography,
-//   Box,
-//   TextField,
 //   MenuItem,
-//   Paper
+//   Paper,
+//   TextField,
+//   Typography,
+//   CircularProgress
 // } from "@mui/material";
-// import { CloudUpload, Image, FolderOpen } from "@mui/icons-material";
+// import { Brush, InsertPhoto, UploadFile } from "@mui/icons-material";
 // import artStore from "./ArtStore";
 // import { observer } from "mobx-react-lite";
+// import Swal from "sweetalert2";
 
 // const FileUploader = observer(() => {
 //   const [file, setFile] = useState<File | null>(null);
 //   const [fileName, setFileName] = useState("");
 //   const [progress, setProgress] = useState(0);
+//   const isLogin = sessionStorage.getItem("token")?true:false;
 //   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 //   const [artworkName, setArtworkName] = useState("");
 //   const [dragOver, setDragOver] = useState(false);
+//   const [isUploading, setIsUploading] = useState(false);
 
 //   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 //     if (e.target.files) {
@@ -1066,9 +1282,7 @@
 //     setDragOver(true);
 //   };
 
-//   const handleDragLeave = () => {
-//     setDragOver(false);
-//   };
+//   const handleDragLeave = () => setDragOver(false);
 
 //   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
 //     event.preventDefault();
@@ -1081,13 +1295,13 @@
 
 //   const handleUpload = async () => {
 //     if (!file || selectedCategory === null || !artworkName) return;
-
 //     try {
+//       setIsUploading(true);
 //       const url = `${import.meta.env.VITE_API_URL}/api/upload/presigned-url`;
 //       const response = await axios.get(url, { params: { fileName: file.name } });
 
 //       await axios.put(response.data.url, file, {
-//         headers: { 'Content-Type': file.type },
+//         headers: { "Content-Type": file.type },
 //         onUploadProgress: (e) => {
 //           const percent = Math.round((e.loaded * 100) / (e.total || 1));
 //           setProgress(percent);
@@ -1113,33 +1327,47 @@
 //     } catch (error) {
 //       console.error("שגיאה בהעלאה:", error);
 //       alert("שגיאה בהעלאת הקובץ");
+//     } finally {
+//       setIsUploading(false);
 //     }
 //   };
+// // ...
+// return (
+//   <Box sx={{ /* styles */ }}>
+//     {!isLogin ? (
+//       <React.Fragment>
+//         {Swal.fire({
+//           icon: "error",
+//           title: "אופס",
+//           text: "יש להתחבר קודם!",
+//           footer: '<a href="#/login">התחברות/הרשמה</a>'
 
-//   return (
-//     <Box
+//         })}
+//       </React.Fragment>
+//     ) : (
+//         <Box
 //       sx={{
 //         minHeight: "100vh",
 //         display: "flex",
 //         justifyContent: "center",
 //         alignItems: "center",
-//         // background: "linear-gradient(135deg, #fbe5f0 0%, #e0f7fa 100%)",
+//         // background: "linear-gradient(135deg, #fde2f3 0%, #e0f7fa 100%)",
 //         padding: 2,
 //       }}
 //     >
 //       <Paper
-//         elevation={4}
+//         elevation={6}
 //         sx={{
 //           padding: 4,
 //           borderRadius: 5,
 //           width: "100%",
-//           maxWidth: 420,
-//           backgroundColor: "#ffffffdd",
+//           maxWidth: 450,
+//           backgroundColor: "#ffffffee",
 //           textAlign: "center",
 //         }}
 //       >
-//         <Typography variant="h5" sx={{ mb: 3, fontWeight: "bold", color: "#444" }}>
-//           <CloudUpload sx={{ verticalAlign: "middle", mr: 1 ,ml: 1 }} />
+//         <Typography variant="h5" sx={{ mb: 3, fontWeight: "bold", color: "#555" }}>
+//           <Brush sx={{ verticalAlign: "middle", mx: 1 }} />
 //           העלאת ציור
 //         </Typography>
 
@@ -1148,12 +1376,11 @@
 //           onDragLeave={handleDragLeave}
 //           onDrop={handleDrop}
 //           sx={{
-//             border: `2px dashed ${dragOver ? "#448aff" : "#ccc"}`,
+//             border: `2px dashed ${dragOver ? "#90caf9" : "#ccc"}`,
 //             borderRadius: 3,
 //             p: 3,
 //             mb: 2,
-//             textAlign: "center",
-//             backgroundColor: dragOver ? "#e3f2fd" : "#fafafa",
+//             backgroundColor: dragOver ? "#fce4ec" : "#fafafa",
 //             transition: "0.3s",
 //             cursor: "pointer",
 //           }}
@@ -1161,7 +1388,7 @@
 //           <Typography color="textSecondary">
 //             גרור ושחרר כאן קובץ, או בחר מתוך המחשב
 //           </Typography>
-//           <FolderOpen sx={{ fontSize: 40, color: "#aaa", mt: 1 }} />
+//           <UploadFile sx={{ fontSize: 40, color: "#bbb", mt: 1 }} />
 //         </Box>
 
 //         <input
@@ -1171,15 +1398,30 @@
 //           id="file-input"
 //         />
 //         <label htmlFor="file-input">
-//           <Button variant="outlined" component="span" fullWidth startIcon={<Image sx={{ ml: 1 }}  />}>
+//           <Button
+//             variant="outlined"
+//             component="span"
+//             fullWidth
+//             startIcon={<InsertPhoto sx={{ ml: 1 }} />}
+//           >
 //             בחר קובץ
 //           </Button>
 //         </label>
 
 //         {file && (
-//           <Typography sx={{ mt: 1 }} variant="body2">
-//             קובץ שנבחר: <b>{fileName}</b>
-//           </Typography>
+//           <Box mt={2}>
+//             <Typography variant="body2">
+//               קובץ שנבחר: <b>{fileName}</b>
+//             </Typography>
+//             {file.type.startsWith("image/") && (
+//               <Box
+//                 component="img"
+//                 src={URL.createObjectURL(file)}
+//                 alt="preview"
+//                 sx={{ width: "100%", borderRadius: 2, mt: 1 }}
+//               />
+//             )}
+//           </Box>
 //         )}
 
 //         <TextField
@@ -1221,245 +1463,25 @@
 //             fontSize: "1rem",
 //             borderRadius: 3,
 //             textTransform: "none",
-//             boxShadow: 2,
+//             boxShadow: 3,
 //           }}
+//           disabled={isUploading}
 //         >
-//           העלה ציור
+//           {isUploading ? "מעלה..." : "העלה ציור"}
 //         </Button>
 
-//         {progress > 0 && (
-//           <Typography sx={{ mt: 2 }} variant="body2" color="textSecondary">
-//             התקדמות העלאה: {progress}%
-//           </Typography>
+//         {isUploading && (
+//           <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+//             <CircularProgress size={32} sx={{ color: "#4dd0e1" }} />
+//           </Box>
 //         )}
 //       </Paper>
 //     </Box>
-//   );
+//   )
+    
+// }</Box>
+// );
+// ;
 // });
 
 // export default FileUploader;
-import React, { useState } from "react";
-import axios from "axios";
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  MenuItem,
-  Paper,
-  TextField,
-  Typography,
-  CircularProgress
-} from "@mui/material";
-import { Brush, InsertPhoto, UploadFile } from "@mui/icons-material";
-import artStore from "./ArtStore";
-import { observer } from "mobx-react-lite";
-
-const FileUploader = observer(() => {
-  const [file, setFile] = useState<File | null>(null);
-  const [fileName, setFileName] = useState("");
-  const [progress, setProgress] = useState(0);
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-  const [artworkName, setArtworkName] = useState("");
-  const [dragOver, setDragOver] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0]);
-      setFileName(e.target.files[0].name);
-    }
-  };
-
-  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    setDragOver(true);
-  };
-
-  const handleDragLeave = () => setDragOver(false);
-
-  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    setDragOver(false);
-    if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
-      setFile(event.dataTransfer.files[0]);
-      setFileName(event.dataTransfer.files[0].name);
-    }
-  };
-
-  const handleUpload = async () => {
-    if (!file || selectedCategory === null || !artworkName) return;
-    try {
-      setIsUploading(true);
-      const url = `${import.meta.env.VITE_API_URL}/api/upload/presigned-url`;
-      const response = await axios.get(url, { params: { fileName: file.name } });
-
-      await axios.put(response.data.url, file, {
-        headers: { "Content-Type": file.type },
-        onUploadProgress: (e) => {
-          const percent = Math.round((e.loaded * 100) / (e.total || 1));
-          setProgress(percent);
-        },
-      });
-
-      const downloadResponse = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/upload/download-url/${file.name}`
-      );
-      const downloadUrl = downloadResponse.data;
-
-      await artStore.saveFile({
-        CategoryId: selectedCategory,
-        FileUrl: downloadUrl,
-        Name: file.name,
-      });
-
-      alert("הקובץ הועלה בהצלחה!");
-      setFile(null);
-      setFileName("");
-      setArtworkName("");
-      setProgress(0);
-    } catch (error) {
-      console.error("שגיאה בהעלאה:", error);
-      alert("שגיאה בהעלאת הקובץ");
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        // background: "linear-gradient(135deg, #fde2f3 0%, #e0f7fa 100%)",
-        padding: 2,
-      }}
-    >
-      <Paper
-        elevation={6}
-        sx={{
-          padding: 4,
-          borderRadius: 5,
-          width: "100%",
-          maxWidth: 450,
-          backgroundColor: "#ffffffee",
-          textAlign: "center",
-        }}
-      >
-        <Typography variant="h5" sx={{ mb: 3, fontWeight: "bold", color: "#555" }}>
-          <Brush sx={{ verticalAlign: "middle", mx: 1 }} />
-          העלאת ציור
-        </Typography>
-
-        <Box
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          sx={{
-            border: `2px dashed ${dragOver ? "#90caf9" : "#ccc"}`,
-            borderRadius: 3,
-            p: 3,
-            mb: 2,
-            backgroundColor: dragOver ? "#fce4ec" : "#fafafa",
-            transition: "0.3s",
-            cursor: "pointer",
-          }}
-        >
-          <Typography color="textSecondary">
-            גרור ושחרר כאן קובץ, או בחר מתוך המחשב
-          </Typography>
-          <UploadFile sx={{ fontSize: 40, color: "#bbb", mt: 1 }} />
-        </Box>
-
-        <input
-          type="file"
-          onChange={handleFileChange}
-          style={{ display: "none" }}
-          id="file-input"
-        />
-        <label htmlFor="file-input">
-          <Button
-            variant="outlined"
-            component="span"
-            fullWidth
-            startIcon={<InsertPhoto sx={{ ml: 1 }} />}
-          >
-            בחר קובץ
-          </Button>
-        </label>
-
-        {file && (
-          <Box mt={2}>
-            <Typography variant="body2">
-              קובץ שנבחר: <b>{fileName}</b>
-            </Typography>
-            {file.type.startsWith("image/") && (
-              <Box
-                component="img"
-                src={URL.createObjectURL(file)}
-                alt="preview"
-                sx={{ width: "100%", borderRadius: 2, mt: 1 }}
-              />
-            )}
-          </Box>
-        )}
-
-        <TextField
-          select
-          fullWidth
-          label="בחר קטגוריה"
-          value={selectedCategory || ""}
-          onChange={(e) => setSelectedCategory(parseInt(e.target.value))}
-          sx={{ mt: 3, backgroundColor: "#fff" }}
-        >
-          {artStore.getCategories().length === 0 ? (
-            <MenuItem disabled>טוען קטגוריות...</MenuItem>
-          ) : (
-            artStore.getCategories().map((cat) => (
-              <MenuItem key={cat.id} value={cat.id}>
-                {cat.name}
-              </MenuItem>
-            ))
-          )}
-        </TextField>
-
-        <TextField
-          fullWidth
-          label="שם/תיאור הציור"
-          value={artworkName}
-          onChange={(e) => setArtworkName(e.target.value)}
-          sx={{ mt: 2, backgroundColor: "#fff" }}
-        />
-
-        <Button
-          variant="contained"
-          color="primary"
-          fullWidth
-          onClick={handleUpload}
-          sx={{
-            mt: 3,
-            py: 1.2,
-            fontWeight: "bold",
-            fontSize: "1rem",
-            borderRadius: 3,
-            textTransform: "none",
-            boxShadow: 3,
-          }}
-          disabled={isUploading}
-        >
-          {isUploading ? "מעלה..." : "העלה ציור"}
-        </Button>
-
-        {isUploading && (
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
-            <CircularProgress size={32} sx={{ color: "#4dd0e1" }} />
-          </Box>
-        )}
-      </Paper>
-    </Box>
-  );
-});
-
-export default FileUploader;

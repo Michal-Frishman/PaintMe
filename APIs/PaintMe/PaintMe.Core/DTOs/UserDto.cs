@@ -17,8 +17,7 @@ namespace PaintMe.Core.DTOs
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public int RoleId { get; set; }
-        [ForeignKey(nameof(RoleId))]
-        public Role Role { get; set; }
+
     }
 
 }

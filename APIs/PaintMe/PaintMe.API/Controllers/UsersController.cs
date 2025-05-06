@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
-using PaintMe.Core;
 using PaintMe.Core.DTOs;
 using PaintMe.Core.Entities;
 using PaintMe.API.PostModals;
+using Microsoft.AspNetCore.Authorization;
+using PaintMe.Core.IServices;
+using PaintMe.Core;
 
 namespace PaintMe.API.Controllers
 {
@@ -22,6 +24,7 @@ namespace PaintMe.API.Controllers
 
         // GET: api/Users
         [HttpGet]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<List<UserDto>>> Get()
         {
             var result = await _userService.GetListAsync() ?? new List<UserDto>();
@@ -30,6 +33,8 @@ namespace PaintMe.API.Controllers
 
         // GET api/Users/5
         [HttpGet("{id}")]
+        [Authorize(Policy = "AdminOnly")]
+
         public async Task<ActionResult<UserDto>> GetById(int id)
         {
             if (id <= 0)
@@ -47,6 +52,7 @@ namespace PaintMe.API.Controllers
 
         // POST api/Users
         [HttpPost]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<UserDto>> Post([FromBody] UserPostModal userPostModal)
         {
             if (userPostModal == null)
@@ -66,6 +72,8 @@ namespace PaintMe.API.Controllers
 
         // PUT api/Users/5
         [HttpPut("{id}")]
+        [Authorize(Policy = "AdminOnly")]
+
         public async Task<ActionResult<bool>> Put(int id, [FromBody] UserPostModal userPutModal)
         {
             if (id <= 0 || userPutModal == null)
@@ -83,6 +91,8 @@ namespace PaintMe.API.Controllers
 
         // DELETE api/Users/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = "AdminOnly")]
+
         public async Task<ActionResult<bool>> Delete(int id)
         {
             if (id <= 0)

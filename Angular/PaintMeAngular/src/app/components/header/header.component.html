@@ -28,7 +28,7 @@
         <mat-toolbar-row>
           <a routerLink="/" class="logo">PaintMe Admin</a>
           <span class="spacer"></span>
-      
+      @if(isLoggedIn){
           <div>
             <nav>
               <button mat-button routerLink="/files" routerLinkActive="active" color="primary">
@@ -49,6 +49,7 @@
               </button>
             </nav>
           </div>
+        }
         </mat-toolbar-row>
       </mat-toolbar>
       

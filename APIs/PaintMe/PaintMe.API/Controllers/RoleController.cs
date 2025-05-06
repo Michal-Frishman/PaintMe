@@ -4,6 +4,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PaintMe.Core;
 using PaintMe.Core.DTOs;
+using PaintMe.Core.IServices;
 
 namespace PaintMe.API.Controllers
 {

@@ -1163,6 +1163,7 @@ import { Box, Stack, Slider, Paper, IconButton, Tooltip, CircularProgress } from
 import { useParams } from "react-router-dom";
 import artStore from "./ArtStore";
 import { Delete, Download, Save, Print } from "@mui/icons-material";
+import Swal from "sweetalert2";
 
 const colorMap = {
   red: "rgba(255, 0, 0, 0.5)",
@@ -1261,8 +1262,11 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
       const downloadResponse = await axios.get(`${url}/api/upload/download-url/${fileName2}`);
       const downloadUrl = downloadResponse.data;
       await artStore.saveColoredFile({ name: fileName2, coloredImageUrl: downloadUrl, originalDrawingId: parseInt(id || ''), userId: parseInt(sessionStorage.getItem("userId") || '') });
-      alert(`הציור הועלה בהצלחה!`);
-
+      Swal.fire({
+        title: "הציור נשמר בהצלחה",
+        icon: "success",
+        // draggable: true
+      });
     } catch (error) {
       console.error('Error uploading painted drawing:', error);
       alert('שגיאה בהעלאת הציור');
@@ -1381,7 +1385,7 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
             style={{ background: "transparent" }}
           />
         </Box> */}
-        <Box
+        {/* <Box
           display="flex"
           justifyContent="center"
           alignItems="center"
@@ -1393,9 +1397,59 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
             position: "relative", // הוסף את זה
+          }
+        }
+        > */}
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          width={600}
+          height={400}
+          style={{
+            backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
+            backgroundSize: "contain",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+            position: "relative", // זה חשוב
           }}
         >
-          <CanvasDraw
+          <Box
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            {/* <CanvasDraw
+              ref={canvasRef}
+              brushColor={brushColor}
+              brushRadius={brushRadius}
+              lazyRadius={0}
+            /> */}
+            <CanvasDraw
+              ref={canvasRef}
+              brushColor={brushColor}
+              brushRadius={brushRadius}
+              lazyRadius={0}
+              canvasWidth={600}
+              canvasHeight={400}
+              style={{
+                width: "100%",
+                height: "100%",
+                background: "transparent"
+              }}
+            />
+
+
+
+
+          </Box>
+        </Box>
+
+        {/* <CanvasDraw
             ref={canvasRef}
             brushColor={brushColor}
             brushRadius={brushRadius}
@@ -1408,8 +1462,8 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
               height: "100%", // הוסף את זה
               background: "transparent" // הוסף את זה
             }}
-          />
-        </Box>
+          /> */}
+        {/* </Box> */}
         {/* //   <Stack spacing={2} alignItems="center" pl={3}>
       //     <Button variant="contained" color="primary" onClick={() => canvasRef.current?.clear()}>
       //       ניקוי

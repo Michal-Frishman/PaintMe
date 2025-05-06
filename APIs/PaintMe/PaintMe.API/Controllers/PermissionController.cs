@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PaintMe.Core;
 using PaintMe.Core.DTOs;
+using PaintMe.Core.IServices;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 

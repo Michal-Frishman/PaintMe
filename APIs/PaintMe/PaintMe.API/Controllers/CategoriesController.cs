@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PaintMe.API.PostModals;
 using PaintMe.Core;
 using PaintMe.Core.DTOs;
 using PaintMe.Core.Entities;
+using PaintMe.Core.IServices;
 using PaintMe.Service.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -46,6 +48,7 @@ namespace PaintMe.API.Controllers
 
         // POST api/Category
         [HttpPost]
+        [Authorize(Policy = "AdminOly")]
         public async Task<ActionResult<bool>> Post([FromBody] CategoryPostModel category)
         {
             if (category == null) return BadRequest("User data is required");
@@ -57,6 +60,8 @@ namespace PaintMe.API.Controllers
 
         // PUT api/Category/5
         [HttpPut("{id}")]
+        [Authorize(Policy = "AdminOly")]
+
         public async Task<ActionResult<bool>> Put(int id, [FromBody] CategoryPostModel category)
         {
             if (category == null || id < 0) return BadRequest("Invalid input");
@@ -68,6 +73,8 @@ namespace PaintMe.API.Controllers
 
         // DELETE api/Category/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = "AdminOly")]
+
         public async Task<ActionResult<bool>> Delete(int id)
         {
             if (id < 0) return BadRequest("Invalid input");

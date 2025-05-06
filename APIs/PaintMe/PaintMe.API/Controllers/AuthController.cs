@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using PaintMe.Core;
 using PaintMe.Service.Services;
 using PaintMe.Core.DTOs;
+using Microsoft.AspNetCore.Authorization;
+using PaintMe.Core.IServices;
+using PaintMe.Core;
 
 namespace PaintMe.API.Controllers
 {
@@ -53,19 +55,15 @@ namespace PaintMe.API.Controllers
         public async Task<IActionResult> LoginAsync([FromBody] LoginModel model)
         {
 
-            var role = _userService.AuthenticateAsync(model.Email, model.Password);
-            var user = _userService.FindUserByEmailAsync(model.Email);
-            if (role.Equals("Admin"))
+            var role = await _userService.AuthenticateAsync(model.Email, model.Password);
+            var user =await _userService.FindUserByEmailAsync(model.Email);
+            if (user == null) return Unauthorized("Invalid credentials");
+            if (role == "Admin" || role == "User")
             {
-                var token = _authService.GenerateJwtToken(user.Id, model.Email, new[] { "Admin" });
+                var token = _authService.GenerateJwtToken(user.Id, model.Email, role);
                 return Ok(new { Token = token, User = user });
             }
-            else if (role.Equals("User"))
-            {
-                var token = _authService.GenerateJwtToken(user.Id, model.Email, new[] { "User" });
-                return Ok(new { Token = token, User = user });
-            }
-            return Unauthorized(role);
+            return Unauthorized("Invalid role");
         }
         [HttpPost("register")]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterPostModel model)
@@ -78,12 +76,25 @@ namespace PaintMe.API.Controllers
           
             var user = _mapper.Map<UserDto>(model);
             var newUser = await _userService.AddAsync(user);
-            await Console.Out.WriteLineAsync("=========================userId"+ newUser.Id);
-            var token = _authService.GenerateJwtToken(newUser.Id, model.Email, new[] { "User" });
+            var token = _authService.GenerateJwtToken(newUser.Id, model.Email,  "User" );
 
-            return Ok(new { Token = token });
+            return Ok(new { Token = token, User = newUser });
         }
-
+        //add admin only for admin
+        //[HttpPost("register-admin")]
+        //[Authorize(Policy = "AdminOly")]
+        //public async Task<IActionResult> RegisterAdminAsync([FromBody] RegisterPostModel model)
+        //{
+        //    var existingUser = await _userService.FindUserByEmailAsync(model.Email);
+        //    if (existingUser != null)
+        //    {
+        //        return BadRequest("User already exists");
+        //    }
+        //    var user = _mapper.Map<UserDto>(model);
+        //    var newUser = await _userService.AddAsync(user);
+        //    var token = _authService.GenerateJwtToken(newUser.Id, model.Email, "Admin");
+        //    return Ok(new { Token = token, User = newUser });
+        //}
         //[HttpPost("register")]
         //public async Task<IActionResult> RegisterAsync([FromBody] RegisterPostModel model)
         //{

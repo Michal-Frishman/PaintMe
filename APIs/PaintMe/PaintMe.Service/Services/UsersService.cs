@@ -47,7 +47,8 @@ namespace PaintMe.Service.Services
             var a = _mapper.Map<User>(user);
             a.CreatedAt = DateTime.Now;
             a.UpdatedAt = DateTime.Now;
-            a.CreatedBy = 1;
+            a.CreatedBy = 8;
+            a.RoleId= 1;
             var data = await _usersRepository.AddDataAsync(a);
             var x = _mapper.Map<UserDto>(data);
             return x;

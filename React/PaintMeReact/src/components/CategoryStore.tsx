@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from './axiosInstance';
 import { makeAutoObservable, action } from "mobx";
 import { FileSmall } from '../models/File';
 
@@ -15,14 +15,15 @@ class CategoryStore {
     selectedCategory: CategoryType | null = null;
     selectedArtwork: FileSmall[] = [];
     url: string = `${import.meta.env.VITE_API_URL}/api`;
-
+   
+      
     constructor() {
         makeAutoObservable(this);
         this.loadCategories(); // טען קטגוריות בעת יצירת האובייקט
     }
     addCategory = action(async (category: string) => {
         try {
-            await axios.post(`${this.url}/Categories`, { name: category });
+            await axiosInstance.post(`${this.url}/Categories`, { name: category });
             this.loadCategories();
         } catch (error) {
             console.error("Error adding category:", error);
@@ -36,7 +37,7 @@ class CategoryStore {
         this.isLoading = true;
 
         try {
-            const response = await axios.get(`${this.url}/Categories`);
+            const response = await axiosInstance.get(`${this.url}/Categories`);
             this.setCategories(response.data);
         } catch (error) {
             console.error("Error loading categories:", error);
@@ -51,7 +52,7 @@ class CategoryStore {
         this.isLoading = true;
 
         try {
-            const response = await axios.get(`${this.url}/Categories/${categoryId}`);
+            const response = await axiosInstance.get(`${this.url}/Categories/${categoryId}`);
             this.selectedCategory = response.data;
         } catch (error) {
             console.error("Error loading category:", error);
@@ -59,13 +60,13 @@ class CategoryStore {
         this.isLoading = false;
 
     });
-
+  
     getCategoriesList() {
         return this.categories;
     }
     loadArtworkById = async (artworkId: number) => {
         try {
-            const response = await axios.get(`${this.url}/Files/category/${artworkId}`);
+            const response = await axiosInstance.get(`${this.url}/Files/category/${artworkId}`);
             this.selectedArtwork = response.data;
             console.log(this.selectedArtwork);
 

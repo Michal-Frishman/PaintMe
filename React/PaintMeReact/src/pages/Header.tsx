@@ -3,9 +3,35 @@ import { Link, Link as RouterLink } from "react-router-dom"
 import { Brush, CloudUpload, Login, Collections } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles"
 import { BubbleDecoration } from "./HomePage";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Header = () => {
     const theme = useTheme()
+
+    // בתוך קומפוננטת Header
+    const navigate = useNavigate();
+
+    const handleProtectedNavigation = (path: string) => {
+        const token = sessionStorage.getItem("token");
+        if (!token) {
+            Swal.fire({
+                icon: "error",
+                title: "יש להתחבר קודם!",
+                footer: '<a href="#/login">התחברות/הרשמה</a>',
+                background: '#fff8f8',
+                color: '#333',
+                confirmButtonColor: '#f44336',
+                customClass: {
+                  title: 'swal-title',
+                  popup: 'swal-popup',
+                  footer: 'swal-footer'
+                },
+            });
+        } else {
+            navigate(path);
+        }
+    };
 
     return (
         <AppBar
@@ -119,15 +145,7 @@ const Header = () => {
                     </Button>
                 </Box> */}
                 <Box sx={{ display: { xs: "flex", md: "flex" }, gap: 2, alignItems: "center", flexWrap: "wrap" }}>
-                    <Button
-                        component={RouterLink}
-                        to="/categories"
-                        color="inherit"
-                        sx={{ backgroundColor: theme.palette.secondary.main, flex: '1 1 auto' }}
-                        startIcon={<Brush sx={{ ml: 1 }} />}
-                    >
-                        דפי צביעה
-                    </Button>
+                    {/* 
 
                     <Button
                         component={RouterLink}
@@ -139,15 +157,7 @@ const Header = () => {
                         העלאת ציור
                     </Button>
 
-                    <Button
-                        component={Link}
-                        to="/login"
-                        color="inherit"
-                        sx={{ backgroundColor: theme.palette.secondary.main, flex: '1 1 auto' }}
-                        startIcon={<Login sx={{ ml: 1 }} />}
-                    >
-                        התחברות/הרשמה
-                    </Button>
+                   
 
                     <Button
                         component={Link}
@@ -157,7 +167,43 @@ const Header = () => {
                         startIcon={<Collections sx={{ ml: 1 }} />}
                     >
                         הציורים שלי
+                    </Button> */}
+                     <Button
+                        component={Link}
+                        to="/login"
+                        color="inherit"
+                        sx={{ backgroundColor: theme.palette.secondary.main, flex: '1 1 auto' }}
+                        startIcon={<Login sx={{ ml: 1 }} />}
+                    >
+                        התחברות/הרשמה
                     </Button>
+                    <Button
+                        component={RouterLink}
+                        to="/categories"
+                        color="inherit"
+                        sx={{ backgroundColor: theme.palette.secondary.main, flex: '1 1 auto' }}
+                        startIcon={<Brush sx={{ ml: 1 }} />}
+                    >
+                        דפי צביעה
+                    </Button>
+                    <Button
+                        onClick={() => handleProtectedNavigation("/upload")}
+                        color="inherit"
+                        sx={{ backgroundColor: theme.palette.secondary.main, flex: "1 1 auto" }}
+                        startIcon={<CloudUpload sx={{ ml: 1 }} />}
+                    >
+                        העלאת ציור
+                    </Button>
+
+                    <Button
+                        onClick={() => handleProtectedNavigation("/coloredFiles")}
+                        color="inherit"
+                        sx={{ backgroundColor: theme.palette.secondary.main, flex: "1 1 auto" }}
+                        startIcon={<Collections sx={{ ml: 1 }} />}
+                    >
+                        הציורים שלי
+                    </Button>
+
                 </Box>
 
                 {/* <Button

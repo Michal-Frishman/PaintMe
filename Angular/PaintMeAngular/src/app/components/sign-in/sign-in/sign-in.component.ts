@@ -11,7 +11,8 @@ import { User } from '../../../models/User';
 import { SignIn } from '../../../models/SignIn';
 import { AuthService } from '../../../services/auth/auth.service';
 import { log } from 'node:console';
-
+import { isPlatformBrowser } from '@angular/common';
+import { PLATFORM_ID } from '@angular/core';
 @Component({
   selector: 'app-sign-in',
   standalone: true,
@@ -34,7 +35,7 @@ export class SignInComponent implements OnInit {
   constructor(private fb: FormBuilder, private authService: AuthService) { }
   getUserIdFromToken(token: string) {
     const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.id; 
+    return payload.id;
   }
   signIn(): void {
     if (this.signInForm?.valid) {
@@ -45,8 +46,11 @@ export class SignInComponent implements OnInit {
         this.authService.signIn(this.user).subscribe({
           next: (res) => {
             // const id=this.getUserIdFromToken(res.token);
-            sessionStorage.setItem('token', res.token);
-            sessionStorage.setItem('userId', this.getUserIdFromToken(res.token));
+            const platformId = inject(PLATFORM_ID);
+            if (isPlatformBrowser(platformId)) {
+              sessionStorage.setItem('token', res.token);
+            }
+            // sessionStorage.setItem('userId', this.getUserIdFromToken(res.token));
             console.log(res);
 
 

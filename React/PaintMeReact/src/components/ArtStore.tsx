@@ -14,8 +14,8 @@ class ArtStore {
     coloredFiles: ColoredFile[] | null = null;
     constructor() {
         makeAutoObservable(this);
-        this.loadCategories();
-        this.loadColoredFiles();
+        // this.loadCategories();
+        // this.loadColoredFiles();
     }
 
     loadCategories = action(async () => {
@@ -34,9 +34,8 @@ class ArtStore {
         this.isLoading = true;
 
         try {
-            const fetchedColoredFiles = await fetchColoredFiles(parseInt(sessionStorage.getItem("userId") ?? ''));
+            const fetchedColoredFiles = await fetchColoredFiles(2);
             if (Array.isArray(fetchedColoredFiles)) {
-                // Ensure that the state modification is within the action
                 this.coloredFiles = fetchedColoredFiles;
             } else {
                 console.error('צבועים שהתקבלו אינן מערך:', fetchedColoredFiles);
@@ -92,7 +91,9 @@ class ArtStore {
     });
 
     getCategories() {
+        console.log("categories"+ this.categories);
         return this.categories;
+
     }
 }
 

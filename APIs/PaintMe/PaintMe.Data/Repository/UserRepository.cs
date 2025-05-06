@@ -82,8 +82,9 @@ namespace PaintMe.Data.Repository
         }
         public async Task<User> FindUserByEmailAsync(string email)
         {
-            return await _dataContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return await _dataContext.Users.Include(user => user.Role).FirstOrDefaultAsync(u => u.Email == email);
         }
+
 
 
 

@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
-using PaintMe.Core;
 using PaintMe.Core.DTOs;
 using PaintMe.Core.Entities;
 using PaintMe.API.PostModals;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using PaintMe.Core.IServices;
+using PaintMe.Core;
 
 namespace PaintMe.API.Controllers
 {
@@ -49,6 +51,7 @@ namespace PaintMe.API.Controllers
 
         // POST api/Files
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<FileDto>> Post([FromBody] FilePostModal filePostModal)
         {
             if (filePostModal == null)
@@ -67,6 +70,7 @@ namespace PaintMe.API.Controllers
 
         // PUT api/Files/5
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<ActionResult<bool>> Put(int id, [FromBody] FilePostModal filePutModal)
         {
             if (id <= 0 || filePutModal == null)
@@ -84,6 +88,7 @@ namespace PaintMe.API.Controllers
 
         // DELETE api/Files/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult<bool>> Delete(int id)
         {
             if (id <= 0)

@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using PaintMe.Core.Entities;
 
 namespace PaintMe.Service.Services
 {
@@ -14,21 +15,18 @@ namespace PaintMe.Service.Services
         {
             _configuration = configuration;
         }
-        public string GenerateJwtToken(int userId, string username, string[] roles)
+        public string GenerateJwtToken(int userId, string username, string role)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
-                    {
-                         new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-                             new Claim(ClaimTypes.Email, username)
-                 };
-
-            foreach (var role in roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role));
-            }
+    {
+        new Claim("Id", userId.ToString()),
+        new Claim("Email", username),
+        new Claim("DateCreated", DateTime.UtcNow.ToString()),
+        new Claim(ClaimTypes.Role, role) 
+    };
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],

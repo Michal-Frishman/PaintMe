@@ -1,33 +1,32 @@
-import axios from 'axios';
+import axiosInstance from './axiosInstance';
 import { ColoredFile } from '../models/ColoredFile';
 import {File} from '../models/File';
 
 const API_URL = `${import.meta.env.VITE_API_URL}/api`; 
 
 export const fetchCategories = async () => {
-        // const response = await axios.get(`https://localhost:7209/api/Categories`);
-
-    const response = await axios.get(`${API_URL}/Categories`);
+    // const response = await axios.get(`https://localhost:7209/api/Categories`);
+    const response = await axiosInstance.get(`${API_URL}/Categories`);
     return response.data;
 };
 export const fetchColoredFiles = async (userId: number) => {
-    const response = await axios.get(`${API_URL}/ColoredFiles/user/${userId}`);
+    const response = await axiosInstance.get(`${API_URL}/ColoredFiles/user/${userId}`);
     return response.data;
 };
 export const fetchArtworksByCategory = async (categoryId: number) => {
-    const response = await axios.get(`${API_URL}/Files/category/${categoryId}`);
+    const response = await axiosInstance.get(`${API_URL}/Files/category/${categoryId}`);
     return response.data;
 };
 
 
 export const fetchArtworkById = async (artworkId: number) => {
-    const response = await axios.get(`${API_URL}/Files/${artworkId}`);
+    const response = await axiosInstance.get(`${API_URL}/Files/${artworkId}`);
     return response.data;
 };
 
 export const fetchAddColoredFile = async (coloredFile: ColoredFile) => {
     try {
-        const response = await axios.post(`${API_URL}/ColoredFiles`,coloredFile);
+        const response = await axiosInstance.post(`${API_URL}/ColoredFiles`,coloredFile);
         return response.data;
     } catch (error) {
         console.error('Error fetching colored file:', error);
@@ -37,7 +36,7 @@ export const fetchAddColoredFile = async (coloredFile: ColoredFile) => {
 export const fetchAddFile = async (file:File) => {
     
     try {
-        const response = await axios.post(`${API_URL}/Files`, file)
+        const response = await axiosInstance.post(`${API_URL}/Files`, file)
         return response.data;
         
     } catch (error) {
@@ -47,7 +46,7 @@ export const fetchAddFile = async (file:File) => {
 };
 export const fetchDeleteColoredFile = async (id: number) => {
     try {
-        const response = await axios.delete(`${API_URL}/ColoredFiles/${id}`);
+        const response = await axiosInstance.delete(`${API_URL}/ColoredFiles/${id}`);
         return response.data;
     } catch (error) {
         console.error('Error fetchDeleteColoredFile:', error);

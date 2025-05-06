@@ -131,6 +131,7 @@ using PaintMe.API;
 using PaintMe.Core;
 using PaintMe.Core.DTOs;
 using PaintMe.Core.Entities;
+using PaintMe.Core.IServices;
 using PaintMe.Data;
 using PaintMe.Data.Repository;
 using PaintMe.Service.Repositories;
@@ -143,19 +144,25 @@ Env.Load();
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
 builder.Services.AddScoped<IUserService, UsersService>();
 builder.Services.AddScoped<IFilesService, FilesService>();
 builder.Services.AddScoped<IColoredFilesService, ColoredFilesService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<ITokenContextService, TokenContextService>();
 
 builder.Services.AddScoped<IFilesRepository, FilesRepository>();
 builder.Services.AddScoped<IColoredFileRepository, ColoredFilesRepository>();
 builder.Services.AddScoped<IUserRepository, UsersRepository>();
-builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();  // רק כאן
 builder.Services.AddScoped<IUserRolesRepository, UserRoleRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoriesRepository>();
+builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 
 builder.Services.AddScoped<AuthService>();
+
 
 //builder.Services.AddDbContext<DataContext>(option =>
 //{
@@ -165,7 +172,7 @@ builder.Services.AddScoped<AuthService>();
 //builder.Configuration["AWS_REGION"]
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    var x = builder.Configuration["CONNECTION_SRRING"];
+    var x = builder.Configuration["CONNECTION_STRING"];
     options.UseMySql(x,
                    ServerVersion.AutoDetect(x)
         );
@@ -183,32 +190,27 @@ builder.Services.AddCors(options =>
                           .AllowAnyMethod()
                           .AllowAnyHeader());
 });
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["JWT:Issuer"],
-            ValidAudience = builder.Configuration["JWT:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:KEY"]))
-        };
-    });
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//})
+//.AddJwtBearer(options =>
+//{
+//    options.TokenValidationParameters = new TokenValidationParameters
+//    {
+//        ValidateIssuer = true,
+//        ValidateAudience = true,
+//        ValidateLifetime = true,
+//        ValidateIssuerSigningKey = true,
+//        ValidIssuer = builder.Configuration["JWT:Issuer"],
+//        ValidAudience = builder.Configuration["JWT:Audience"],
+//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:KEY"]))
+//    };
+//});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-    options.AddPolicy("UserOrAdmin", policy => policy.RequireRole("User", "Admin"));
-    options.AddPolicy("UserOnly", policy => policy.RequireRole("User"));
-});
+
 
 
 builder.Services.AddEndpointsApiExplorer();
@@ -241,6 +243,60 @@ builder.Services.AddSwaggerGen(options =>
 
 
 });
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("UserOrAdmin", policy => policy.RequireRole("User", "Admin"));
+    options.AddPolicy("UserOnly", policy => policy.RequireRole("User"));
+});
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["JWT:Issuer"],
+        ValidAudience = builder.Configuration["JWT:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:KEY"]))
+    };
+
+    // Handling JWT token validation failure
+    options.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            if (context.Exception is SecurityTokenExpiredException)
+            {
+                context.Response.StatusCode = 401;
+                context.Response.ContentType = "application/json";
+                return context.Response.WriteAsync("Token has expired.");
+            }
+            else if (context.Exception is SecurityTokenInvalidSignatureException)
+            {
+                context.Response.StatusCode = 401;
+                context.Response.ContentType = "application/json";
+                return context.Response.WriteAsync("Invalid token signature.");
+            }
+            else
+            {
+                context.Response.StatusCode = 401;
+                context.Response.ContentType = "application/json";
+                return context.Response.WriteAsync("Authentication failed.");
+            }
+        }
+    };
+});
+
+// Remove the second instance of .AddAuthentication() and .AddJwtBearer() from the code
 
 // הוספת הגדרות AWS
 //builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());

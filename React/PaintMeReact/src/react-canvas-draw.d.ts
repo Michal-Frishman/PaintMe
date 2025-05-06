@@ -5,6 +5,9 @@ declare module "react-canvas-draw" {
       brushColor?: string;
       brushRadius?: number;
       lazyRadius?: number;
+      canvasWidth?:number;
+      canvasHeight?:number;
+      style?:any;
     }
   
     class CanvasDraw extends React.Component<CanvasDrawProps> {
