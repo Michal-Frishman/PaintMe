@@ -29,7 +29,7 @@ namespace PaintMe.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CategoryDto>>> Get() // שונה ל-Task<ActionResult<IEnumerable<CategoryDto>>>
         {
-            var categories = await _categoryService.GetListAsync(); // הוספת await
+            var categories = await _categoryService.GetListAsync(); 
             return (categories);
         }
 

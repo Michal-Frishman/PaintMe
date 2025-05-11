@@ -21,9 +21,9 @@ namespace PaintMe.Core.Entities
         public string RoleName { get; set; } = "User";
         public string Description { get; set; }
         [Required]
-        public DateOnly CreatedAt { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+        public DateOnly CreatedAt { get; set; } 
 
-        public DateOnly UpdatedAt { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+        public DateOnly UpdatedAt { get; set; } 
         public ICollection<User>? Users { get; set; } = new List<User>();
         public ICollection<Permission>? Permissions { get; set; } = new List<Permission>();
     }

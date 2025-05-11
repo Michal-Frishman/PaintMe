@@ -32,9 +32,8 @@ class ArtStore {
     });
     loadColoredFiles = action(async () => {
         this.isLoading = true;
-
         try {
-            const fetchedColoredFiles = await fetchColoredFiles(2);
+            const fetchedColoredFiles = await fetchColoredFiles();
             if (Array.isArray(fetchedColoredFiles)) {
                 this.coloredFiles = fetchedColoredFiles;
             } else {

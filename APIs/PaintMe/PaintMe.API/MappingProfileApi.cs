@@ -4,6 +4,7 @@ using PaintMe.API.PostModals;
 using PaintMe.API.PutModels;
 using PaintMe.Core.DTOs;
 using PaintMe.Core.Entities;
+using static PaintMe.API.Controllers.AuthController;
 
 namespace PaintMe.API
 {

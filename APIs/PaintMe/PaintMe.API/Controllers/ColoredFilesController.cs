@@ -51,21 +51,26 @@ namespace PaintMe.API.Controllers
             }
             return Ok(result);
         }
-        [HttpGet("user/{id}")]
+        [HttpGet("getByUser")]
         [Authorize(Policy = "UserOnly")]
-        public async Task<ActionResult<List<ColoredFileDto>>> GetByUserId(int id)
+        public async Task<ActionResult<List<ColoredFileDto>>> GetByUser()
         {
-            //var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Id");
-            //if (userIdClaim == null)
-            //{
-            //    return Unauthorized("User ID not found in token.");
-            //}
-            //int userId = int.Parse(userIdClaim.Value);
             var userId = _tokenContextService.GetUserId();
             if (userId == 0) throw new UnauthorizedAccessException();
             await Console.Out.WriteLineAsync("userId: "+ userId);
 
             var result = await _coloredFileService.GetByUserIdAsync(userId);
+            if (result == null)
+            {
+                return new List<ColoredFileDto>();
+            }
+            return Ok(result);
+        }
+        [HttpGet("getByUserId/{id}")]
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<ActionResult<List<ColoredFileDto>>> GetByUserId(int id)
+        {
+            var result = await _coloredFileService.GetByUserIdAsync(id);
             if (result == null)
             {
                 return new List<ColoredFileDto>();
@@ -78,10 +83,14 @@ namespace PaintMe.API.Controllers
 
         public async Task<ActionResult<ColoredFileDto>> Post([FromBody] ColoredFilePostModal coloredFile)
         {
+           
             if (coloredFile == null)
             {
                 return BadRequest("Invalid colored file data.");
             }
+            var userId = _tokenContextService.GetUserId();
+            if (userId == 0) throw new UnauthorizedAccessException();
+            coloredFile.UserId = userId;
             var coloredFileDto = _mapper.Map<ColoredFileDto>(coloredFile);
             var result = await _coloredFileService.AddAsync(coloredFileDto);
             if (result==null)

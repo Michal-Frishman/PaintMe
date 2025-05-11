@@ -195,13 +195,38 @@ const HomePage = () => {
                 },
               }}
             >
-              הכנסו לאיזור האישי            </Button>
+      הרשמו/התחברו          </Button>
 
           </Box>
         </HeroContent>
       </HeroSection>
 
       <Box sx={{ mb: 8 }}>
+      <Typography
+            variant="h4"
+            component="h2"
+            align="center"
+            gutterBottom
+            sx={{
+              fontWeight: 700,
+              mb: 6,
+              color: theme.palette.text.primary,
+              position: "relative",
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                bottom: -16,
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: 60,
+                height: 4,
+                borderRadius: 2,
+                backgroundColor: theme.palette.primary.main,
+              },
+            }}
+          >
+            מה אנחנו מציעים
+          </Typography>
         <Grid container spacing={4}>
           <Grid item xs={12} sm={6} md={3}>
             <FeatureCard elevation={2}>

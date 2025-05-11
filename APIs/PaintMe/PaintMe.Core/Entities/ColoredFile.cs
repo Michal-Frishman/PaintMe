@@ -18,11 +18,13 @@ namespace PaintMe.Core.Entities
         [ForeignKey(nameof(OriginalDrawingId))]
         public File File { get; set; }
         public string ColoredImageUrl { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } 
+        public DateTime UpdatedAt { get; set; } 
         public int UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
         public User User { get; set; }
+        public int UpdatedBy { get; set; }
+        public int CreatedBy { get; set; }
     }
 }

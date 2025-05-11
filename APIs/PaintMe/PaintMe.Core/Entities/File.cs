@@ -18,12 +18,12 @@ namespace PaintMe.Core.Entities
 
         [ForeignKey(nameof(CategoryId))]
         public Category Category { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } 
         public int? CreatedBy { get; set; }
 
         [ForeignKey(nameof(CreatedBy))]
         public User UserCreated { get; set; }
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public DateTime UpdatedAt { get; set; } 
 
         public int? UpdatedBy { get; set; }
 

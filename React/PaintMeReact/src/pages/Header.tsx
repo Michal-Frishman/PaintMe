@@ -2,9 +2,9 @@ import { AppBar, Box, Toolbar, Typography, Button, IconButton } from "@mui/mater
 import { Link, Link as RouterLink } from "react-router-dom"
 import { Brush, CloudUpload, Login, Collections } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles"
-import { BubbleDecoration } from "./HomePage";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { BubbleDecoration } from "./HomePage";
 
 const Header = () => {
     const theme = useTheme()

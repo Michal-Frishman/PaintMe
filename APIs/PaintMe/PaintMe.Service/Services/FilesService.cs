@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using PaintMe.Core;
 using PaintMe.Core.DTOs;
-using PaintMe.Core.Entities;
+using PaintMe.Core.IServices;
 using File = PaintMe.Core.Entities.File;
 
 namespace PaintMe.Service.Services
@@ -10,11 +10,13 @@ namespace PaintMe.Service.Services
     {
         readonly IFilesRepository _filesRepository;
         readonly IMapper _mapper;
+        readonly ITokenContextService _tokenContextService;
 
-        public FilesService(IMapper mapper, IFilesRepository dataContext)
+        public FilesService(IMapper mapper, IFilesRepository dataContext, ITokenContextService tokenContextService)
         {
             _mapper = mapper;
             _filesRepository = dataContext;
+            _tokenContextService = tokenContextService;
         }
 
         public async Task<List<FileDto>> GetListAsync()
@@ -36,6 +38,7 @@ namespace PaintMe.Service.Services
             if (item == null) return false;
             file.UpdatedAt = DateTime.Now;
             var data = _mapper.Map<File>(file);
+            data.UpdatedBy = _tokenContextService.GetUserId();
             return await _filesRepository.UpdateDataAsync(id, data);
         }
 
@@ -44,8 +47,8 @@ namespace PaintMe.Service.Services
             if (await _filesRepository.GetByIdDataAsync(file.Id) != null)
                 return null;
             file.CreatedAt = DateTime.Now;
-            file.UpdatedAt = DateTime.Now;
             var data = _mapper.Map<File>(file);
+            data.CreatedBy= _tokenContextService.GetUserId();
             var a = await _filesRepository.AddDataAsync(data);
             var x = _mapper.Map<FileDto>(a);
             return x;

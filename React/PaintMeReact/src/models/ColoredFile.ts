@@ -3,5 +3,5 @@ export type ColoredFile = {
     name: string;
     originalDrawingId: number;
     coloredImageUrl: string;
-    userId: number;
+    // userId: number;
 };

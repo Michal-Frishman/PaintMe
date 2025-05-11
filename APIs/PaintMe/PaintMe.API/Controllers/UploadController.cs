@@ -91,7 +91,6 @@ public class UploadController : ControllerBase
     }
 
     [HttpGet("presigned-url")]
-    [Authorize]
     public async Task<IActionResult> GetPresignedUrl([FromQuery] string fileName)
     {
         var extension = Path.GetExtension(fileName).ToLower();
@@ -124,7 +123,6 @@ public class UploadController : ControllerBase
         return Ok(new { url });
     }
     [HttpGet("download-url/{fileName}")]
-    [Authorize]
 
     public async Task<string> GetDownloadUrlAsync(string fileName)
     {

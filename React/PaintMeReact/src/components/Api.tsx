@@ -9,8 +9,8 @@ export const fetchCategories = async () => {
     const response = await axiosInstance.get(`${API_URL}/Categories`);
     return response.data;
 };
-export const fetchColoredFiles = async (userId: number) => {
-    const response = await axiosInstance.get(`${API_URL}/ColoredFiles/user/${userId}`);
+export const fetchColoredFiles = async () => {
+    const response = await axiosInstance.get(`${API_URL}/ColoredFiles/getByUser`);
     return response.data;
 };
 export const fetchArtworksByCategory = async (categoryId: number) => {

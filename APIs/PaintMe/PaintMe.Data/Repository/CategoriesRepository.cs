@@ -49,8 +49,8 @@ namespace PaintMe.Data.Repository
             if (existingCategory == null) return false;
 
             existingCategory.Name = item.Name;
-            existingCategory.UpdateBy = item.UpdateBy;
-            existingCategory.UpdateAt = DateTime.Now;
+            existingCategory.UpdatedBy = item.UpdatedBy;
+            existingCategory.UpdatedAt = DateTime.Now;
 
             try
             {
