@@ -28,8 +28,8 @@ import { PLATFORM_ID } from '@angular/core';
 export class SignInComponent implements OnInit {
   showSignUp = false;
   router = inject(Router);
-  hide = signal(true);
-  user!: SignIn;
+hide = signal(true);
+  hidePassword = true;  user!: SignIn;
   signInForm!: FormGroup;
 
   constructor(private fb: FormBuilder, private authService: AuthService) { }

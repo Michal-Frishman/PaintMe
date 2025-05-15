@@ -1,6 +1,7 @@
 import axiosInstance from './axiosInstance';
 import { makeAutoObservable, action } from "mobx";
 import { FileSmall } from '../models/File';
+import axios from 'axios';
 
 export type CategoryType = {
     id: number;
@@ -37,7 +38,7 @@ class CategoryStore {
         this.isLoading = true;
 
         try {
-            const response = await axiosInstance.get(`${this.url}/Categories`);
+            const response = await axios.get(`${this.url}/Categories`);
             this.setCategories(response.data);
         } catch (error) {
             console.error("Error loading categories:", error);

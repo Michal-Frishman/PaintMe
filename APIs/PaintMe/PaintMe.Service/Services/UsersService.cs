@@ -192,15 +192,11 @@ namespace PaintMe.Service.Services
 
         public async Task<UserDto> AddAsync(UserDto user)
         {
-            var userId = _tokenContextService.GetUserId();
-
             var entity = _mapper.Map<User>(user);
             entity.CreatedAt = DateTime.UtcNow;
-            entity.UpdatedAt = DateTime.UtcNow;
-            entity.CreatedBy = userId;
-            entity.UpdatedBy = userId;
             entity.RoleId = 1; 
             var data = await _usersRepository.AddDataAsync(entity);
+            data.CreatedBy = _tokenContextService.GetUserId();
             return _mapper.Map<UserDto>(data);
         }
 

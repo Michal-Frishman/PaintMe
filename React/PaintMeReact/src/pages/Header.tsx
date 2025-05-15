@@ -18,7 +18,6 @@ const Header = () => {
             Swal.fire({
                 icon: "error",
                 title: "יש להתחבר קודם!",
-                footer: '<a href="#/login">התחברות/הרשמה</a>',
                 background: '#fff8f8',
                 color: '#333',
                 confirmButtonColor: '#f44336',

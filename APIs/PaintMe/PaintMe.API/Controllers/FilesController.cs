@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using PaintMe.Core.IServices;
 using PaintMe.Core;
+using PaintMe.Service.Services;
 
 namespace PaintMe.API.Controllers
 {
@@ -31,7 +32,14 @@ namespace PaintMe.API.Controllers
             var result = await _fileService.GetListAsync();
             return Ok(result);
         }
-
+        [HttpGet("user")]
+        public async Task<ActionResult<List<FileDto>>> GetByUserId()
+        {
+            var files = await _fileService.GetDataByUserId();
+            if (files == null || files.Count == 0)
+                return NotFound("No files.");
+            return Ok(files);
+        }
         // GET api/Files/5
         [HttpGet("{id}")]
         public async Task<ActionResult<FileDto>> GetById(int id)
@@ -61,7 +69,7 @@ namespace PaintMe.API.Controllers
 
             var fileDto = _mapper.Map<FileDto>(filePostModal);
             var result = await _fileService.AddAsync(fileDto);
-            if (result==null)
+            if (result == null)
             {
                 return BadRequest("Failed to create file.");
             }

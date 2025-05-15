@@ -22,6 +22,14 @@ namespace PaintMe.Data.Repository
         {
             return await _dataContext.Files.ToListAsync();
         }
+        public async Task<List<File>> GetDataByUserId(int userId)
+        {
+            
+                return await _dataContext.Files
+                    .Where(x => x.CreatedBy == userId || x.CreatedBy == 0)
+                    .ToListAsync();
+            
+        }
 
         public async Task<File> AddDataAsync(File file)
         {

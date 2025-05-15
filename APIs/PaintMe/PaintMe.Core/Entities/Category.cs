@@ -17,7 +17,7 @@ namespace PaintMe.Core.Entities
         public string? Name { get; set; }
         public int UpdatedBy { get; set; }
         public int CreatedBy { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime CreateAt { get; set; }
+        public DateTime UpdateAt { get; set; }
     }
 }

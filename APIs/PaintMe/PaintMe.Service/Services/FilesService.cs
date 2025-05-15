@@ -48,7 +48,7 @@ namespace PaintMe.Service.Services
                 return null;
             file.CreatedAt = DateTime.Now;
             var data = _mapper.Map<File>(file);
-            data.CreatedBy= _tokenContextService.GetUserId();
+            data.CreatedBy = _tokenContextService.GetUserId();
             var a = await _filesRepository.AddDataAsync(data);
             var x = _mapper.Map<FileDto>(a);
             return x;
@@ -65,5 +65,12 @@ namespace PaintMe.Service.Services
             var data = await _filesRepository.GetByCategoryDataAsync(categoryId);
             return _mapper.Map<List<FileDto>>(data);
         }
+        public async Task<List<FileDto>> GetDataByUserId()
+        {
+            int userId = _tokenContextService.GetUserId();
+            var files = await _filesRepository.GetDataByUserId(userId);
+            return _mapper.Map<List<FileDto>>(files);
+        }
+
     }
 }
