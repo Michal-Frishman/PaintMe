@@ -48,7 +48,7 @@ namespace PaintMe.API.Controllers
 
         // POST api/Category
         [HttpPost]
-        [Authorize(Policy = "AdminOly")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<bool>> Post([FromBody] CategoryPostModel category)
         {
             if (category == null) return BadRequest("User data is required");
@@ -60,7 +60,7 @@ namespace PaintMe.API.Controllers
 
         // PUT api/Category/5
         [HttpPut("{id}")]
-        [Authorize(Policy = "AdminOly")]
+        [Authorize(Policy = "AdminOnly")]
 
         public async Task<ActionResult<bool>> Put(int id, [FromBody] CategoryPostModel category)
         {
@@ -73,7 +73,7 @@ namespace PaintMe.API.Controllers
 
         // DELETE api/Category/5
         [HttpDelete("{id}")]
-        [Authorize(Policy = "AdminOly")]
+        [Authorize(Policy = "AdminOnly")]
 
         public async Task<ActionResult<bool>> Delete(int id)
         {
