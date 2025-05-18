@@ -223,7 +223,7 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
         img.crossOrigin = "anonymous"
         img.src = backgroundImage
 
-        await new Promise((resolve, reject) => {
+        await new Promise((resolve, _) => {
           img.onload = () => {
             context.drawImage(img, 0, 0, newCanvas.width, newCanvas.height)
             context.drawImage(canvas, 0, 0, newCanvas.width, newCanvas.height)
@@ -341,7 +341,7 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
         img.crossOrigin = "anonymous"
         img.src = backgroundImage
 
-        await new Promise((resolve, reject) => {
+        await new Promise((resolve, _) => {
           img.onload = () => {
             context.drawImage(img, 0, 0, newCanvas.width, newCanvas.height)
             context.drawImage(canvas, 0, 0, newCanvas.width, newCanvas.height)
@@ -399,7 +399,7 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
         img.crossOrigin = "anonymous"
         img.src = backgroundImage
 
-        await new Promise((resolve, reject) => {
+        await new Promise((resolve, _) => {
           img.onload = () => {
             context.drawImage(img, 0, 0, newCanvas.width, newCanvas.height)
             context.drawImage(canvas, 0, 0, newCanvas.width, newCanvas.height)

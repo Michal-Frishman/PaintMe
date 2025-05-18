@@ -218,7 +218,7 @@ namespace PaintMe.Service.Services
         }
 
         public async Task<UserDto> FindUserByEmailAsync(string email)
-        {
+         {
             var user = await _usersRepository.FindUserByEmailAsync(email);
             return _mapper.Map<UserDto>(user);
         }

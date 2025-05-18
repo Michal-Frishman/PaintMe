@@ -6,7 +6,6 @@ using System.Xml.Linq;
 
 namespace PaintMe.Core.Entities
 {
-    //[Index(nameof(Email), nameof(Name), IsUnique = true)]
 
     [Table("Users")]
     public class User

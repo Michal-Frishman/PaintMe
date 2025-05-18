@@ -1,4 +1,4 @@
-import { AppBar, Box, Toolbar, Typography, Button, IconButton } from "@mui/material"
+import { AppBar, Box, Toolbar, Typography, Button } from "@mui/material"
 import { Link, Link as RouterLink } from "react-router-dom"
 import { Brush, CloudUpload, Login, Collections } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles"

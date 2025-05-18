@@ -25,7 +25,7 @@ namespace PaintMe.Service.Services
         new Claim("Id", userId.ToString()),
         new Claim("Email", username),
         new Claim("DateCreated", DateTime.UtcNow.ToString()),
-        new Claim(ClaimTypes.Role, role) 
+        new Claim(ClaimTypes.Role, role)
     };
 
             var token = new JwtSecurityToken(

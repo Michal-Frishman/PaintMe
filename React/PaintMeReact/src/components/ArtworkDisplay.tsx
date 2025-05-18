@@ -394,7 +394,6 @@ import {
   Breadcrumbs,
   IconButton,
   useTheme,
-  useMediaQuery,
   Tooltip,
   Button, // Moved Button import here
 } from "@mui/material"
@@ -404,8 +403,6 @@ const ArtworkDisplay = observer(() => {
   const { id: categoryId } = useParams()
   const navigate = useNavigate()
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
-  const isTablet = useMediaQuery(theme.breakpoints.down("md"))
 
   useEffect(() => {
     if (categoryId) {

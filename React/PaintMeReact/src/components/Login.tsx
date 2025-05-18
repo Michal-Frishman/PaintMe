@@ -14,10 +14,7 @@ import {
   Divider,
   Alert,
   CircularProgress,
-  useMediaQuery,
-  useTheme,
   FormHelperText,
-  Link,
 } from "@mui/material"
 import { Visibility, VisibilityOff, Email, Lock, Google } from "@mui/icons-material"
 import axios from "axios"
@@ -36,22 +33,10 @@ export default function AuthPage() {
   const emailRef = useRef<HTMLInputElement>(null)
   const passwordRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
 
   const handleModeChange = (_event: React.SyntheticEvent, newValue: "login" | "register") => {
     setMode(newValue)
     setError(null)
-  }
-
-  const getUserIdFromToken = (token: string) => {
-    try {
-      const payload = JSON.parse(atob(token.split(".")[1]))
-      return payload.id
-    } catch (error) {
-      console.error("Error parsing token:", error)
-      return null
-    }
   }
 
   const validateForm = () => {
@@ -97,7 +82,6 @@ export default function AuthPage() {
 
       const token = res.data.token
       sessionStorage.setItem("token", token)
-      sessionStorage.setItem("userId", getUserIdFromToken(token))
       console.log(emailRef.current?.value);
 
       setSuccess(mode === "login" ? "התחברת בהצלחה!" : "נרשמת בהצלחה!")
@@ -107,7 +91,6 @@ export default function AuthPage() {
           'template_v9kcgm5',
           {
             email: emailRef.current?.value,
-            // message: "תודה שנרשמת ל-PaintMe!",
           },
           "PLoLH7V1mxp0HGHAK")
       }
@@ -144,7 +127,7 @@ export default function AuthPage() {
       }
 
       const url = `${import.meta.env.VITE_API_URL}/api/Auth/${mode}`
-      const password = "GoogleAuth123!" // Consider a more secure approach
+      const password = "GoogleAuth123!" 
 
       const res = await axios.post(url, {
         Email: email,
@@ -153,14 +136,12 @@ export default function AuthPage() {
 
       const token = res.data.token
       sessionStorage.setItem("token", token)
-      sessionStorage.setItem("userId", getUserIdFromToken(token))
 
       setSuccess(mode === "login" ? "התחברת בהצלחה עם Google!" : "נרשמת בהצלחה עם Google!")
 
-      // Redirect after a short delay
-      setTimeout(() => {
+      // setTimeout(() => {
         navigate("/")
-      }, 1500)
+      // }, 1500)
     } catch (err) {
       console.error("Google Sign-In error:", err)
       setError("שגיאה בהתחברות עם Google")
@@ -336,13 +317,13 @@ export default function AuthPage() {
               <FormHelperText sx={{ mb: 3, mr: 1.5 }}>הסיסמה חייבת להכיל לפחות 6 תווים</FormHelperText>
             )}
 
-            {mode === "login" && (
+            {/* {mode === "login" && (
               <Box sx={{ mb: 3, textAlign: "end" }}>
                 <Link href="#" underline="hover" variant="body2" color="primary" sx={{ cursor: "pointer" }}>
                   שכחת סיסמה?
                 </Link>
               </Box>
-            )}
+            )} */}
 
             <Button
               type="submit"

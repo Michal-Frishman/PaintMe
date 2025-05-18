@@ -346,7 +346,6 @@ import {
   Snackbar,
   Alert,
   useTheme,
-  useMediaQuery,
   Divider,
   CardContent,
   Button,
@@ -363,8 +362,6 @@ import Swal from "sweetalert2"
 
 const ColoredFiles = observer(() => {
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
-  const isTablet = useMediaQuery(theme.breakpoints.down("md"))
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [selectedFileId, setSelectedFileId] = useState<number | null>(null)
   const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: "success" | "error" }>({

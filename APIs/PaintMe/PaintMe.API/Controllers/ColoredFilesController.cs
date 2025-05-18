@@ -52,7 +52,7 @@ namespace PaintMe.API.Controllers
             return Ok(result);
         }
         [HttpGet("getByUser")]
-        [Authorize(Policy = "UserOnly")]
+        [Authorize]
         public async Task<ActionResult<List<ColoredFileDto>>> GetByUser()
         {
             var userId = _tokenContextService.GetUserId();
@@ -62,7 +62,7 @@ namespace PaintMe.API.Controllers
             var result = await _coloredFileService.GetByUserIdAsync(userId);
             if (result == null)
             {
-                return new List<ColoredFileDto>();
+                return new  List<ColoredFileDto>();
             }
             return Ok(result);
         }
