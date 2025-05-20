@@ -1,17 +1,21 @@
 import { makeAutoObservable, action } from 'mobx';
 import { Category } from '../models/Category';
 import { File } from '../models/File';
-import { fetchCategories, fetchArtworksByCategory, fetchArtworkById, fetchAddColoredFile, fetchAddFile, fetchColoredFiles, fetchDeleteColoredFile } from './Api';
+import { fetchCategories, fetchArtworksByCategory, fetchArtworkById, fetchAddColoredFile, fetchAddFile, fetchColoredFiles, fetchDeleteColoredFile, fetchAiDrawingInstructions, fetchAiaiDrawingFeedback } from './Api';
 import { ColoredFile } from '../models/ColoredFile';
 
 class ArtStore {
     isLoading = false;
-
+    aiInstructions: string | null = null;
+    aiFeedback: string | null = null;
     categories: Category[] = [];
     artworks: File[] = [];
     selectedCategory: number | null = null;
     selectedArtwork: File | null = null;
     coloredFiles: ColoredFile[] | null = null;
+    lastAiInstructionsPath: string | null = null; // ✅ חדש
+    aiInstructionsMap = new Map<string, string>(); // ✅ שמירת הוראות לפי path
+
     constructor() {
         makeAutoObservable(this);
         // this.loadCategories();
@@ -90,10 +94,51 @@ class ArtStore {
     });
 
     getCategories() {
-        console.log("categories"+ this.categories);
         return this.categories;
-
     }
+    // loadAiInstructions = action(async (path: string) => {
+    //       if (this.lastAiInstructionsPath === path && this.aiInstructions) {
+    //   return // ✅ לא טוען שוב אם זה כבר נטען
+    // }
+    //     this.isLoading = true;
+    //     try {
+    //         const result = await fetchAiDrawingInstructions(path);
+    //         this.aiInstructions = result;
+    //     } catch (error) {
+    //         console.error('שגיאה בטעינת רעיונות AI:', error);
+    //         this.aiInstructions = null;
+    //     }
+    //     this.isLoading = false;
+    // });
+    getAiInstructions(path: string): string | null {
+        return this.aiInstructionsMap.get(path) ?? null;
+    }
+
+    loadAiInstructions = action(async (path: string) => {
+        if (this.aiInstructionsMap.has(path)) return; // ✅ כבר נטען – לא טוען שוב
+
+        this.isLoading = true;
+        try {
+            const result = await fetchAiDrawingInstructions(path);
+            this.aiInstructionsMap.set(path, result); // ✅ שמירה לפי path
+        } catch (error) {
+            console.error('שגיאה בטעינת רעיונות AI:', error);
+        }
+        this.isLoading = false;
+    });
+
+loadAiFeedback = action(async (path: string) => {
+    this.isLoading = true;
+    try {
+        const result = await fetchAiaiDrawingFeedback(path);
+        this.aiFeedback = result;
+    } catch (error) {
+        console.error('שגיאה בטעינת פידבק מה-AI:', error);
+        this.aiFeedback = null;
+    }
+    this.isLoading = false;
+});
+
 }
 
 const artStore = new ArtStore();

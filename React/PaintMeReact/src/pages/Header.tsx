@@ -9,7 +9,6 @@ import { BubbleDecoration } from "./HomePage";
 const Header = () => {
     const theme = useTheme()
 
-    // בתוך קומפוננטת Header
     const navigate = useNavigate();
 
     const handleProtectedNavigation = (path: string) => {
@@ -83,10 +82,15 @@ const Header = () => {
                         fontSize: 35,
                         textDecoration: "none",
                         color: theme.palette.primary.main,
-                        fontFamily: "'Baloo 2', sans-serif",
+                        // fontFamily: "'Baloo 2', sans-serif",
                     }}
                 >
                     PaintMe
+                        {/* <img
+                        src="\logo.png" // שימי כאן את הנתיב ללוגו שלך
+                        alt="PaintMe Logo"
+                        style={{ height: 80,width:80, marginRight: 8 }}
+                    /> */}
                 </Typography>
 
                 {/* <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2, alignItems: "center" }}>
@@ -167,15 +171,30 @@ const Header = () => {
                     >
                         הציורים שלי
                     </Button> */}
-                     <Button
-                        component={Link}
-                        to="/login"
-                        color="inherit"
-                        sx={{ backgroundColor: theme.palette.secondary.main, flex: '1 1 auto' }}
-                        startIcon={<Login sx={{ ml: 1 }} />}
-                    >
-                        התחברות/הרשמה
-                    </Button>
+                    {!sessionStorage.getItem("token") && (
+                        <>
+                            {/* <Button
+                                onClick={() => {
+                                    sessionStorage.removeItem("token");
+                                    navigate("/");
+                                }}
+                                color="inherit"
+                                sx={{ backgroundColor: theme.palette.secondary.main, flex: '1 1 auto' }}
+                                startIcon={<Login sx={{ ml: 1 }} />}
+                            >
+                                התנתקות
+                            </Button> */}
+                            <Button
+                                component={Link}
+                                to="/login"
+                                color="inherit"
+                                sx={{ backgroundColor: theme.palette.secondary.main, flex: '1 1 auto' }}
+                                startIcon={<Login sx={{ ml: 1 }} />}
+                            >
+                                התחברות/הרשמה
+                            </Button>
+                        </>
+                    )}
                     <Button
                         component={RouterLink}
                         to="/categories"

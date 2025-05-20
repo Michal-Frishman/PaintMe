@@ -4,6 +4,9 @@ import { createTheme } from "@mui/material/styles"
 // Create a custom theme with pastel, childish colors
 const theme = createTheme({
   direction: "rtl", // Set RTL direction
+  // typography: {
+  //   fontFamily: "'Baloo 2', sans-serif",
+  // },
   palette: {
     primary: {
       main: "#FF85A1", // Soft pink

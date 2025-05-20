@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Authorization;
 using PaintMe.Core.IServices;
 using PaintMe.Core;
 using PaintMe.Service.Services;
+using System.Text.Json;
+using System.Text;
+using System.IO;
 
 namespace PaintMe.API.Controllers
 {
@@ -18,6 +21,7 @@ namespace PaintMe.API.Controllers
     {
         private readonly IFilesService _fileService;
         private readonly IMapper _mapper;
+        private static readonly HttpClient client = new HttpClient();
 
         public FilesController(IFilesService fileService, IMapper mapper)
         {
@@ -126,6 +130,135 @@ namespace PaintMe.API.Controllers
             }
             return Ok(result);
         }
+        [HttpGet("aiDrawingInstructions")]
+        public async Task<string> AiDrawingInstructions([FromQuery] string path)
+        {
+            string base64Image = await ConvertImageToBase64Async(path);
+
+            string apiKey = "AIzaSyDmYwXGXUSLI1n2pKpow5tnbGtKectLYoM";
+            string endpoint = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={apiKey}";
+
+            var payload = new
+            {
+                contents = new[]
+                {
+                new {
+                    parts = new object[]
+                    {
+                        new { text = "ללא שימוש במילה בטח ולא שימוש בסוגי צבעים ומברשות .תן לי הוראות מפורטות איך לצבוע את התמונה הנתונה, תן פרוט על כל אלמנט בתמונה באיזה צבע לצבוע אותו" },
+                        new {
+                            inlineData = new {
+                                mimeType = "image/jpeg",
+                                data = base64Image
+                            }
+                        }
+                    }
+                }
+            }
+            };
+
+            var json = JsonSerializer.Serialize(payload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync(endpoint, content);
+            string result = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return $"API Error: {result}";
+            }
+
+            using JsonDocument doc = JsonDocument.Parse(result);
+            var root = doc.RootElement;
+
+            if (root.TryGetProperty("candidates", out var candidates) &&
+                candidates.GetArrayLength() > 0)
+            {
+                var firstCandidate = candidates[0];
+
+                if (firstCandidate.TryGetProperty("content", out var content2) &&
+                    content2.TryGetProperty("parts", out var parts) &&
+                    parts.GetArrayLength() > 0)
+                {
+                    var firstPart = parts[0];
+                    if (firstPart.TryGetProperty("text", out var text))
+                    {
+                        return text.GetString();
+                    }
+                }
+            }
+
+            return "No text found in the response.";
+        }
+        [HttpGet("aiDrawingFeedback")]
+        public async Task<string> AiDrawingFeedback([FromQuery] string path)
+        {
+            string base64Image = await ConvertImageToBase64Async(path);
+
+            string apiKey = "AIzaSyDmYwXGXUSLI1n2pKpow5tnbGtKectLYoM";
+            string endpoint = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={apiKey}";
+
+            var payload = new
+            {
+                contents = new[]
+                {
+                new {
+                    parts = new object[]
+                    {
+                        new { text = "השתמש בלשון זכר לאורך כל המשוב. אנא נתח את התמונה הצבועה המצורפת. תן משוב חיובי ומעודד שמתמקד בהצעות להוספת צבעים או אזורים שבהם ניתן להעשיר את הציור עם צבעים משלימים, מבלי להציע תיקונים או שינויים בצבעים שכבר קיימים. השתמש בשפה ידידותית ומניעה להמשך יצירה."},
+                        new {
+                            inlineData = new {
+                                mimeType = "image/jpeg",
+                                data = base64Image
+                            }
+                        }
+                    }
+                }
+            }
+            };
+
+            var json = JsonSerializer.Serialize(payload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync(endpoint, content);
+            string result = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return $"API Error: {result}";
+            }
+
+            using JsonDocument doc = JsonDocument.Parse(result);
+            var root = doc.RootElement;
+
+            if (root.TryGetProperty("candidates", out var candidates) &&
+                candidates.GetArrayLength() > 0)
+            {
+                var firstCandidate = candidates[0];
+
+                if (firstCandidate.TryGetProperty("content", out var content2) &&
+                    content2.TryGetProperty("parts", out var parts) &&
+                    parts.GetArrayLength() > 0)
+                {
+                    var firstPart = parts[0];
+                    if (firstPart.TryGetProperty("text", out var text))
+                    {
+                        return text.GetString();
+                    }
+                }
+            }
+
+            return "No text found in the response.";
+        }
+
+        private static async Task<string> ConvertImageToBase64Async(string imagePathOrUrl)
+        {
+
+            using var httpClient = new HttpClient();
+            byte[] imageBytes = await httpClient.GetByteArrayAsync(imagePathOrUrl);
+            return Convert.ToBase64String(imageBytes);
+        }
+
     }
 
 

@@ -80,7 +80,6 @@ namespace PaintMe.API.Controllers
         // POST api/ColoredFiles
         [HttpPost]
         [Authorize]
-
         public async Task<ActionResult<ColoredFileDto>> Post([FromBody] ColoredFilePostModal coloredFile)
         {
            

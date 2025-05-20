@@ -95,7 +95,10 @@ export default function AuthPage() {
           "PLoLH7V1mxp0HGHAK")
       }
       setTimeout(() => {
-        navigate("/")
+        sessionStorage.getItem("url") ?
+          navigate("/drawing", { state: { isColored: true } })
+          :
+          navigate("/")
       }, 1500)
     } catch (e: any) {
       console.error("Error:", e)
@@ -127,7 +130,7 @@ export default function AuthPage() {
       }
 
       const url = `${import.meta.env.VITE_API_URL}/api/Auth/${mode}`
-      const password = "GoogleAuth123!" 
+      const password = "GoogleAuth123!"
 
       const res = await axios.post(url, {
         Email: email,
@@ -140,7 +143,7 @@ export default function AuthPage() {
       setSuccess(mode === "login" ? "התחברת בהצלחה עם Google!" : "נרשמת בהצלחה עם Google!")
 
       // setTimeout(() => {
-        navigate("/")
+      navigate("/")
       // }, 1500)
     } catch (err) {
       console.error("Google Sign-In error:", err)

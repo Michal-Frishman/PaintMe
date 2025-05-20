@@ -1,7 +1,4 @@
-"use client"
-
 import type React from "react"
-
 import { useRef, useState, useEffect } from "react"
 import axios from "axios"
 import {
@@ -16,11 +13,13 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material"
-import { useParams } from "react-router-dom"
+
+import { useNavigate, useParams } from "react-router-dom"
 import artStore from "./ArtStore"
 import { Delete, Download, Save, Print } from "@mui/icons-material"
 import Swal from "sweetalert2"
 import axiosInstance from "./axiosInstance"
+import AiInstructionsSection from "./AiInstructionsSection"
 
 const colorMap = {
   red: "rgba(255, 0, 0, 0.5)",
@@ -29,16 +28,21 @@ const colorMap = {
   yellow: "rgba(255, 255, 0, 0.5)",
   black: "rgba(0, 0, 0, 0.5)",
   pink: "rgba(255, 192, 203, 0.5)",
-  purple: "rgba(128, 0, 128, 0.5)",
-  cyan: "rgba(0, 255, 255, 0.5)",
-  gold: "rgba(255, 215, 0, 0.5)",
-  orange: "rgba(255, 165, 0, 0.5)",
+  // purple: "rgba(128, 0, 128, 0.5)",
+  // cyan: "rgba(0, 255, 255, 0.5)",
+  // gold: "rgba(255, 215, 0, 0.5)",
+  // orange: "rgba(255, 165, 0, 0.5)",
+  //   lime: "rgba(0, 255, 0, 0.3)",
+  // navy: "rgba(0, 0, 128, 0.5)",
+  // brown: "rgba(139, 69, 19, 0.5)",
+  // gray: "rgba(128, 128, 128, 0.5)",
+  // white: "rgba(255, 255, 255, 0.5)",
+  // darkred: "rgba(139, 0, 0, 0.5)",
 }
 
 const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
   const theme = useTheme()
 
-  // Loading states for different actions
   const [isSaving, setIsSaving] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const [isPrinting, setIsPrinting] = useState(false)
@@ -63,10 +67,13 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
   const [brushRadius, setBrushRadius] = useState(5)
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null)
   const [fileName, setFileName] = useState("")
+  const [fileUrl, setFileUrl] = useState("")
+
+  // const [showAiInstructions, setShowAiInstructions] = useState(false)
+
   const { id } = useParams<{ id: string }>()
   const url = import.meta.env.VITE_API_URL
 
-  // Initialize canvas and load background image
   useEffect(() => {
     const loadArtworkById = async (artworkId: number) => {
       try {
@@ -75,6 +82,7 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
           : await axiosInstance.get(`${url}/api/Files/${artworkId}`)
         setBackgroundImage(response.data.coloredImageUrl || response.data.fileUrl)
         setFileName(response.data.name)
+        setFileUrl(response.data.fileUrl)
       } catch (error) {
         console.error("Error loading artwork:", error)
         showSnackbar("שגיאה בטעינת הציור", "error")
@@ -85,7 +93,6 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
     }
   }, [id, isColored, url])
 
-  // Setup canvas and drawing context
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -93,23 +100,24 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    // Set canvas size
     if (containerRef.current) {
       canvas.width = 600
       canvas.height = 400
     }
 
-    // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    // Load background image if available
     if (backgroundImage) {
       const img = new Image()
       img.crossOrigin = "anonymous"
       img.src = backgroundImage
       img.onload = () => {
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+        const ratio = Math.min(canvas.width / img.width, canvas.height / img.height)
+        const x = (canvas.width - img.width * ratio) / 2
+        const y = (canvas.height - img.height * ratio) / 2
+        ctx.drawImage(img, x, y, img.width * ratio, img.height * ratio)
       }
+
 
     }
   }, [backgroundImage])
@@ -126,7 +134,6 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
     setSnackbar({ ...snackbar, open: false })
   }
 
-  // Drawing functions
   const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -136,14 +143,11 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
 
     setIsDrawing(true)
 
-    // Get coordinates
     let clientX, clientY
     if ("touches" in e) {
-      // Touch event
       clientX = e.touches[0].clientX
       clientY = e.touches[0].clientY
     } else {
-      // Mouse event
       clientX = e.clientX
       clientY = e.clientY
     }
@@ -165,15 +169,12 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    // Get coordinates
     let clientX, clientY
     if ("touches" in e) {
-      // Touch event
       clientX = e.touches[0].clientX
       clientY = e.touches[0].clientY
-      e.preventDefault() // Prevent scrolling on touch devices
+      e.preventDefault()
     } else {
-      // Mouse event
       clientX = e.clientX
       clientY = e.clientY
     }
@@ -255,71 +256,64 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
       setIsSaving(false)
     }
   }
+  const handleTempSave = async (canvas: HTMLCanvasElement) => {
+    const imageUrl = canvas.toDataURL("image/png")
+    const blob = await (await fetch(imageUrl)).blob()
+    const fileName2 = fileName + "colored" + Date.now() + ".png"
 
+    try {
+      const response = await axios.get(`${url}/api/upload/presigned-url`, {
+        params: { fileName: fileName2 },
+      })
+      const presignedUrl = response.data.url
+
+      await axios.put(presignedUrl, blob, {
+        headers: { "Content-Type": "image/png" },
+      })
+
+      const downloadResponse = await axios.get(`${url}/api/upload/download-url/${fileName2}`)
+      const downloadUrl = downloadResponse.data
+      sessionStorage.setItem("coloredImageUrl", downloadUrl);
+      const navigate = useNavigate()
+      navigate("/login");
+    }
+    catch (error) {
+      console.error("Error uploading painted drawing:", error)
+      throw new Error("שגיאה בהעלאת הציור")
+    }
+  }
   const saveCanvas = async (canvas: HTMLCanvasElement) => {
     const imageUrl = canvas.toDataURL("image/png")
     const blob = await (await fetch(imageUrl)).blob()
     const fileName2 = fileName + "colored" + Date.now() + ".png"
 
     try {
-      // Get presigned URL
       const response = await axios.get(`${url}/api/upload/presigned-url`, {
         params: { fileName: fileName2 },
       })
       const presignedUrl = response.data.url
 
-      // Upload image to presigned URL
       await axios.put(presignedUrl, blob, {
         headers: { "Content-Type": "image/png" },
       })
 
-      // try {
-      //   const url = `${import.meta.env.VITE_API_URL}/api/upload/presigned-url`
-      //   const response = await axiosInstance.get(url, { params: { fileName: file.name } })
-
-      //   await axios.put(response.data.url, file, {
-      //     headers: { "Content-Type": file.type },
-      //     onUploadProgress: (e) => {
-      //       const percent = Math.round((e.loaded * 100) / (e.total || 1))
-      //       setProgress(percent)
-      //     },
-      //   })
-
-      //   const downloadResponse = await axiosInstance.get(
-      //     `${import.meta.env.VITE_API_URL}/api/upload/download-url/${file.name}`,
-      //   )
-      //   const downloadUrl = downloadResponse.data
-
-      //   await artStore.saveFile({
-      //     CategoryId: selectedCategory,
-      //     FileUrl: downloadUrl,
-      //     Name: artworkName,
-      //   })
-
-      // Get download URL
       const downloadResponse = await axios.get(`${url}/api/upload/download-url/${fileName2}`)
       const downloadUrl = downloadResponse.data
 
-      // Save to store
       await artStore.saveColoredFile({
         name: fileName2,
         coloredImageUrl: downloadUrl,
         originalDrawingId: Number.parseInt(id || ""),
-        // userId: Number.parseInt(sessionStorage.getItem("userId") || ""),
       })
-      // public int OriginalDrawingId { get; set; }
-      // public string Name { get; set; }
-      // public string ColoredImageUrl { get; set; }
       return true
     } catch (error) {
       console.error("Error uploading painted drawing:", error)
       throw new Error("שגיאה בהעלאת הציור")
     }
   }
-
   const handleDownload = async () => {
     if (!canvasRef.current) return
-    if (isDownloading) return // Prevent multiple clicks
+    if (isDownloading) return 
 
     setIsDownloading(true)
     showSnackbar("מכין את הציור להורדה...", "info")
@@ -540,7 +534,39 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
             aria-label="גודל מכחול"
           />
         </Stack>
-        <Box
+        <Box ref={containerRef}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          width={600}
+          height={400}
+          sx={{
+            backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
+            backgroundSize: "contain",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+            position: "relative",
+            borderRadius: 2,
+            border: `1px solid ${theme.palette.divider}`,
+            boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+            overflow: "hidden",
+          }}>
+          <canvas
+            ref={canvasRef}
+            onMouseDown={startDrawing}
+            onMouseMove={draw}
+            onMouseUp={endDrawing}
+            onMouseLeave={endDrawing}
+            onTouchStart={startDrawing}
+            onTouchMove={draw}
+            onTouchEnd={endDrawing}
+            style={{ width: '100%', height: '100%', border: '1px solid #ccc' }}
+          />
+          {/* התוסף הצף מעל הקנבס */}
+          {fileUrl && <AiInstructionsSection imagePath={fileUrl} />}
+        </Box>
+
+        {/* <Box
           ref={containerRef}
           display="flex"
           justifyContent="center"
@@ -578,7 +604,7 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
               background: "transparent",
             }}
           />
-        </Box>
+        </Box> */}
         <Paper
           elevation={3}
           sx={{
@@ -712,10 +738,33 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
               </IconButton>
             </div>
           </Tooltip>
+
         </Paper>
+        {/* {!isColored && (
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<LightbulbIcon />}
+            onClick={() => setShowAiInstructions(true)}
+          >
+            קבל רעיונות והשראה לצביעה מ-AI
+          </Button>)}
+        {showAiInstructions && <AiInstructionsSection imagePath={fileUrl} />} */}
+
+
+        {/* {isColored && (
+          <Button
+            variant="outlined"
+            color="secondary"
+            startIcon={<FeedbackIcon />}
+            onClick={() => }
+          >
+            קבל משוב והצעות לייעול מ-AI
+          </Button>
+        )} */}
       </Stack>
 
-      {/* Snackbar for notifications */}
+
       <Snackbar
         open={snackbar.open}
         autoHideDuration={4000}
