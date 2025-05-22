@@ -58,7 +58,7 @@ export const fetchDeleteColoredFile = async (id: number) => {
 
 export const fetchAiDrawingInstructions = async (path: string) => {
     try {
-        const response = await axios.get(`https://localhost:7209/api/Files/aiDrawingInstructions
+        const response = await axios.get(`${API_URL}/Files/aiDrawingInstructions
 `, {
             params: { path }
         });

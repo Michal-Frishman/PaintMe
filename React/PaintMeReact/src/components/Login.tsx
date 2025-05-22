@@ -20,7 +20,7 @@ import { Visibility, VisibilityOff, Email, Lock, Google } from "@mui/icons-mater
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth"
-import { auth } from "../pages/firebase" // Make sure this path is correct
+import { auth } from "../pages/firebase" 
 import emailjs from '@emailjs/browser';
 
 export default function AuthPage() {
@@ -95,9 +95,6 @@ export default function AuthPage() {
           "PLoLH7V1mxp0HGHAK")
       }
       setTimeout(() => {
-        sessionStorage.getItem("url") ?
-          navigate("/drawing", { state: { isColored: true } })
-          :
           navigate("/")
       }, 1500)
     } catch (e: any) {

@@ -305,17 +305,20 @@ const AiInstructionsSection = observer(({ imagePath }: { imagePath: string }) =>
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const toggleOpen = async () => {
-    if (!open) {
-      const alreadyLoaded = artStore.getAiInstructions(imagePath);
-      if (!alreadyLoaded) {
-        setLoading(true);
-        await artStore.loadAiInstructions(imagePath);
-        setLoading(false);
-      }
+const toggleOpen = async () => {
+  if (!open) {
+    setOpen(true); // 👈 פותח מיד את הפופאפ
+    const alreadyLoaded = artStore.getAiInstructions(imagePath);
+    if (!alreadyLoaded) {
+      setLoading(true);
+      await artStore.loadAiInstructions(imagePath);
+      setLoading(false);
     }
-    setOpen(!open);
-  };
+  } else {
+    setOpen(false); // סוגר רגיל
+  }
+};
+
 
   const cleanInstructions = artStore.getAiInstructions(imagePath)
     ?.replace(/\*\*/g, '')
