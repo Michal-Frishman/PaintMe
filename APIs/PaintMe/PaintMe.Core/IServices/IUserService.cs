@@ -19,7 +19,6 @@ namespace PaintMe.Core
         public Task<UserDto> FindUserByEmailAsync(string email);
         Task<Dictionary<string, int>> GetNewUsersPerMonthAsync();
         public Task<bool> UpdateRoleAsync(int id, Role role);
-        //public Task<UserDto> RegisterAsync(UserDto user, string[] roles);
         public Task<UserDto> LoginAsync(string email, string password);
     }
 }

@@ -70,6 +70,13 @@ namespace PaintMe.API.Controllers
             if (!result) return NotFound("User not found");
             return Ok(result);
         }
+        // GET api/Categories/popularity
+        [HttpGet("popularity")]
+        public async Task<ActionResult<Dictionary<string, int>>> GetPopularity()
+        {
+            var result = await _categoryService.GetPopularityAsync();
+            return Ok(result);
+        }
 
         // DELETE api/Category/5
         [HttpDelete("{id}")]

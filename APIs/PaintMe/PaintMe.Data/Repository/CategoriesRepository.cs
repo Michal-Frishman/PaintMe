@@ -63,6 +63,22 @@ namespace PaintMe.Data.Repository
             }
         }
 
+        public async Task<Dictionary<string, int>> GetCategoryPopularityAsync()
+        {
+            return await _datacontext.ColoredFiles
+                .Include(cf => cf.File)                         
+                    .ThenInclude(f => f.Category)              
+                .GroupBy(cf => cf.File.Category.Name)           
+                .OrderByDescending(g => g.Count())               
+                .Select(g => new
+                {
+                    CategoryName = g.Key,
+                    Count = g.Count()
+                })
+                .ToDictionaryAsync(g => g.CategoryName, g => g.Count);
+        }
+
+
         public async Task<bool> RemoveItemFromDataAsync(int id)
         {
             var category = _datacontext.Categories.FirstOrDefault(c => c.Id == id);

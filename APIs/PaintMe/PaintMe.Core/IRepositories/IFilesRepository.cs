@@ -13,8 +13,10 @@ namespace PaintMe.Core
       public Task<List<File>> GetAllDataAsync();
       public Task<File> GetByIdDataAsync(int id);
         public  Task<List<File>> GetDataByUserId(int id);
+        Task<List<File>> GetFilesByUserOrAdminsAsync(int userId);
+    Task<List<File>> GetFilesByAdminsOnlyAsync();
 
-      public Task<File> AddDataAsync(File t);
+        public Task<File> AddDataAsync(File t);
       public Task<bool> UpdateDataAsync(int id, File item);
         public Task<bool> RemoveItemFromDataAsync(int id);
         Task<List<File>> GetByCategoryDataAsync(int categoryId);

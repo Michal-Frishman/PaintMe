@@ -121,6 +121,10 @@ namespace PaintMe.Service.Services
 
             return await _categoryRepository.UpdateDataAsync(id, categoryEntity);
         }
+        public async Task<Dictionary<string, int>> GetPopularityAsync()
+        {
+            return await _categoryRepository.GetCategoryPopularityAsync();
+        }
 
         public async Task<bool> AddAsync(CategoryDto category)
         {

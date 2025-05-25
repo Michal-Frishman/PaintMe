@@ -18,7 +18,17 @@ namespace PaintMe.Service.Services
             _filesRepository = dataContext;
             _tokenContextService = tokenContextService;
         }
-
+        public async Task<List<FileDto>> GetFilesByUserOrAdminsAsync()
+        {
+            int userId = _tokenContextService.GetUserId();
+            var files = await _filesRepository.GetFilesByUserOrAdminsAsync(userId);
+            return _mapper.Map<List<FileDto>>(files);
+        }
+        public async Task<List<FileDto>> GetFilesByAdminsOnlyAsync()
+        {
+            var files = await _filesRepository.GetFilesByAdminsOnlyAsync();
+            return _mapper.Map<List<FileDto>>(files);
+        }
         public async Task<List<FileDto>> GetListAsync()
         {
             var data = await _filesRepository.GetAllDataAsync();
@@ -71,16 +81,5 @@ namespace PaintMe.Service.Services
             var files = await _filesRepository.GetDataByUserId(userId);
             return _mapper.Map<List<FileDto>>(files);
         }
-        public async Task<List<File>> GetFilesByUserOrAdminsAsync()
-        {
-            int userId = _tokenContextService.GetUserId();
-            return await _filesRepository.GetFilesByUserOrAdminsAsync(userId);
-        }
-
-        public async Task<List<File>> GetFilesByAdminsOnlyAsync()
-        {
-            return await _filesRepository.GetFilesByAdminsOnlyAsync();
-        }
-
     }
 }

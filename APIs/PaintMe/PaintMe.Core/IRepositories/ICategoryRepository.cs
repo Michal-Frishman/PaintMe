@@ -11,5 +11,7 @@ namespace PaintMe.Service.Repositories
         Task<bool> RemoveItemFromDataAsync(int id);
         Task<bool> UpdateDataAsync(int id, Category category);
         Task<bool> AddDataAsync(Category category);
+        Task<Dictionary<string, int>> GetCategoryPopularityAsync();
+
     }
 }
