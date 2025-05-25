@@ -47,7 +47,7 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const url = import.meta.env.VITE_API_URL
-
+  const [response2, setResponse2] = useState<any>(null);
   useEffect(() => {
     sessionStorage.getItem("token") === null &&
       Swal.fire({
@@ -67,13 +67,16 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
   useEffect(() => {
     const loadArtworkById = async (artworkId: number) => {
       try {
-        const response = isColored
+        const res = isColored
           ? await axiosInstance.get(`${url}/api/ColoredFiles/${artworkId}`)
           : await axiosInstance.get(`${url}/api/Files/${artworkId}`)
 
-        setBackgroundImage(response.data.coloredImageUrl || response.data.fileUrl)
-        setFileName(response.data.name)
-        setFileUrl(response.data.fileUrl)
+        setResponse2(res)
+        const data = res.data
+
+        setBackgroundImage(data.coloredImageUrl || data.fileUrl)
+        setFileName(data.name)
+        setFileUrl(data.fileUrl)
       } catch (error) {
         console.error("Error loading artwork:", error)
         showSnackbar("שגיאה בטעינת הציור", "error")
@@ -85,27 +88,26 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
   }, [id, isColored, url])
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
-    if (containerRef.current) {
-      canvas.width = 600
-      canvas.height = 400
-    }
+    const canvas = canvasRef.current!
+    const container = containerRef.current!
+    // קביעה אמיתית של הרזולוציה
+    canvas.width = container.clientWidth
+    canvas.height = container.clientHeight
+
+    const ctx = canvas.getContext("2d")!
     ctx.clearRect(0, 0, canvas.width, canvas.height)
+
     if (backgroundImage) {
       const img = new Image()
       img.crossOrigin = "anonymous"
       img.src = backgroundImage
       img.onload = () => {
-        const ratio = Math.min(canvas.width / img.width, canvas.height / img.height)
-        const x = (canvas.width - img.width * ratio) / 2
-        const y = (canvas.height - img.height * ratio) / 2
-        ctx.drawImage(img, x, y, img.width * ratio, img.height * ratio)
+        // מותח על כל הקנבס
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
       }
     }
   }, [backgroundImage])
+
 
   const showSnackbar = (message: string, severity: "success" | "error" | "info" = "success") => {
     setSnackbar({
@@ -289,8 +291,12 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
       await artStore.saveColoredFile({
         name: fileName2,
         coloredImageUrl: downloadUrl,
-        originalDrawingId: Number.parseInt(id || ""),
+        originalDrawingId: response2.data.originalDrawingId
       })
+      if (isColored) {
+        await artStore.deleteColoredFile(Number.parseInt(id || ""))
+        console.log("Deleting old colored file with ID:", id);
+      }
       return true
     } catch (error) {
       console.error("Error uploading painted drawing:", error)
@@ -307,9 +313,9 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
 
     try {
       const canvas = canvasRef.current
-      const mergedCanvas = await createMergedCanvas(canvas)
+      // const mergedCanvas = await createMergedCanvas(canvas)
 
-      const imageUrl = mergedCanvas.toDataURL("image/png")
+      const imageUrl = canvas.toDataURL("image/png")
       console.log("imageUrl", imageUrl);
       const link = document.createElement("a")
       link.href = imageUrl
@@ -476,7 +482,7 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
           width={600}
           height={400}
           sx={{
-            backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
+            // backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
@@ -495,7 +501,7 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
             onTouchStart={startDrawing}
             onTouchMove={draw}
             onTouchEnd={endDrawing}
-            style={{ width: '100%', height: '100%', border: '1px solid #ccc' }}
+          // style={{ width: '100px', height: '100px', border: '1px solid #ccc' }}
           />
           {fileUrl && <AiInstructionsSection imagePath={fileUrl} />}
         </Box>

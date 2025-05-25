@@ -4,6 +4,7 @@ import { File } from '../models/File';
 import axios from 'axios';
 
 const API_URL = `${import.meta.env.VITE_API_URL}/api`;
+// const API_URL = `https://localhost:7209/api`;
 
 export const fetchCategories = async () => {
     const response = await axiosInstance.get(`${API_URL}/Categories`);
