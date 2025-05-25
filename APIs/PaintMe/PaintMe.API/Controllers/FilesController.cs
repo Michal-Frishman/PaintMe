@@ -36,6 +36,22 @@ namespace PaintMe.API.Controllers
             var result = await _fileService.GetListAsync();
             return Ok(result);
         }
+        [HttpGet("user-and-admin")]
+        [HttpGet("user-and-admin")]
+        public async Task<IActionResult> GetFilesByUserOrAdmins()
+        {
+            var files = await _fileService.GetFilesByUserOrAdminsAsync();
+            return Ok(files);
+        }
+
+
+        [HttpGet("admin-only")]
+        public async Task<IActionResult> GetFilesByAdminsOnly()
+        {
+            var files = await _fileService.GetFilesByAdminsOnlyAsync();
+            return Ok(files);
+        }
+
         [HttpGet("user")]
         public async Task<ActionResult<List<FileDto>>> GetByUserId()
         {

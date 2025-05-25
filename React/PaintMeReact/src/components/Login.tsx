@@ -139,9 +139,7 @@ export default function AuthPage() {
 
       setSuccess(mode === "login" ? "התחברת בהצלחה עם Google!" : "נרשמת בהצלחה עם Google!")
 
-      // setTimeout(() => {
       navigate("/")
-      // }, 1500)
     } catch (err) {
       console.error("Google Sign-In error:", err)
       setError("שגיאה בהתחברות עם Google")

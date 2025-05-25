@@ -307,7 +307,7 @@ const AiInstructionsSection = observer(({ imagePath }: { imagePath: string }) =>
 
 const toggleOpen = async () => {
   if (!open) {
-    setOpen(true); // 👈 פותח מיד את הפופאפ
+    setOpen(true); 
     const alreadyLoaded = artStore.getAiInstructions(imagePath);
     if (!alreadyLoaded) {
       setLoading(true);
@@ -315,7 +315,7 @@ const toggleOpen = async () => {
       setLoading(false);
     }
   } else {
-    setOpen(false); // סוגר רגיל
+    setOpen(false); 
   }
 };
 
