@@ -94,10 +94,16 @@ namespace PaintMe.Data.Repository
                 return false;
             }
         }
-        public async Task<List<File>> GetByCategoryDataAsync(int categoryId)
+        public async Task<List<File>> GetByCategoryDataAsync(int categoryId, int userId)
         {
-            return await _dataContext.Files.Where(f => f.CategoryId == categoryId).ToListAsync();
+            return await _dataContext.Files
+                .Include(f => f.UserCreated)
+                    .ThenInclude(u => u.Role) // חשוב לכלול את התפקיד
+                .Where(f => f.CategoryId == categoryId &&
+                           (f.CreatedBy == userId || f.UserCreated.Role.RoleName == "Admin"))
+                .ToListAsync();
         }
+
         public async Task<List<File>> GetFilesByUserOrAdminsAsync(int userId)
         {
             var adminRoleId = await _dataContext.Roles

@@ -72,9 +72,12 @@ namespace PaintMe.Service.Services
         }
         public async Task<List<FileDto>> GetByCategoryDataAsync(int categoryId)
         {
-            var data = await _filesRepository.GetByCategoryDataAsync(categoryId);
+            int userId = _tokenContextService.GetUserId(); // שליפת מזהה המשתמש המחובר
+
+            var data = await _filesRepository.GetByCategoryDataAsync(categoryId, userId);
             return _mapper.Map<List<FileDto>>(data);
         }
+
         public async Task<List<FileDto>> GetDataByUserId()
         {
             int userId = _tokenContextService.GetUserId();

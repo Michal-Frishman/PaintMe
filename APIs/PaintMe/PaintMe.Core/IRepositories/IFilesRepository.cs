@@ -19,7 +19,7 @@ namespace PaintMe.Core
         public Task<File> AddDataAsync(File t);
       public Task<bool> UpdateDataAsync(int id, File item);
         public Task<bool> RemoveItemFromDataAsync(int id);
-        Task<List<File>> GetByCategoryDataAsync(int categoryId);
+         Task<List<File>> GetByCategoryDataAsync(int categoryId, int userId);
 
     }
 }
