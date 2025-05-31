@@ -1,0 +1,75 @@
+  <app-back-button></app-back-button>
+
+<div class="container">
+  <h2>העלאת ציור</h2>
+
+  <mat-horizontal-stepper [selectedIndex]="activeStep()">
+    @for (step of steps; track i; let i = $index) {
+    <mat-step [label]="step"></mat-step>
+    }
+
+
+  </mat-horizontal-stepper>
+
+  @if (activeStep() === 0) {
+  <div class="upload-area">
+    <p>גרור ושחרר כאן קובץ תמונה או</p>
+    <input type="file" accept="image/*" (change)="onFileChange($event)" />
+  </div>
+  }
+
+  @if (activeStep() === 1) {
+  <div *ngIf="file">
+    <p>קובץ נבחר: {{ fileName }}</p>
+    <button mat-button (click)="removeFile()">הסר קובץ</button>
+
+    <form [formGroup]="uploadForm">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>קטגוריה</mat-label>
+        <mat-select formControlName="category">
+          @for(category of categories$ | async; track category.id) {
+          <mat-option [value]="category.id">{{ category.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>שם/תיאור הציור</mat-label>
+        <input matInput formControlName="artworkName" />
+      </mat-form-field>
+    </form>
+  </div>
+  }
+
+  @if (activeStep() === 2) {
+  @if (!uploadSuccess()) {
+  <p>שם הקובץ: {{ fileName }}</p>
+  <p>קטגוריה: {{ getSelectedCategoryName() }}</p>
+
+  <p>שם/תיאור: {{ uploadForm.get('artworkName')?.value }}</p>
+
+  <!-- @if (isUploading()) {
+  <mat-progress-bar mode="determinate" [value]="progress()"></mat-progress-bar>
+  <p>{{ progress() }}% הושלמו</p>
+  } -->
+
+  <button mat-raised-button (click)="upload()" [disabled]="isUploading()||loading">
+    @if(loading){
+    <app-loading-spinner></app-loading-spinner>
+    }
+    העלה ציור
+  </button>
+  } @else {
+  <p>הציור הועלה בהצלחה!</p>
+  }
+  }
+
+  <div class="navigation-buttons">
+    <button mat-button (click)="previousStep()" [disabled]="activeStep() === 0">
+      חזרה
+    </button>
+    <button mat-button (click)="nextStep()" *ngIf="activeStep() < steps.length - 1">
+      המשך
+    </button>
+  </div>
+</div>

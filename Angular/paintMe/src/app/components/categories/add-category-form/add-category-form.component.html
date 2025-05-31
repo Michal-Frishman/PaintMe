@@ -1,0 +1,26 @@
+<app-back-button></app-back-button>
+<div class="form-container" dir="rtl">
+  <form [formGroup]="categoryForm" (ngSubmit)="addCategory()" class="styled-form">
+    <h2 class="form-title">הוספת קטגוריה</h2>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>שם הקטגוריה</mat-label>
+      <input matInput formControlName="name" required>
+      @if(categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched) {
+      <mat-error>שדה חובה</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="form-actions">
+      <button mat-raised-button [disabled]="categoryForm.invalid || loading" type="submit" class="rtl-icon"
+        style="display: flex; align-items: center; gap: 8px;">
+        @if (loading) {
+        <app-loading-spinner></app-loading-spinner>
+        }
+        @else{
+        <span>הוסף</span>
+
+        }
+      </button>
+    </div>
+  </form>
+</div>

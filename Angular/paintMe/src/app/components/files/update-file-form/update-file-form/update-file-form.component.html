@@ -1,0 +1,30 @@
+<app-back-button></app-back-button>
+<div class="form-container">
+  <form [formGroup]="fileForm" (submit)="updateFile()">
+    <mat-form-field appearance="fill">
+      <mat-label>שם</mat-label>
+      <input matInput type="text" formControlName="name" required />
+      @if (this.fileForm.get('name')?.invalid && fileForm.get('name')?.touched) {
+      <mat-error>שדה חובה</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>קטגוריה</mat-label>
+      <mat-select formControlName="category">
+        @for (category of categories$ | async; track category.id) {
+        <mat-option [value]="category.id">{{ category.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button [disabled]="fileForm.invalid" type="submit">
+      @if(loading){
+      <app-loading-spinner></app-loading-spinner>
+      }
+      @else {
+      עדכן ציור
+      }
+    </button>
+  </form>
+</div>

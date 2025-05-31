@@ -1,0 +1,375 @@
+/* Main Container Styling */
+.container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  direction: rtl;
+  font-family: 'Segoe UI', 'Heebo', Arial, sans-serif;
+}
+
+/* Heading Styling */
+h2 {
+  color: #2c3e50;
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 0.75rem;
+}
+
+/* Stepper Customization */
+::ng-deep .mat-horizontal-stepper-header-container {
+  margin-bottom: 2rem;
+}
+
+::ng-deep .mat-step-header .mat-step-icon-selected {
+  background-color: #3498db;
+}
+
+::ng-deep .mat-stepper-horizontal-line {
+  border-top-color: #e0e0e0;
+}
+
+/* Upload Area Styling */
+.upload-area {
+  border: 2px dashed #3498db;
+  border-radius: 8px;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #f8f9fa;
+  margin-bottom: 2rem;
+}
+
+.upload-area:hover {
+  background-color: #e8f4fd;
+  border-color: #2980b9;
+}
+
+.upload-area p {
+  font-size: 1.2rem;
+  color: #7f8c8d;
+  margin-bottom: 1.5rem;
+}
+
+.upload-area input[type="file"] {
+  display: inline-block;
+  background-color: #3498db;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  font-size: 1rem;
+}
+
+/* Form Field Styling */
+.full-width {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 1rem;
+}
+
+::ng-deep .mat-select-value {
+  color: #2c3e50;
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+  background-color: #f8f9fa;
+  border-radius: 8px 8px 0 0;
+}
+
+/* Button Styling */
+button[mat-button], button[mat-raised-button] {
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+button[mat-raised-button] {
+  background-color: #3498db;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+button[mat-raised-button]:hover:not([disabled]) {
+  background-color: #2980b9;
+}
+
+button[mat-button] {
+  color: #3498db;
+}
+
+/* Navigation Buttons Container */
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* Progress Bar Styling */
+::ng-deep .mat-progress-bar {
+  height: 8px;
+  border-radius: 4px;
+  margin: 1.5rem 0;
+}
+
+::ng-deep .mat-progress-bar-fill::after {
+  background-color: #3498db;
+}
+
+::ng-deep .mat-progress-bar-buffer {
+  background-color: #e8f4fd;
+}
+
+/* Success Message Styling */
+p:last-of-type {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+p:last-of-type:has(+ .navigation-buttons) {
+  margin-bottom: 1.5rem;
+}
+
+/* File Info Display */
+p {
+  color: #2c3e50;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Success Message Animation */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+p:contains("הציור הועלה בהצלחה") {
+  animation: fadeIn 0.5s ease-in;
+  color: #27ae60;
+  font-weight: bold;
+  font-size: 1.5rem;
+  padding: 2rem;
+  text-align: center;
+  background-color: #f0fff4;
+  border-radius: 8px;
+  margin: 2rem 0;
+}
+
+/* Override Mat-Select styling for RTL */
+::ng-deep .mat-select-panel {
+  direction: rtl;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 600px) {
+  .container {
+    padding: 1rem;
+    margin: 1rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  .upload-area {
+    padding: 2rem 1rem;
+  }
+}/* Main Container Styling */
+.container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  direction: rtl;
+  font-family: 'Segoe UI', 'Heebo', Arial, sans-serif;
+}
+
+/* Heading Styling */
+h2 {
+  color: #2c3e50;
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 0.75rem;
+}
+
+/* Stepper Customization */
+::ng-deep .mat-horizontal-stepper-header-container {
+  margin-bottom: 2rem;
+}
+
+::ng-deep .mat-step-header .mat-step-icon-selected {
+  background-color: #3498db;
+}
+
+::ng-deep .mat-stepper-horizontal-line {
+  border-top-color: #e0e0e0;
+}
+
+/* Upload Area Styling */
+.upload-area {
+  border: 2px dashed #3498db;
+  border-radius: 8px;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #f8f9fa;
+  margin-bottom: 2rem;
+}
+
+.upload-area:hover {
+  background-color: #e8f4fd;
+  border-color: #2980b9;
+}
+
+.upload-area p {
+  font-size: 1.2rem;
+  color: #7f8c8d;
+  margin-bottom: 1.5rem;
+}
+
+.upload-area input[type="file"] {
+  display: inline-block;
+  background-color: #3498db;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  font-size: 1rem;
+}
+
+/* Form Field Styling */
+.full-width {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 1rem;
+}
+
+::ng-deep .mat-select-value {
+  color: #2c3e50;
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+  background-color: #f8f9fa;
+  border-radius: 8px 8px 0 0;
+}
+
+/* Button Styling */
+button[mat-button], button[mat-raised-button] {
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+button[mat-raised-button] {
+  background-color: #3498db;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+button[mat-raised-button]:hover:not([disabled]) {
+  background-color: #2980b9;
+}
+
+button[mat-button] {
+  color: #3498db;
+}
+
+/* Navigation Buttons Container */
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* Progress Bar Styling */
+::ng-deep .mat-progress-bar {
+  height: 8px;
+  border-radius: 4px;
+  margin: 1.5rem 0;
+}
+
+::ng-deep .mat-progress-bar-fill::after {
+  background-color: #3498db;
+}
+
+::ng-deep .mat-progress-bar-buffer {
+  background-color: #e8f4fd;
+}
+
+/* Success Message Styling */
+p:last-of-type {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+p:last-of-type:has(+ .navigation-buttons) {
+  margin-bottom: 1.5rem;
+}
+
+/* File Info Display */
+p {
+  color: #2c3e50;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Success Message Animation */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+p:contains("הציור הועלה בהצלחה") {
+  animation: fadeIn 0.5s ease-in;
+  color: #27ae60;
+  font-weight: bold;
+  font-size: 1.5rem;
+  padding: 2rem;
+  text-align: center;
+  background-color: #f0fff4;
+  border-radius: 8px;
+  margin: 2rem 0;
+}
+
+/* Override Mat-Select styling for RTL */
+::ng-deep .mat-select-panel {
+  direction: rtl;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 600px) {
+  .container {
+    padding: 1rem;
+    margin: 1rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  .upload-area {
+    padding: 2rem 1rem;
+  }
+}

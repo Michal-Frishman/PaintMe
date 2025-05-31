@@ -1,0 +1,24 @@
+  <app-back-button></app-back-button>
+
+<div class="form-container" dir="rtl">
+  <form [formGroup]="categoryForm" (ngSubmit)="updateCategory()"  class="styled-form">
+  <h2 class="form-title">עדכון קטגוריה</h2>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>שם הקטגוריה</mat-label>
+      <input matInput formControlName="name" required>
+      @if(this.categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched)
+      {
+      <mat-error>שדה חובה</mat-error>
+      }
+    </mat-form-field>
+
+    <button mat-raised-button [disabled]="categoryForm.invalid" type="submit">   @if (loading) {
+        <app-loading-spinner></app-loading-spinner>
+        }
+        @else{
+        <span>עדכן</span>
+
+        } </button>
+  </form>
+</div>

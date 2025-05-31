@@ -1,0 +1,65 @@
+<app-back-button></app-back-button>
+<div class="content-container" dir="rtl">
+  <div class="page-header">
+    <h1>ניהול קבצים</h1>
+    <p class="page-description">צפו, הוסיפו, ערכו או מחקו קבצים במערכת</p>
+  </div>
+
+  <div class="toolbar">
+    <a mat-raised-button color="black" [routerLink]="['/files/add']">
+      <mat-icon>add</mat-icon>
+      הוסף ציור
+    </a>
+  </div>
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>חיפוש ציור</mat-label>
+    <input matInput (input)="applyFilter($event)" placeholder="הקלד שם ציור">
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  @if (isLoading$ | async) {
+  <div class="file-card-grid">
+    @for (i of [1, 2, 3, 4]; track $index) {
+    <mat-card class="file-card skeleton-card">
+      <div class="skeleton-image"></div>
+      <div class="file-footer">
+        <div class="skeleton-line short"></div>
+        <div class="skeleton-actions">
+          <div class="skeleton-button"></div>
+          <div class="skeleton-button"></div>
+        </div>
+      </div>
+    </mat-card>
+    }
+  </div>
+  } @else {
+  <div class="file-list-container" dir="rtl">
+    <div class="file-card-grid">
+      @for (file of filteredFiles$ | async; track file.id) {
+      <mat-card class="file-card">
+        <img mat-card-image [src]="file.fileUrl" alt="{{file.name}}" class="file-image" />
+        <div class="file-footer">
+          <div class="file-name" title="{{file.name}}">
+            {{ file.name }}
+          </div>
+          <div class="file-actions">
+            @if(isDeleting){
+            <app-loading-spinner></app-loading-spinner>
+            }
+            @else{
+            <button mat-icon-button (click)="deleteFile(file.id ?? 0)">
+              <mat-icon class="rtl-icon">delete</mat-icon>
+            </button>
+            }
+
+            <a mat-icon-button c [routerLink]="['/files', file.id, 'update']">
+              <mat-icon class="rtl-icon">edit</mat-icon>
+            </a>
+          </div>
+        </div>
+      </mat-card>
+      }
+    </div>
+  </div>
+  }
+</div>

@@ -1,0 +1,45 @@
+/* .form-container {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+  }
+  
+  .styled-form {
+    background-color: #fff4fb;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .form-title {
+    text-align: center;
+    color: #ad1457;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  .rtl-icon {
+    margin-left: 8px;
+    margin-right: 0;
+  }
+  .btn-spinner {
+    vertical-align: middle;
+    margin-left: 8px;
+    height: 20px;
+    width: 50px;
+  }
+   */

@@ -1,0 +1,33 @@
+<div class="form-container">
+    <form [formGroup]="signInForm" (submit)="signIn()">
+        <h2>כניסה למערכת</h2>
+
+        <mat-form-field appearance="fill">
+            <mat-label>אימייל</mat-label>
+            <input matInput type="email" formControlName="email" required>
+            @if(signInForm.get('email')?.invalid && signInForm.get('email')?.touched) {
+            <mat-error>
+                נדרש אימייל תקין
+            </mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>סיסמה</mat-label>
+            <input matInput type="password" formControlName="password" required>
+            @if(signInForm.get('password')?.invalid && signInForm.get('password')?.touched) {
+            <mat-error>
+                נדרשת סיסמה
+            </mat-error>
+            }
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" [disabled]="signInForm.invalid || loading" type=" submit">
+            @if(loading){
+            <app-loading-spinner></app-loading-spinner>
+            }
+            @else{
+            התחברות}
+        </button>
+    </form>
+</div>

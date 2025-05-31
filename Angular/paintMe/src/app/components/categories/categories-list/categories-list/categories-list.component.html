@@ -1,0 +1,62 @@
+  <app-back-button></app-back-button>
+<div class="content-container" dir="rtl">
+  <div class="page-header">
+    <h1>ניהול קטגוריות</h1>
+    <p class="page-description">צפו, הוסיפו, ערכו או מחקו קטגוריות במערכת</p>
+  </div>
+
+<!-- <div class="toolbar"> -->
+
+
+
+  <a mat-raised-button color="black" [routerLink]="['/categories/add']">
+    <mat-icon>add</mat-icon>
+    הוסף קטגוריה
+  </a>
+<!-- </div> -->
+
+<mat-form-field appearance="outline" class="search-field">
+  <mat-label>חיפוש קטגוריה</mat-label>
+  <input matInput (input)="applyFilter($event)" placeholder="הקלד קטגוריה">
+  <mat-icon matSuffix>search</mat-icon>
+</mat-form-field>
+  @if ((isLoading$ | async)) {
+    <div class="category-card-grid">
+@for (i of [1, 2, 3, 4]; track $index) {
+        <mat-card class="category-card skeleton-card">
+          <mat-card-header>
+            <div class="skeleton-avatar"></div>
+            <div class="skeleton-title"></div>
+          </mat-card-header>
+          <mat-card-actions align="end">
+            <div class="skeleton-button"></div>
+            <div class="skeleton-button"></div>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+  } @else {
+    <div class="category-card-grid">
+      @for (category of filteredCategories$ | async; track category.id) {
+        <mat-card class="category-card">
+          <mat-card-header>
+            <div mat-card-avatar class="category-icon">
+              <mat-icon>category</mat-icon>
+            </div>
+            <mat-card-title>{{ category.name }}</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-actions align="end">
+            <a mat-icon-button  [routerLink]="['/categories', category.id, 'update']" matTooltip="עדכן קטגוריה">
+              <mat-icon>edit</mat-icon>
+            </a>
+
+            <button mat-icon-button  (click)="deleteCategory(category.id)" matTooltip="הסר קטגוריה">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

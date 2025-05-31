@@ -1,0 +1,66 @@
+
+<div class="content-container" dir="rtl">
+  <div class="welcome-section">
+    <mat-card>
+      <mat-card-content>
+        <div class="welcome-content">
+          <div class="welcome-text">
+            <h1>ברוכים הבאים למערכת הניהול</h1>
+            <p>כאן תוכלו לנהל את כל התוכן של האפליקציה. השתמשו בתפריט העליון כדי לנווט בין האזורים השונים של מערכת
+              הניהול. תוכלו לנהל ציורים, קטגוריות, משתמשים ולצפות בדוחות פעילות.</p>
+          </div>
+          <div class="welcome-image">
+            <mat-icon>brush</mat-icon>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="stats-grid">
+@for (stat of stats$ | async; track stat.title) {
+    <mat-card class="stat-card {{stat.color}}">
+      <div class="stat-icon">
+        <mat-icon>{{stat.icon}}</mat-icon>
+      </div>
+      <div class="stat-details">
+        <div class="stat-value">{{stat.value}}</div>
+        <div class="stat-title">{{stat.title}}</div>
+      </div>
+    </mat-card>
+    }
+  </div>
+
+  <!-- <div class="quick-links">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>גישה מהירה</mat-card-title>
+      </mat-card-header>
+      <mat-card-content> -->
+        <!-- <div class="button-row">
+          <a mat-raised-button color="primary" [routerLink]="['/users']">
+            <mat-icon>people</mat-icon>
+            ניהול משתמשים
+          </a>
+          <a mat-raised-button color="accent" [routerLink]="['/drawings']">
+            <mat-icon>brush</mat-icon>
+            ניהול ציורים
+          </a>
+          <a mat-raised-button color="warn" [routerLink]="['/categories']">
+            <mat-icon>category</mat-icon>
+            ניהול קטגוריות
+          </a>
+          <a mat-raised-button [routerLink]="['/reports']">
+            <mat-icon>assessment</mat-icon>
+            דוחות
+          </a>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div> -->
+</div>
+
+
+<footer>
+  <p>&copy; {{currentYear}} PaintMe כל הזכויות שמורות.</p>
+</footer>
