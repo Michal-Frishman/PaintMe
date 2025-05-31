@@ -17,6 +17,7 @@ import {
   Tooltip,
   TextField,
   InputAdornment,
+  Skeleton,
 } from "@mui/material"
 import { ArrowBack, Search as SearchIcon } from "@mui/icons-material"
 
@@ -36,9 +37,9 @@ const ArtworkDisplay = observer(() => {
     navigate("/categories")
   }
 
-  // if (categoryStore.isLoading) {
-  //   return <LoadingState />
-  // }
+  if (categoryStore.isLoading) {
+    return <LoadingState />
+  }
 
   const allArtworks = [...categoryStore.getSelectedArtwork()]
   const filteredArtworks = allArtworks
@@ -143,6 +144,40 @@ const ArtworkDisplay = observer(() => {
       </Fade>
     </Container>
   )
+  
 })
+const LoadingState = () => {
+  return (
+    <Container maxWidth="xl" sx={{ py: 5 }}>
+      <Box sx={{ display: "flex", alignItems: "center", mb: 4 }}>
+        <Skeleton variant="circular" width={40} height={40} sx={{ mr: 2 }} />
+        <Skeleton variant="text" width={200} height={40} />
+      </Box>
+
+      <Box sx={{ maxWidth: 400, marginLeft: "auto", marginRight: 0, mb: 4 }}>
+        <Skeleton variant="rectangular" height={56} />
+      </Box>
+
+      <Grid container spacing={3}>
+        {[...Array(8)].map((_, index) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+            <Card
+              sx={{
+                borderRadius: 3,
+                overflow: "hidden",
+                height: "100%",
+              }}
+            >
+              <Skeleton variant="rectangular" height={220} />
+              <Box sx={{ p: 2 }}>
+                <Skeleton variant="text" width="60%" height={24} />
+              </Box>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
+  )
+}
 
 export default ArtworkDisplay
