@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 axiosInstance.interceptors.request.use(
@@ -15,7 +15,24 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
+  (error) => Promise.reject(error)
+);
+
+axiosInstance.interceptors.response.use(
+
+  response => response,
+  error => {
+    const data = error.response?.data;
+    const message =
+      typeof data === 'string' ? data :
+        typeof data?.message === 'string' ? data.message :
+          error.message;
+
+    if (error.response?.status === 401 && message.includes('Token has expired')) {
+      sessionStorage.removeItem('token');
+window.location.href = "/#/login?expired=true";
+    }
+
     return Promise.reject(error);
   }
 );

@@ -1,32 +1,23 @@
-import type React from "react"
-import { useState } from "react"
-import axios from "axios"
+import React, { useState } from "react"
 import {
   Button,
   Typography,
   Box,
-  TextField,
-  MenuItem,
   Paper,
   Stepper,
   Step,
   StepLabel,
-  LinearProgress,
-  Card,
-  CardContent,
-  Divider,
-  IconButton,
-  Stack,
   Alert,
-  Fade,
 } from "@mui/material"
-import { CloudUpload, Image, FolderOpen, Close, CheckCircle, ArrowBack, ArrowForward } from "@mui/icons-material"
-import artStore from "./ArtStore"
+import { CloudUpload, ArrowBack, ArrowForward } from "@mui/icons-material"
 import { observer } from "mobx-react-lite"
-import CategoryStore from "./CategoryStore"
+import artStore from "./ArtStore"
 import axiosInstance from "./axiosInstance"
+import FileUploadStep from "./UploadFile/FileUploadStep"
+import ArtworkDetailsStep from "./UploadFile/ArtworkDetailsStep"
+import UploadSummaryStep from "./UploadFile/UploadSummaryStep"
 
-const FileUploader = observer(() => {
+const FileUploader: React.FC = observer(() => {
   const [file, setFile] = useState<File | null>(null)
   const [fileName, setFileName] = useState("")
   const [progress, setProgress] = useState(0)
@@ -50,9 +41,7 @@ const FileUploader = observer(() => {
       setFile(selectedFile)
       setFileName(selectedFile.name)
       setErrorMessage("")
-      if (activeStep === 0) {
-        setActiveStep(1)
-      }
+      if (activeStep === 0) setActiveStep(1)
     }
   }
 
@@ -60,10 +49,7 @@ const FileUploader = observer(() => {
     event.preventDefault()
     setDragOver(true)
   }
-
-  const handleDragLeave = () => {
-    setDragOver(false)
-  }
+  const handleDragLeave = () => setDragOver(false)
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault()
@@ -77,9 +63,7 @@ const FileUploader = observer(() => {
       setFile(droppedFile)
       setFileName(droppedFile.name)
       setErrorMessage("")
-      if (activeStep === 0) {
-        setActiveStep(1)
-      }
+      if (activeStep === 0) setActiveStep(1)
     }
   }
 
@@ -97,23 +81,22 @@ const FileUploader = observer(() => {
 
     setIsUploading(true)
     setErrorMessage("")
-
     try {
-      const url = `${import.meta.env.VITE_API_URL}/api/upload/presigned-url`
-      const response = await axiosInstance.get(url, { params: { fileName: file.name } })
+      const presignUrl = `${import.meta.env.VITE_API_URL}/api/upload/presigned-url`
+      const response = await axiosInstance.get(presignUrl, { params: { fileName: file.name } })
 
-      await axios.put(response.data.url, file, {
+      await axiosInstance.put(response.data.url, file, {
         headers: { "Content-Type": file.type },
-        onUploadProgress: (e) => {
+        onUploadProgress: e => {
           const percent = Math.round((e.loaded * 100) / (e.total || 1))
           setProgress(percent)
         },
       })
 
-      const downloadResponse = await axiosInstance.get(
-        `${import.meta.env.VITE_API_URL}/api/upload/download-url/${file.name}`,
+      const downloadRes = await axiosInstance.get(
+        `${import.meta.env.VITE_API_URL}/api/upload/download-url/${file.name}`
       )
-      const downloadUrl = downloadResponse.data
+      const downloadUrl = downloadRes.data
 
       await artStore.saveFile({
         CategoryId: selectedCategory,
@@ -144,238 +127,49 @@ const FileUploader = observer(() => {
       return
     }
     setErrorMessage("")
-    setActiveStep((prevStep) => prevStep + 1)
+    setActiveStep(prev => prev + 1)
   }
 
   const handleBack = () => {
-    setActiveStep((prevStep) => prevStep - 1)
+    setActiveStep(prev => prev - 1)
     setErrorMessage("")
   }
 
-  const renderStepContent = () => {
-    switch (activeStep) {
+  const renderStepContent = (step: number) => {
+    switch (step) {
       case 0:
         return (
-          <Box sx={{ mt: 3 }}>
-            <Box
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-              sx={{
-                border: `2px dashed ${dragOver ? "#7c4dff" : "#e0e0e0"}`,
-                borderRadius: 3,
-                p: 4,
-                mb: 2,
-                textAlign: "center",
-                backgroundColor: dragOver ? "rgba(124, 77, 255, 0.05)" : "#fafafa",
-                transition: "all 0.3s ease",
-                cursor: "pointer",
-                height: "180px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                "&:hover": {
-                  borderColor: "#7c4dff",
-                  backgroundColor: "rgba(124, 77, 255, 0.05)",
-                },
-              }}
-            >
-              <FolderOpen sx={{ fontSize: 48, color: dragOver ? "#7c4dff" : "#9e9e9e", mb: 2 }} />
-              <Typography color="textSecondary" sx={{ fontWeight: "medium" }}>
-                גרור ושחרר כאן קובץ תמונה
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                או
-              </Typography>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                style={{ display: "none" }}
-                id="file-input"
-              />
-              <label htmlFor="file-input">
-                <Button
-                  variant="outlined"
-                  component="span"
-                  sx={{
-                    mt: 2,
-                    borderRadius: "20px",
-                    textTransform: "none",
-                    borderColor: "#7c4dff",
-                    color: "#7c4dff",
-                    "&:hover": {
-                      borderColor: "#5e35b1",
-                      backgroundColor: "rgba(124, 77, 255, 0.05)",
-                    },
-                  }}
-                  startIcon={<Image />}
-                >
-                  בחר קובץ
-                </Button>
-              </label>
-            </Box>
-          </Box>
+          <FileUploadStep
+            dragOver={dragOver}
+            handleDragOver={handleDragOver}
+            handleDragLeave={handleDragLeave}
+            handleDrop={handleDrop}
+            handleFileChange={handleFileChange}
+          />
         )
       case 1:
         return (
-          <Box sx={{ mt: 3 }}>
-            {file && (
-              <Card variant="outlined" sx={{ mb: 3, borderRadius: 2, overflow: "hidden" }}>
-                <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
-                  <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                      <Image sx={{ color: "#7c4dff", mr: 1.5 }} />
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          fontWeight: "medium",
-                          maxWidth: "200px",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {fileName}
-                      </Typography>
-                    </Box>
-                    <IconButton size="small" onClick={handleRemoveFile} sx={{ color: "#9e9e9e" }}>
-                      <Close fontSize="small" />
-                    </IconButton>
-                  </Box>
-                </CardContent>
-              </Card>
-            )}
-
-            <TextField
-              select
-              fullWidth
-              label="קטגוריה"
-              value={selectedCategory || ""}
-              onChange={(e) => setSelectedCategory(Number.parseInt(e.target.value))}
-              sx={{
-                mb: 3,
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: "12px",
-                },
-              }}
-              required
-            >
-              {!CategoryStore.categories ? (
-                <MenuItem disabled>טוען קטגוריות...</MenuItem>
-              ) : (
-                CategoryStore.categories.map((cat) => (
-                  <MenuItem key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </MenuItem>
-                ))
-              )}
-            </TextField>
-
-            <TextField
-              fullWidth
-              label="שם/תיאור הציור"
-              value={artworkName}
-              onChange={(e) => setArtworkName(e.target.value)}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: "12px",
-                },
-              }}
-              required
-            />
-          </Box>
+          <ArtworkDetailsStep
+            file={file}
+            fileName={fileName}
+            artworkName={artworkName}
+            setArtworkName={setArtworkName}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            handleRemoveFile={handleRemoveFile}
+          />
         )
       case 2:
         return (
-          <Box sx={{ mt: 3, textAlign: "center" }}>
-            {!uploadSuccess ? (
-              <>
-                <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 3 }}>
-                  <Typography variant="h6" sx={{ mb: 1, fontWeight: "medium" }}>
-                    סיכום פרטי ההעלאה
-                  </Typography>
-                  <Divider sx={{ width: "40%", mb: 3 }} />
-
-                  <Stack spacing={1.5} sx={{ width: "100%", textAlign: "right" }}>
-                    <Box>
-                      <Typography variant="body2" color="text.secondary">
-                        שם הקובץ:
-                      </Typography>
-                      <Typography variant="body1">{fileName}</Typography>
-                    </Box>
-
-                    <Box>
-                      <Typography variant="body2" color="text.secondary">
-                        קטגוריה:
-                      </Typography>
-                      <Typography variant="body1">
-                        {CategoryStore.categories?.find((cat) => cat.id === selectedCategory)?.name || ""}
-                      </Typography>
-                    </Box>
-
-                    <Box>
-                      <Typography variant="body2" color="text.secondary">
-                        שם/תיאור:
-                      </Typography>
-                      <Typography variant="body1">{artworkName}</Typography>
-                    </Box>
-                  </Stack>
-                </Box>
-
-                {isUploading ? (
-                  <Box sx={{ width: "100%", mt: 3 }}>
-                    <LinearProgress
-                      variant="determinate"
-                      value={progress}
-                      sx={{
-                        height: 10,
-                        borderRadius: 5,
-                        backgroundColor: "rgba(124, 77, 255, 0.2)",
-                        "& .MuiLinearProgress-bar": {
-                          backgroundColor: "#7c4dff",
-                        },
-                      }}
-                    />
-                    <Typography variant="body2" sx={{ mt: 1, color: "text.secondary" }}>
-                      {progress}% הושלמו
-                    </Typography>
-                  </Box>
-                ) : (
-                  <Button
-                    variant="contained"
-                    onClick={handleUpload}
-                    disabled={isUploading}
-                    sx={{
-                      mt: 2,
-                      backgroundColor: "#7c4dff",
-                      borderRadius: "12px",
-                      py: 1.2,
-                      px: 4,
-                      textTransform: "none",
-                      fontWeight: "medium",
-                      "&:hover": {
-                        backgroundColor: "#5e35b1",
-                      },
-                    }}
-                  >
-                    <CloudUpload sx={{ mr: 1 }} />
-                    העלה ציור
-                  </Button>
-                )}
-              </>
-            ) : (
-              <Fade in={uploadSuccess}>
-                <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", py: 3 }}>
-                  <CheckCircle sx={{ fontSize: 60, color: "#4caf50", mb: 2 }} />
-                  <Typography variant="h6" sx={{ fontWeight: "medium" }}>
-                    הציור הועלה בהצלחה!
-                  </Typography>
-                </Box>
-              </Fade>
-            )}
-          </Box>
+          <UploadSummaryStep
+            fileName={fileName}
+            selectedCategory={selectedCategory}
+            artworkName={artworkName}
+            handleUpload={handleUpload}
+            isUploading={isUploading}
+            progress={progress}
+            uploadSuccess={uploadSuccess}
+          />
         )
       default:
         return null
@@ -389,7 +183,6 @@ const FileUploader = observer(() => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        // background: "linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%)",
         padding: 2,
       }}
     >
@@ -411,7 +204,7 @@ const FileUploader = observer(() => {
         </Typography>
 
         <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4 }}>
-          {steps.map((label) => (
+          {steps.map(label => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
             </Step>
@@ -424,7 +217,7 @@ const FileUploader = observer(() => {
           </Alert>
         )}
 
-        {renderStepContent()}
+        {renderStepContent(activeStep)}
 
         {!uploadSuccess && activeStep !== 0 && (
           <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
@@ -438,7 +231,7 @@ const FileUploader = observer(() => {
             >
               חזרה
             </Button>
-            {activeStep < 2 && (
+            {activeStep < steps.length - 1 && (
               <Button
                 onClick={handleNext}
                 sx={{

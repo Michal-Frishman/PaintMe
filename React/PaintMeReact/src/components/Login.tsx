@@ -22,6 +22,7 @@ import { useNavigate } from "react-router-dom"
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth"
 import { auth } from "../pages/firebase" 
 import emailjs from '@emailjs/browser';
+import { useSearchParams } from "react-router-dom";
 
 export default function AuthPage() {
   const [mode, setMode] = useState<"login" | "register">("login")
@@ -29,7 +30,8 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
-
+  const [searchParams] = useSearchParams();
+  const isExpiredToken = searchParams.get("expired") === "true";
   const emailRef = useRef<HTMLInputElement>(null)
   const passwordRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
@@ -82,7 +84,6 @@ export default function AuthPage() {
 
       const token = res.data.token
       sessionStorage.setItem("token", token)
-      console.log(emailRef.current?.value);
 
       setSuccess(mode === "login" ? "התחברת בהצלחה!" : "נרשמת בהצלחה!")
       if (mode === "register") {
@@ -221,7 +222,11 @@ export default function AuthPage() {
               {success}
             </Alert>
           )}
-
+ {isExpiredToken && (
+        <p >
+          זמן השהייה במערכת פג תוקף, יש להתחבר מחדש.
+        </p>
+      )}
           <Button
             fullWidth
             variant="outlined"

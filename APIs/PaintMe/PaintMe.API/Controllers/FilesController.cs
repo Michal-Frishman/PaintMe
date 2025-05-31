@@ -92,7 +92,7 @@ namespace PaintMe.API.Controllers
             {
                 return BadRequest("Failed to create file.");
             }
-            return CreatedAtAction(nameof(GetById), new { id = fileDto.Id }, fileDto);
+            return Ok(result);
         }
 
         // PUT api/Files/5

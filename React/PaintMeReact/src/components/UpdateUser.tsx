@@ -41,7 +41,6 @@ const UpdateUser = ({ setClose }: { setClose: Dispatch<boolean> }) => {
             setOpen(!open);
             setClose(!close);
         } catch (e: AxiosError | any) {
-            console.log(e);
             if (e.status === 404)
                 alert('user does not exsist');
         }

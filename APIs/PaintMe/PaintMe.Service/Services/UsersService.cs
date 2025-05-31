@@ -194,7 +194,7 @@ namespace PaintMe.Service.Services
         {
             var entity = _mapper.Map<User>(user);
             entity.CreatedAt = DateTime.UtcNow;
-            entity.RoleId = 1; 
+            entity.RoleId = 2; 
             var data = await _usersRepository.AddDataAsync(entity);
             data.CreatedBy = _tokenContextService.GetUserId();
             return _mapper.Map<UserDto>(data);

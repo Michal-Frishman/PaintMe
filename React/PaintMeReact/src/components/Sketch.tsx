@@ -1,7 +1,7 @@
 import type React from "react"
 import { useRef, useState, useEffect } from "react"
 import axios from "axios"
-import { Box, Stack, Slider, Paper, IconButton, Tooltip, CircularProgress, useTheme, Snackbar, Alert, } from "@mui/material"
+import { Box, Stack, Slider, Paper, IconButton, Tooltip, CircularProgress, useTheme, Snackbar, Alert, Typography, } from "@mui/material"
 import { useNavigate, useParams } from "react-router-dom"
 import artStore from "./ArtStore"
 import { Delete, Download, Save, Print } from "@mui/icons-material"
@@ -48,6 +48,8 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
   const { id } = useParams<{ id: string }>()
   const url = import.meta.env.VITE_API_URL
   const [response2, setResponse2] = useState<any>(null);
+  const [isImageLoading, setIsImageLoading] = useState(false)
+
   useEffect(() => {
     sessionStorage.getItem("token") === null &&
       Swal.fire({
@@ -88,9 +90,9 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
   }, [id, isColored, url])
 
   useEffect(() => {
+
     const canvas = canvasRef.current!
     const container = containerRef.current!
-    // קביעה אמיתית של הרזולוציה
     canvas.width = container.clientWidth
     canvas.height = container.clientHeight
 
@@ -101,9 +103,11 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
       const img = new Image()
       img.crossOrigin = "anonymous"
       img.src = backgroundImage
+      setIsImageLoading(true)
+
       img.onload = () => {
-        // מותח על כל הקנבס
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+        setIsImageLoading(false)
       }
     }
   }, [backgroundImage])
@@ -187,7 +191,6 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
     newCanvas.width = canvas.width
     newCanvas.height = canvas.height
 
-    // צבע רקע לבן
     context.fillStyle = 'white'
     context.fillRect(0, 0, newCanvas.width, newCanvas.height)
 
@@ -199,12 +202,8 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
       await new Promise<void>((resolve, reject) => {
         img.onload = () => {
           try {
-            // מותח את תמונת הרקע על כל הקנבס (כמו background-size: cover)
             context.drawImage(img, 0, 0, newCanvas.width, newCanvas.height)
-
-            // ציור הקנבס המקורי (הציורים) מעל תמונת הרקע
             context.drawImage(canvas, 0, 0)
-
             resolve()
           } catch (error) {
             reject(error)
@@ -212,7 +211,6 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
         }
         img.onerror = (error) => {
           console.error("Error loading background image:", error)
-          // גם במקרה של שגיאה, צייר את הציורים
           context.drawImage(canvas, 0, 0)
           resolve()
         }
@@ -220,7 +218,6 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
     } else {
       context.drawImage(canvas, 0, 0)
     }
-
     return newCanvas
   }
 
@@ -248,17 +245,18 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
       const canvas = canvasRef.current
       const mergedCanvas = await createMergedCanvas(canvas)
 
-      console.log("mergedCanvas:", mergedCanvas);
+      const x = await saveCanvas(mergedCanvas)
 
-      await saveCanvas(mergedCanvas)
-
-      Swal.fire({
-        title: "הציור נשמר בהצלחה",
-        icon: "success",
-        timer: 2000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-      })
+      if (x) {
+        Swal.fire({
+          title: "הציור נשמר בהצלחה",
+          icon: "success",
+          timer: 1000,
+          timerProgressBar: true,
+          showConfirmButton: false,
+        })
+        navigate("/coloredFiles")
+      }
     } catch (error) {
       console.error("Error saving drawing:", error)
       showSnackbar("שגיאה בשמירת הציור", "error")
@@ -270,7 +268,6 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
   const saveCanvas = async (canvas: HTMLCanvasElement) => {
     const imageUrl = canvas.toDataURL("image/png")
     const blob = await (await fetch(imageUrl)).blob()
-    console.log("blob", blob);
 
     const fileName2 = fileName + "colored" + Date.now() + ".png"
 
@@ -286,17 +283,19 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
 
       const downloadResponse = await axios.get(`${url}/api/upload/download-url/${fileName2}`)
       const downloadUrl = downloadResponse.data
-      console.log("downloadUrl", downloadUrl);
+ 
 
       await artStore.saveColoredFile({
         name: fileName2,
         coloredImageUrl: downloadUrl,
-        originalDrawingId: response2.data.originalDrawingId
+        originalDrawingId: isColored ? response2.data.originalDrawingId
+          : response2.data.id
       })
+
       if (isColored) {
         await artStore.deleteColoredFile(Number.parseInt(id || ""))
-        console.log("Deleting old colored file with ID:", id);
       }
+
       return true
     } catch (error) {
       console.error("Error uploading painted drawing:", error)
@@ -313,10 +312,7 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
 
     try {
       const canvas = canvasRef.current
-      // const mergedCanvas = await createMergedCanvas(canvas)
-
       const imageUrl = canvas.toDataURL("image/png")
-      console.log("imageUrl", imageUrl);
       const link = document.createElement("a")
       link.href = imageUrl
       link.download = `ציור-${fileName || "שלי"}-${Date.now()}.png`
@@ -401,7 +397,6 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
 
   const clearCanvas = () => {
     if (isClearing) return
-
     setIsClearing(true)
 
     try {
@@ -412,14 +407,27 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
       if (!ctx) return
 
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-      showSnackbar("הציור נוקה בהצלחה", "success")
+
+      if (backgroundImage) {
+        const img = new Image()
+        img.crossOrigin = "anonymous"
+        img.src = backgroundImage
+        setIsImageLoading(true)
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+          setIsImageLoading(false)
+        }
+      }
+
+      // showSnackbar("הציור נוקה בהצלחה", "success")
     } catch (error) {
       console.error("Error clearing canvas:", error)
-      showSnackbar("שגיאה בניקוי הציור", "error")
+      // showSnackbar("שגיאה בניקוי הציור", "error")
     } finally {
       setIsClearing(false)
     }
   }
+
 
   return (
 
@@ -482,7 +490,6 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
           width={600}
           height={400}
           sx={{
-            // backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
@@ -501,8 +508,25 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
             onTouchStart={startDrawing}
             onTouchMove={draw}
             onTouchEnd={endDrawing}
-          // style={{ width: '100px', height: '100px', border: '1px solid #ccc' }}
           />
+          {isImageLoading && (
+            <Typography
+              variant="h6"
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                color: "gray",
+                backgroundColor: "rgba(255,255,255,0.8)",
+                padding: 2,
+                borderRadius: 2,
+              }}
+            >
+              הציור בטעינה...
+            </Typography>
+          )}
+
           {fileUrl && <AiInstructionsSection imagePath={fileUrl} />}
         </Box>
 

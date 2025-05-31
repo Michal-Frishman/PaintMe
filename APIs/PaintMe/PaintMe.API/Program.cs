@@ -15,6 +15,8 @@ using PaintMe.Data.Repository;
 using PaintMe.Service.Repositories;
 using PaintMe.Service.Services;
 using System.Text;
+using System.Text.Json;
+
 Env.Load();
 
 
@@ -123,7 +125,9 @@ builder.Services.AddAuthentication(options =>
             {
                 context.Response.StatusCode = 401;
                 context.Response.ContentType = "application/json";
-                return context.Response.WriteAsync("Token has expired.");
+                return context.Response.WriteAsync(
+                    JsonSerializer.Serialize(new { message = "Token has expired" })
+                );
             }
             else if (context.Exception is SecurityTokenInvalidSignatureException)
             {

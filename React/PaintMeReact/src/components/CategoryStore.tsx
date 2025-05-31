@@ -69,7 +69,6 @@ class CategoryStore {
         try {
             const response = await axiosInstance.get(`${this.url}/Files/category/${artworkId}`);
             this.selectedArtwork = response.data;
-            console.log(this.selectedArtwork);
 
         } catch (error) {
             console.error('שגיאה בטעינת עבודה אמנות:', error);
