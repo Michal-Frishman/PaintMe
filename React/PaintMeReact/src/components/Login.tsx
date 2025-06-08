@@ -19,10 +19,10 @@ import { Visibility, VisibilityOff, Email, Lock, Google } from "@mui/icons-mater
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth"
-import { auth } from "./firebase"
 import emailjs from '@emailjs/browser';
 import { useSearchParams } from "react-router-dom";
 import UserStore from "../Stores/UserStore"
+import { auth } from "./firebase"
 
 export default function AuthPage() {
   const [mode, setMode] = useState<"login" | "register">("login")

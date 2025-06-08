@@ -11,14 +11,12 @@ import {
 } from "@mui/material";
 import { CloudUpload } from "@mui/icons-material";
 import { observer } from "mobx-react-lite";
-
-// ייבוא הקומפוננטות החדשות
+import axiosInstance from "../../Stores/axiosInstance";
+import artStore from "../../Stores/FilesStore";
 import FileDropZone from "./FileDropZone";
 import FileDetailsForm from "./FileDetailsForm";
 import UploadSummary from "./UploadSummary";
 import StepperNavigation from "./StepperNavigation";
-import axiosInstance from "../../Stores/axiosInstance";
-import artStore from "../../Stores/FilesStore";
 
 const FileUploader = observer(() => {
   const [file, setFile] = useState<File | null>(null);

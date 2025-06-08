@@ -1,13 +1,13 @@
 
 import { createBrowserRouter } from "react-router-dom";
 import AppLayout from "./AppLayout";
-import ArtworkDisplay from "./Components/ArtworkDisplay";
-import CategoryList from "./Components/CategoryList";
-import ColoredFiles from "./Components/ColoredFiles";
-import HomePage from "./Components/HomePage/HomePage";
-import Login from "./Components/Login";
-import FileUploader from "./Components/UploadFile/FileUploader";
-import DrawingCanvas from "./Components/DrawingCanvas/DrawingCanvas";
+import ArtworkDisplay from "./components/ArtworkDisplay";
+import CategoryList from "./components/CategoryList";
+import ColoredFiles from "./components/ColoredFiles";
+import HomePage from "./components/HomePage/HomePage";
+import Login from "./components/Login";
+import FileUploader from "./components/UploadFile/FileUploader";
+import DrawingCanvas from "./components/DrawingCanvas/DrawingCanvas";
 
 export const myRouter = createBrowserRouter([
   {

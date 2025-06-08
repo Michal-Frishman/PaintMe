@@ -1,7 +1,7 @@
 import { Outlet } from "react-router";
-import Header from "./Components/Header";
+import Header from "./components/Header";
 import { Box } from "@mui/material";
-import Footer from "./Components/Footer";
+import Footer from "./components/Footer";
 const AppLayout = () => {
     return (
         <>
