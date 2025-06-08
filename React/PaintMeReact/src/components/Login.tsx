@@ -1,5 +1,4 @@
 import React from "react"
-
 import { useState, useRef, type FormEvent } from "react"
 import {
   Box,
@@ -20,9 +19,10 @@ import { Visibility, VisibilityOff, Email, Lock, Google } from "@mui/icons-mater
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth"
-import { auth } from "../pages/firebase" 
+import { auth } from "./firebase"
 import emailjs from '@emailjs/browser';
 import { useSearchParams } from "react-router-dom";
+import UserStore from "../Stores/UserStore"
 
 export default function AuthPage() {
   const [mode, setMode] = useState<"login" | "register">("login")
@@ -52,66 +52,63 @@ export default function AuthPage() {
       setError("נא להזין כתובת אימייל תקינה")
       return false
     }
-
     if (!passwordRef.current?.value) {
       setError("נא להזין סיסמה")
       return false
     }
-
     if (mode === "register" && passwordRef.current.value.length < 6) {
       setError("הסיסמה חייבת להכיל לפחות 6 תווים")
       return false
     }
-
     return true
   }
-
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
+  e.preventDefault();
 
-    if (!validateForm()) return
+  if (!validateForm()) return;
 
-    setLoading(true)
-    setError(null)
+  setLoading(true);
+  setError(null);
 
-    const url = `${import.meta.env.VITE_API_URL}/api/Auth/${mode}`
+  const email = emailRef.current?.value ?? "";
+  const password = passwordRef.current?.value ?? "";
 
-    try {
-      const res = await axios.post(url, {
-        Email: emailRef.current?.value,
-        Password: passwordRef.current?.value,
-      })
+  try {
+    await UserStore.authUser(mode, email, password);
 
-      const token = res.data.token
-      sessionStorage.setItem("token", token)
+    if (UserStore.token) {
+      sessionStorage.setItem("token", UserStore.token);
 
-      setSuccess(mode === "login" ? "התחברת בהצלחה!" : "נרשמת בהצלחה!")
+      setSuccess(mode === "login" ? "התחברת בהצלחה!" : "נרשמת בהצלחה!");
+
       if (mode === "register") {
         await emailjs.send(
-          'PaintMe!123',
-          'template_v9kcgm5',
-          {
-            email: emailRef.current?.value,
-          },
-          "PLoLH7V1mxp0HGHAK")
+          "PaintMe!123",
+          "template_v9kcgm5",
+          { email },
+          "PLoLH7V1mxp0HGHAK"
+        );
       }
-      setTimeout(() => {
-          navigate("/")
-      }, 1500)
-    } catch (e: any) {
-      console.error("Error:", e)
 
-      if (e.response?.status === 400) {
-        setError("משתמש כבר קיים במערכת, אנא התחבר")
-      } else if (e.response?.status === 401) {
-        setError("אימייל או סיסמה שגויים")
-      } else {
-        setError("אירעה שגיאה, אנא נסה שוב מאוחר יותר")
-      }
-    } finally {
-      setLoading(false)
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
+    } else {
+      setError("אירעה שגיאה בקבלת הטוקן מהשרת");
     }
+  } catch (e) {
+    console.error("Error:", e);
+    if (UserStore.error?.includes("כבר קיים")) {
+      setError("משתמש כבר קיים במערכת, אנא התחבר");
+    } else if (UserStore.error?.includes("שגויים")) {
+      setError("אימייל או סיסמה שגויים");
+    } else {
+      setError("אירעה שגיאה, אנא נסה שוב מאוחר יותר");
+    }
+  } finally {
+    setLoading(false);
   }
+};
 
   const handleGoogleAuth = async () => {
     setLoading(true)
@@ -156,7 +153,6 @@ export default function AuthPage() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        // background: "linear-gradient(135deg, #f5f7ff 0%, #e6f0ff 100%)",
         padding: 2,
       }}
     >
@@ -222,11 +218,11 @@ export default function AuthPage() {
               {success}
             </Alert>
           )}
- {isExpiredToken && (
-        <p >
-          זמן השהייה במערכת פג תוקף, יש להתחבר מחדש.
-        </p>
-      )}
+          {isExpiredToken && (
+            <p >
+              זמן השהייה במערכת פג תוקף, יש להתחבר מחדש.
+            </p>
+          )}
           <Button
             fullWidth
             variant="outlined"
@@ -319,14 +315,6 @@ export default function AuthPage() {
             {mode === "register" && (
               <FormHelperText sx={{ mb: 3, mr: 1.5 }}>הסיסמה חייבת להכיל לפחות 6 תווים</FormHelperText>
             )}
-
-            {/* {mode === "login" && (
-              <Box sx={{ mb: 3, textAlign: "end" }}>
-                <Link href="#" underline="hover" variant="body2" color="primary" sx={{ cursor: "pointer" }}>
-                  שכחת סיסמה?
-                </Link>
-              </Box>
-            )} */}
 
             <Button
               type="submit"

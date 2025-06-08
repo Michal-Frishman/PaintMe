@@ -1,11 +1,16 @@
 import React from 'react';
-import ReactDOM from 'react-dom'; // ודא שאתה מייבא מ-react-dom
+import ReactDOM from 'react-dom/client';
 import App from './App';
 
-// Render the App component
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root') // ודא שיש אלמנט עם ID 'root' ב-HTML
-);
+const rootElement = document.getElementById('root');
+
+if (rootElement) {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+} else {
+  throw new Error("No root element found. Make sure there is an element with id='root' in index.html.");
+}

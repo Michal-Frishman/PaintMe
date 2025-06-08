@@ -1,16 +1,13 @@
 
-import ModernDrawingCanvas from "./components/Sketch";
-import UploadForm from "./components/Upload";
-
-import {  createBrowserRouter } from "react-router-dom";
-import AppLayout from "./components/AppLayout";
-import ArtworkDisplay from "./components/ArtworkDisplay";
-import CategoryList from "./components/CategoryList";
-import ColoredFiles from "./components/ColoredFiles";
-import HomePage from "./pages/HomePage";
-import Login from "./components/Login";
-
-
+import { createBrowserRouter } from "react-router-dom";
+import AppLayout from "./AppLayout";
+import ArtworkDisplay from "./Components/ArtworkDisplay";
+import CategoryList from "./Components/CategoryList";
+import ColoredFiles from "./Components/ColoredFiles";
+import HomePage from "./Components/HomePage/HomePage";
+import Login from "./Components/Login";
+import FileUploader from "./Components/UploadFile/FileUploader";
+import DrawingCanvas from "./Components/DrawingCanvas/DrawingCanvas";
 
 export const myRouter = createBrowserRouter([
   {
@@ -36,11 +33,11 @@ export const myRouter = createBrowserRouter([
       },
       {
         path: "/drawing/:id",
-        element: <ModernDrawingCanvas isColored={false} />,
+        element: <DrawingCanvas isColored={false} />,
       },
       {
         path: "/colored/drawing/:id",
-        element: <ModernDrawingCanvas isColored={true} />,
+        element: <DrawingCanvas isColored={true} />,
       },
       {
         path: "/coloredFiles",
@@ -48,7 +45,7 @@ export const myRouter = createBrowserRouter([
       },
       {
         path: "/upload",
-        element: <UploadForm />,
+        element: <FileUploader />,
       },
     ],
   },

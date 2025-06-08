@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import artStore from "./ArtStore"
+import artStore from "../Stores/FilesStore"
 import { Link } from "react-router-dom"
 import {
   Box,
@@ -33,21 +33,22 @@ import {
   Palette,
 } from "@mui/icons-material"
 import Swal from "sweetalert2"
+import ColoredFilesStore from "../Stores/ColoredFilesStore"
 
 const ColoredFiles = observer(() => {
   const theme = useTheme()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [selectedFileId, setSelectedFileId] = useState<number | null>(null)
-  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: "success" | "error" }>({
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: "success" | "error" | "info" }>({
     open: false,
     message: "",
     severity: "success",
   })
 
-  const coloredFiles = artStore.coloredFiles || []
+  const coloredFiles = ColoredFilesStore.coloredFiles || []
 
   useEffect(() => {
-    artStore.loadColoredFiles()
+    ColoredFilesStore.loadColoredFiles()
   }, [])
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, id: number) => {
@@ -74,7 +75,7 @@ const ColoredFiles = observer(() => {
       cancelButtonText: "ביטול",
     }).then((result) => {
       if (result.isConfirmed) {
-        artStore.deleteColoredFile(selectedFileId)
+        ColoredFilesStore.deleteColoredFile(selectedFileId)
         setSnackbar({
           open: true,
           message: "הציור נמחק בהצלחה",
@@ -86,21 +87,44 @@ const ColoredFiles = observer(() => {
     handleMenuClose()
   }
 
-  const handleDownloadFile = (url: string) => {
+const handleDownloadFile = async (url: string) => {
+  try {
+    setSnackbar({
+      open: true,
+      message: "מוריד את הציור...",
+      severity: "info",
+    });
+
+    const response = await fetch(url)
+    if (!response.ok) throw new Error("ההורדה נכשלה")
+
+    const blob = await response.blob()
+    const blobUrl = URL.createObjectURL(blob)
+
     const link = document.createElement("a")
-    link.href = url
-    link.setAttribute("download", `ציור-${Date.now()}.png`)
+    link.href = blobUrl
+    link.download = `ציור-${Date.now()}.png`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
+    URL.revokeObjectURL(blobUrl)
 
     setSnackbar({
       open: true,
       message: "הציור הורד בהצלחה",
       severity: "success",
     })
+  } catch (error) {
+    console.error("שגיאה בהורדה:", error)
+    setSnackbar({
+      open: true,
+      message: "אירעה שגיאה במהלך ההורדה",
+      severity: "error",
+    })
+  } finally {
     handleMenuClose()
   }
+}
 
   const handlePrintFile = (url: string) => {
     const printWindow = window.open("", "", "height=600,width=800")
@@ -123,7 +147,6 @@ const ColoredFiles = observer(() => {
     printWindow.document.close()
     printWindow.focus()
 
-    // Print after image loads
     const img = printWindow.document.querySelector("img")
     if (img) {
       img.onload = () => {

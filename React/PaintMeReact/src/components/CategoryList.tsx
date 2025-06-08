@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { Link, Outlet } from "react-router-dom"
-import categoryStore, { type CategoryType } from "./CategoryStore"
+import categoryStore, { type CategoryType } from "../Stores/CategoryStore"
 import {
   Box,
   Grid,

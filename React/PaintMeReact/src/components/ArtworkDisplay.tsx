@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { Link, useParams, useNavigate } from "react-router-dom"
-import categoryStore from "./CategoryStore"
+import categoryStore from "../Stores/CategoryStore"
 import {
   Box,
   Grid,
@@ -20,18 +20,16 @@ import {
   Skeleton,
 } from "@mui/material"
 import { ArrowBack, Search as SearchIcon } from "@mui/icons-material"
-
+import ArtWorkStore from "../Stores/FilesStore"
 const ArtworkDisplay = observer(() => {
+    const { artworks, loadArtworksByCategory } = ArtWorkStore;
+
   const { id: categoryId } = useParams()
   const navigate = useNavigate()
-
   const [searchQuery, setSearchQuery] = useState("")
-
   useEffect(() => {
-    if (categoryId) {
-      categoryStore.loadArtworkById(Number(categoryId))
-    }
-  }, [categoryId])
+    loadArtworksByCategory(Number(categoryId));
+  }, [categoryId]);
 
   const handleBack = () => {
     navigate("/categories")
@@ -41,18 +39,12 @@ const ArtworkDisplay = observer(() => {
     return <LoadingState />
   }
 
-  const allArtworks = [...categoryStore.getSelectedArtwork()]
-  const filteredArtworks = allArtworks
+  const filteredArtworks = artworks
     .filter((art) =>
       art.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
     .sort((a, b) => a.name.localeCompare(b.name))
-
   const currentCategory = categoryStore.categories.find((cat) => cat.id === Number(categoryId))
-
-  // if (filteredArtworks.length === 0) {
-  //   return <EmptyState categoryName={currentCategory?.name} />
-  // }
 
   return (
     <Container maxWidth="xl" sx={{ py: 5 }}>
