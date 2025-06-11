@@ -11,7 +11,9 @@ export const fetchCategories = async () => {
 };
 
 export const fetchColoredFiles = async () => {
-    const response = await axiosInstance.get(`${API_URL}/ColoredFiles/getByUser`);
+    console.log("Fetching colored files from API");
+    
+    const response = await axiosInstance.get(`/api/ColoredFiles/getByUser`);
     return response.data;
 };
 
@@ -26,7 +28,7 @@ export const fetchArtworkById = async (artworkId: number) => {
 };
 
 export const fetchAddColoredFile = async (coloredFile: ColoredFile) => {
-    try {        
+    try {
         const response = await axiosInstance.post(`${API_URL}/ColoredFiles`, coloredFile);
         return response.data;
     } catch (error) {
@@ -58,7 +60,7 @@ export const fetchDeleteColoredFile = async (id: number) => {
 
 export const fetchAiDrawingInstructions = async (path: string) => {
     try {
-        const response = await axios.get(`${API_URL}/Files/aiDrawingInstructions
+        const response = await axiosInstance.get(`${API_URL}/Files/aiDrawingInstructions
 `, {
             params: { path }
         });
@@ -96,7 +98,7 @@ export const fetchAuth = async (mode: string, email: string, password: string) =
     }
 };
 export const fetchColoredFileById = async (fileId: number) => {
-    const res =  await axiosInstance.get(`${API_URL}/ColoredFiles/${fileId}`)
+    const res = await axiosInstance.get(`${API_URL}/ColoredFiles/${fileId}`)
     return res.data;
 };
 export const fetchPresignedUploadUrl = async (fileName: string) => {

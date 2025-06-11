@@ -6,12 +6,13 @@ const axiosInstance = axios.create({
 
 function isTokenValid(): boolean {
   try {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (!token) return false;
 
-    const tokenCheck = JSON.parse(token)._token;
-    const session_data = tokenCheck.split('.');
-    const payload = JSON.parse(atob(session_data[1]));
+    const parts = token.split('.');
+    if (parts.length !== 3) return false;
+
+    const payload = JSON.parse(atob(parts[1]));
     const currentTime = Math.floor(Date.now() / 1000);
     return payload.exp > currentTime;
   } catch (error) {
@@ -21,14 +22,17 @@ function isTokenValid(): boolean {
 }
 
 axiosInstance.interceptors.request.use(
-  (config) => {
-    const loginUser = localStorage.getItem('loginUser');
-    if (loginUser) {
-      const token = JSON.parse(loginUser)._token;
 
+  (config) => {
+          console.log("=== axios interceptor activated ===");
+    debugger;
+    const token = sessionStorage.getItem('token');
+console.log(sessionStorage.getItem('token')+"מיייייייייייייייי");
+
+    if (token) {
       if (!isTokenValid()) {
         console.warn("Token expired - redirecting to login.");
-        localStorage.removeItem('loginUser');
+        sessionStorage.removeItem('token');
         window.location.href = "/login?expired=true";
         return Promise.reject(new Error("Token expired"));
       }
@@ -44,6 +48,7 @@ axiosInstance.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
 
 axiosInstance.interceptors.response.use(
   response => response,

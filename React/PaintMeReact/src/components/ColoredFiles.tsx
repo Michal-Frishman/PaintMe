@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import artStore from "../Stores/FilesStore"
 import { Link } from "react-router-dom"
 import {
   Box,
@@ -48,6 +47,8 @@ const ColoredFiles = observer(() => {
   const coloredFiles = ColoredFilesStore.coloredFiles || []
 
   useEffect(() => {
+    console.log("טוען ציורים מה-API");
+    
     ColoredFilesStore.loadColoredFiles()
   }, [])
 
@@ -167,7 +168,7 @@ const handleDownloadFile = async (url: string) => {
     setSnackbar({ ...snackbar, open: false })
   }
 
-  if (artStore.isLoading) {
+  if (ColoredFilesStore.isLoading) {
     return <LoadingState />
   }
 

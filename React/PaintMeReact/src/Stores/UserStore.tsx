@@ -11,8 +11,8 @@ const UserStore = () => {
             store.isLoading = true;
             store.error = null;
             try {
-                const result = await fetchAuth(mode, email, password); // מחזיר את ה-token עצמו
-                store.token = result.token || result; // תמיכה גם אם מחזיר ישירות מחרוזת
+                const result = await fetchAuth(mode, email, password);
+                store.token = result.token || result; 
             } catch (err: any) {
                 store.error = err?.response?.data?.message || 'Authentication failed';
             } finally {

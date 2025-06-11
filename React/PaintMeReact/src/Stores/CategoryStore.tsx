@@ -1,6 +1,5 @@
 import { makeAutoObservable, action } from "mobx";
 import axiosInstance from './axiosInstance';
-import axios from 'axios';
 
 export type CategoryType = {
     id: number;
@@ -28,7 +27,7 @@ const CategoryStore = () => {
         loadCategories: action(async () => {
             store.isLoading = true;
             try {
-                const response = await axios.get(`${store.url}/Categories`);
+                const response = await axiosInstance.get(`${store.url}/Categories`);
                 store.setCategories(response.data);
             } catch (error) {
                 console.error("Error loading categories:", error);

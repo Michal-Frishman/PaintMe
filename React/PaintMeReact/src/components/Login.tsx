@@ -16,13 +16,13 @@ import {
   FormHelperText,
 } from "@mui/material"
 import { Visibility, VisibilityOff, Email, Lock, Google } from "@mui/icons-material"
-import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth"
 import emailjs from '@emailjs/browser';
 import { useSearchParams } from "react-router-dom";
 import UserStore from "../Stores/UserStore"
 import { auth } from "./firebase"
+import axiosInstance from "../Stores/axiosInstance"
 
 export default function AuthPage() {
   const [mode, setMode] = useState<"login" | "register">("login")
@@ -127,7 +127,7 @@ export default function AuthPage() {
       const url = `${import.meta.env.VITE_API_URL}/api/Auth/${mode}`
       const password = "GoogleAuth123!"
 
-      const res = await axios.post(url, {
+      const res = await axiosInstance.post(url, {
         Email: email,
         Password: password,
       })
