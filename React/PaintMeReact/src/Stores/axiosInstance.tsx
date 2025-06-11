@@ -24,11 +24,7 @@ function isTokenValid(): boolean {
 axiosInstance.interceptors.request.use(
 
   (config) => {
-          console.log("=== axios interceptor activated ===");
-    debugger;
     const token = sessionStorage.getItem('token');
-console.log(sessionStorage.getItem('token')+"מיייייייייייייייי");
-
     if (token) {
       if (!isTokenValid()) {
         console.warn("Token expired - redirecting to login.");

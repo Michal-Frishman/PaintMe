@@ -10,10 +10,8 @@ export const fetchCategories = async () => {
     return response.data;
 };
 
-export const fetchColoredFiles = async () => {
-    console.log("Fetching colored files from API");
-    
-    const response = await axiosInstance.get(`/api/ColoredFiles/getByUser`);
+export const fetchColoredFiles = async () => {   
+    const response = await axiosInstance.get(`${API_URL}/ColoredFiles/getByUser`);
     return response.data;
 };
 

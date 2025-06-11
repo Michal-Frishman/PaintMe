@@ -110,9 +110,7 @@ class ColoredFilesStore {
     makeAutoObservable(this)
   }
 
-  loadColoredFiles = action(async () => {
-    console.log("טוען צבועים מה-API");
-    
+  loadColoredFiles = action(async () => {    
     this.isLoading = true
     try {
       const fetched = await fetchColoredFiles()

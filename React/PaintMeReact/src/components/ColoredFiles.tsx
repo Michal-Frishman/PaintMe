@@ -47,8 +47,6 @@ const ColoredFiles = observer(() => {
   const coloredFiles = ColoredFilesStore.coloredFiles || []
 
   useEffect(() => {
-    console.log("טוען ציורים מה-API");
-    
     ColoredFilesStore.loadColoredFiles()
   }, [])
 
@@ -88,44 +86,41 @@ const ColoredFiles = observer(() => {
     handleMenuClose()
   }
 
-const handleDownloadFile = async (url: string) => {
-  try {
-    setSnackbar({
-      open: true,
-      message: "מוריד את הציור...",
-      severity: "info",
-    });
+  const handleDownloadFile = async (url: string) => {
+    try {
+      setSnackbar({
+        open: true,
+        message: "מוריד את הציור...",
+        severity: "info",
+      });
+      const response = await fetch(url, { mode: 'cors' })
+      const blob = await response.blob()
+      const blobUrl = URL.createObjectURL(blob)
 
-    const response = await fetch(url)
-    if (!response.ok) throw new Error("ההורדה נכשלה")
+      const link = document.createElement("a")
+      link.href = blobUrl
+      link.download = `ציור-${Date.now()}.png`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(blobUrl)
 
-    const blob = await response.blob()
-    const blobUrl = URL.createObjectURL(blob)
-
-    const link = document.createElement("a")
-    link.href = blobUrl
-    link.download = `ציור-${Date.now()}.png`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(blobUrl)
-
-    setSnackbar({
-      open: true,
-      message: "הציור הורד בהצלחה",
-      severity: "success",
-    })
-  } catch (error) {
-    console.error("שגיאה בהורדה:", error)
-    setSnackbar({
-      open: true,
-      message: "אירעה שגיאה במהלך ההורדה",
-      severity: "error",
-    })
-  } finally {
-    handleMenuClose()
+      setSnackbar({
+        open: true,
+        message: "הציור הורד בהצלחה",
+        severity: "success",
+      })
+    } catch (error) {
+      console.error("שגיאה בהורדה:", error)
+      setSnackbar({
+        open: true,
+        message: "אירעה שגיאה במהלך ההורדה",
+        severity: "error",
+      })
+    } finally {
+      handleMenuClose()
+    }
   }
-}
 
   const handlePrintFile = (url: string) => {
     const printWindow = window.open("", "", "height=600,width=800")
