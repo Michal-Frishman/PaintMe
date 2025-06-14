@@ -7,14 +7,12 @@ namespace PaintMe.Service.Services
     public class RoleService : IRoleService
     {
         readonly IRoleRepository _roleRepository;
-        readonly IPermissionRepository _permissionRepository;
         readonly IMapper _mapper;
 
-        public RoleService(IRoleRepository roleRepository, IMapper mapper, IPermissionRepository permissionRepository)
+        public RoleService(IRoleRepository roleRepository, IMapper mapper)
         {
             _roleRepository = roleRepository;
             _mapper = mapper;
-            _permissionRepository = permissionRepository;
         }
         public async Task<IEnumerable<RoleDto>> GetRolesAsync()
         {
@@ -28,34 +26,10 @@ namespace PaintMe.Service.Services
             return _mapper.Map<RoleDto>(role);
         }
 
-        public async Task<bool> IsRoleHasPermissinAsync(string roleName, string permission)
-        {
-            return await _roleRepository.IsRoleHasPermissinAsync(roleName, permission);
-        }
 
-        public async Task<bool> AddPermissinForRoleAsync(string roleName, string permission)
-        {
-            try
-            {
-                var res = await _permissionRepository.GetPermissionByNameAsync(permission);
-                if (res == null)
-                {
-                    throw new Exception(" permission not found");
-                }
-                return await _roleRepository.AddPermissinForRoleAsync(roleName, res);
-            }
-            catch
-            {
-                throw new Exception("failed to add permission");
-            }
-        }
         public async Task<bool> AddRoleAsync(RoleDto role)
         {
             return await _roleRepository.AddRoleAsync(_mapper.Map<Role>(role));
-        }
-        public async Task<bool> UpdateRoleAsync(int id, RoleDto role)
-        {
-            return await _roleRepository.UpdateRoleAsync(id, _mapper.Map<Role>(role));
         }
         public async Task<bool> DeleteRoleAsync(int id)
         {
@@ -63,4 +37,4 @@ namespace PaintMe.Service.Services
         }
 
     }
-    }
+}

@@ -28,18 +28,10 @@ namespace PaintMe.API.Controllers
         }
 
 
-        // GET: api/<RoleController>
         [HttpGet("{roleName}")]
         public async Task<ActionResult> GetRoleByNameAsync(string roleName)
         {
             return Ok(await _roleService.GetRoleByNameAsync(roleName));
-        }
-
-
-        [HttpGet("{roleName}/Ispermissin")]
-        public async Task<ActionResult> GetRoleHasPermissinAsync(string roleName, [FromQuery] string permission)
-        {
-            return Ok(await _roleService.IsRoleHasPermissinAsync(roleName, permission));
         }
 
 
@@ -48,21 +40,6 @@ namespace PaintMe.API.Controllers
         {
             return Ok(await _roleService.AddRoleAsync(role));
         }
-
-
-        [HttpPost("/addPermission/{roleName}")]
-        public async Task<ActionResult> AddPermissinForRoleAsync(string roleName, [FromBody] string permission)
-        {
-            return Ok(await _roleService.AddPermissinForRoleAsync(roleName, permission));
-        }
-
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateRoleAsync(int id, [FromBody] RoleDto role)
-        {
-            return Ok(await _roleService.UpdateRoleAsync(id, role));
-        }
-
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteRoleAsync(int id)

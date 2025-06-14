@@ -29,16 +29,13 @@ builder.Services.AddScoped<IFilesService, FilesService>();
 builder.Services.AddScoped<IColoredFilesService, ColoredFilesService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
-builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<ITokenContextService, TokenContextService>();
 
 builder.Services.AddScoped<IFilesRepository, FilesRepository>();
 builder.Services.AddScoped<IColoredFileRepository, ColoredFilesRepository>();
 builder.Services.AddScoped<IUserRepository, UsersRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();  
-builder.Services.AddScoped<IUserRolesRepository, UserRoleRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoriesRepository>();
-builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 
 builder.Services.AddScoped<AuthService>();
 
