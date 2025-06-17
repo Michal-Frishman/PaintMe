@@ -3,7 +3,6 @@ import { File } from '../models/File';
 import { ColoredFile } from '../models/ColoredFile';
 import { fetchArtworksByCategory, fetchArtworkById, fetchAddFile } from './Api';
 import axiosInstance from './axiosInstance';
-import { FileSmall } from '../models/File';
 
 const FilesStore = () => {
     const store = {
@@ -11,7 +10,7 @@ const FilesStore = () => {
         artworks: [] as File[],
         selectedArtwork: null as File | null,
         coloredFiles: null as ColoredFile[] | null,
-        selectedArtworkList: [] as FileSmall[],
+        selectedArtworkList: [] as File[],
         url: `${import.meta.env.VITE_API_URL}/api`,
 
         loadArtworksByCategory: action(async (categoryId: number) => {
