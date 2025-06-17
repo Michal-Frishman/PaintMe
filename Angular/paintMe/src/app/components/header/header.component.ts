@@ -20,8 +20,6 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 export class HeaderComponent implements OnInit{
   isLoggedIn = false;
   ngOnInit() {
-    // this.isLoggedIn = !!sessionStorage.getItem('token');
         this.isLoggedIn = true;
-
   }
 }

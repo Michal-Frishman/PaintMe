@@ -1,4 +1,3 @@
-// services/categories/categories.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
@@ -20,7 +19,6 @@ constructor(private http: HttpClient) {
   this.loadCategories();
 }
 
-// מתודה לטעינת קטגוריות
   private loadCategories() {
     this.loadingSubject.next(true);
     this.http.get<any[]>(this.apiUrl).subscribe({
@@ -46,7 +44,6 @@ addCategory(category: { name: string }): Observable<any> {
     );
 }
 
-// מתודה לעדכון קטגוריה
 updateCategory(id: number, category: { name: string; description: string }): Observable<any> {
   return this.http.put<any>(`${this.apiUrl}/${id}`, category)
     .pipe(
@@ -58,7 +55,6 @@ updateCategory(id: number, category: { name: string; description: string }): Obs
     );
 }
 
-// מתודה לקבלת קטגוריה לפי ID
 getCategoryById(id: number): Observable<any> {
   return this.http.get<any>(`${this.apiUrl}/${id}`)
     .pipe(
@@ -79,7 +75,6 @@ getAllCategories(): Observable<any[]> {
     );
 }
 
-// מתודה למחיקת קטגוריה
 deleteCategory(id: number): Observable<void> {
   return this.http.delete<void>(`${this.apiUrl}/${id}`)
     .pipe(

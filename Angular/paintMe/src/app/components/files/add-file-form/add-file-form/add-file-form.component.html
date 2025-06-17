@@ -1,4 +1,4 @@
-  <app-back-button></app-back-button>
+<app-back-button></app-back-button>
 
 <div class="container">
   <h2>העלאת ציור</h2>
@@ -47,11 +47,6 @@
   <p>קטגוריה: {{ getSelectedCategoryName() }}</p>
 
   <p>שם/תיאור: {{ uploadForm.get('artworkName')?.value }}</p>
-
-  <!-- @if (isUploading()) {
-  <mat-progress-bar mode="determinate" [value]="progress()"></mat-progress-bar>
-  <p>{{ progress() }}% הושלמו</p>
-  } -->
 
   <button mat-raised-button (click)="upload()" [disabled]="isUploading()||loading">
     @if(loading){

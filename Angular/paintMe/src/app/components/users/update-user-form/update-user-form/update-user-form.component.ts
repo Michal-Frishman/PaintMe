@@ -35,11 +35,8 @@ loading=false
   ngOnInit(): void {
     this.userId = parseInt(this.route.snapshot.paramMap.get('id')?.toString() ?? '');
     this.userForm = this.fb.group({
-      // firstName: ['', Validators.required],
-      // lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      // role: ['', Validators.required]
     });
     this.loadUserData(); 
   }

@@ -7,8 +7,6 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class UsersService {
-  // apiUrl = 'https://localhost:7209/api/Users';
-
   apiUrl = 'https://paintme-server.onrender.com/api/Users';
   private usersSubject = new BehaviorSubject<User[]>([]);
   users$ = this.usersSubject.asObservable();
@@ -44,21 +42,15 @@ export class UsersService {
       );
   }
   addUser(user: User): Observable<User> {
-    // user.role = parseInt(user.role.toString());
     return this.http.post<User>(this.apiUrl, user)
       .pipe(
         catchError(error => {
           alert("addUser failed: " + error.message);
           return of({} as User);
         }),
-        tap(() => this.loadUsers()) // Reload users after adding a new user
+        tap(() => this.loadUsers()) 
       );
   }
-
-  // postLoginOrRegister( data : PartialUser, userStatus: string): Observable<{ token: string ,userId:number}>{
-  //   return this.http.post<{ token: string, userId:number }>(`http://localhost:3000/api/auth/${userStatus}`, data);
-  // }
-
   getUserById(id: number): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/${id}`)
       .pipe(

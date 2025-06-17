@@ -1,40 +1,3 @@
-<!-- <header class="app-header">
-  <mat-toolbar color="primary" class="admin-header">
-    <mat-toolbar-row>
-      <a routerLink="/" class="logo">PaintMe Admin</a>
-      <span class="spacer"></span>
-      @if(isLoggedIn) {
-        <div class="nav-container">
-          <nav>
-            <button mat-button routerLink="/files" routerLinkActive="active">
-              <mat-icon>brush</mat-icon>
-              <span>ציורים</span>
-            </button>
-            <button mat-button routerLink="/categories" routerLinkActive="active">
-              <mat-icon>category</mat-icon>
-              <span>קטגוריות</span>
-            </button>
-            <button mat-button routerLink="/users" routerLinkActive="active">
-              <mat-icon>people</mat-icon>
-              <span>משתמשים</span>
-            </button>
-            <button mat-button routerLink="/stats" routerLinkActive="active">
-              <mat-icon>assessment</mat-icon>
-              <span>דוחות פעילות</span>
-            </button>
-          </nav>
-  
-      
-        </div>
-      }
-    </mat-toolbar-row>
-  </mat-toolbar>
-</header>
-
-<main class="content-main" dir="rtl">
-  <router-outlet></router-outlet>
-</main> -->
-
 <header class="app-header">
   <mat-toolbar color="primary" class="admin-header">
     <mat-toolbar-row>
@@ -43,10 +6,7 @@
       @if(isLoggedIn) {
         <div class="nav-container">
           <nav>
-            <!-- <button mat-button routerLink="/dashboard" routerLinkActive="active">
-              <mat-icon>dashboard</mat-icon>
-              <span>דשבורד</span>
-            </button> -->
+           
             <button mat-button routerLink="/files" routerLinkActive="active">
               <mat-icon>brush</mat-icon>
               <span>ציורים</span>
@@ -64,20 +24,6 @@
               <span>דוחות פעילות</span>
             </button>
           </nav>
-          
-          <!-- <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-menu-button">
-            <mat-icon>account_circle</mat-icon>
-          </button>
-          <mat-menu #userMenu="matMenu">
-            <button mat-menu-item>
-              <mat-icon>settings</mat-icon>
-              <span>הגדרות</span>
-            </button> -->
-            <!-- <button mat-menu-item (click)="logout()">
-              <mat-icon>exit_to_app</mat-icon>
-              <span>התנתק</span>
-            </button> -->
-          <!-- </mat-menu> -->
         </div>
       }
     </mat-toolbar-row>
@@ -88,6 +34,3 @@
   <router-outlet></router-outlet>
 </main>
 
-<!-- <footer>
-  <p>&copy; {{currentYear}} PaintMe כל הזכויות שמורות.</p>
-</footer> -->

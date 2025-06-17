@@ -1,4 +1,3 @@
-// components/update-category-form/update-category-form.component.ts
 import { ActivatedRoute } from '@angular/router';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -32,7 +31,6 @@ loading=false
     this.categoryId = parseInt(this.route.snapshot.paramMap.get('id')?.toString() ?? '');
     this.categoryForm = this.fb.group({
       name: ['', Validators.required],
-      // description: ['', Validators.required]
     });
     this.loadCategoryData(); 
   }

@@ -29,7 +29,6 @@ import { LoadingSpinnerComponent } from '../../loading-spinner/loading-spinner.c
 })
 export class SignInComponent implements OnInit {
   showSignUp = false;
-  // router = inject(Router);
   hide = signal(true);
   user!: SignIn;
   signInForm!: FormGroup;
