@@ -23,7 +23,7 @@ import SearchIcon from "@mui/icons-material/Search"
 
 const CategoryList = observer(() => {
   const [itemsToShow, setItemsToShow] = useState(8)
-  const [searchTerm, setSearchTerm] = useState("") // מצב לתיבת החיפוש
+  const [searchTerm, setSearchTerm] = useState("") 
 
   useEffect(() => {
     categoryStore.loadCategories()

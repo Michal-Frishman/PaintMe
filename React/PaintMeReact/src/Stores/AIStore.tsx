@@ -14,12 +14,12 @@ const AIStore = () => {
         },
 
         loadAiInstructions: action(async (path: string) => {
-            if (store.aiInstructionsMap.has(path)) return; // כבר נטען – לא טוען שוב
+            if (store.aiInstructionsMap.has(path)) return; 
 
             store.isLoading = true;
             try {
                 const result = await fetchAiDrawingInstructions(path);
-                store.aiInstructionsMap.set(path, result); // שמירה לפי path
+                store.aiInstructionsMap.set(path, result); 
             } catch (error) {
                 console.error('שגיאה בטעינת רעיונות AI:', error);
             }
