@@ -2,22 +2,24 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
 import { User } from '../../models/User';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersService {
-  apiUrl = 'https://paintme-server.onrender.com/api/Users';
+  private apiUrl = `${environment.apiUrl}/Users`;
+
   private usersSubject = new BehaviorSubject<User[]>([]);
   users$ = this.usersSubject.asObservable();
 
- private loadingSubject = new BehaviorSubject<boolean>(true);
+  private loadingSubject = new BehaviorSubject<boolean>(true);
   isLoading$ = this.loadingSubject.asObservable();
 
   constructor(private http: HttpClient) {
     this.loadUsers();
   }
- private loadUsers() {
+  private loadUsers() {
     this.loadingSubject.next(true);
     this.http.get<any[]>(this.apiUrl).subscribe({
       next: users => {
@@ -48,7 +50,7 @@ export class UsersService {
           alert("addUser failed: " + error.message);
           return of({} as User);
         }),
-        tap(() => this.loadUsers()) 
+        tap(() => this.loadUsers())
       );
   }
   getUserById(id: number): Observable<User> {

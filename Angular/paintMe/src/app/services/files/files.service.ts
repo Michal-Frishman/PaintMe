@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, of, tap } from 'rxjs';
 import { File } from '../../models/File';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FilesService {
-  apiUrl = 'https://paintme-server.onrender.com/api/Files';
+  private apiUrl = `${environment.apiUrl}/Files`;
 
   private filesSubject = new BehaviorSubject<File[]>([]);
   files$ = this.filesSubject.asObservable();

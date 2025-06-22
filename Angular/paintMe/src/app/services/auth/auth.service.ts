@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { SignIn } from '../../models/SignIn';
 import { BehaviorSubject, tap } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
+import { environment } from '../../../environments/environment';
 
 interface DecodedToken {
   role?: string | null;
@@ -15,7 +16,7 @@ interface DecodedToken {
 export class AuthService {
   private loggedIn = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this.loggedIn.asObservable();
-  private apiUrl = "https://paintme-server.onrender.com/api/Auth";
+  private apiUrl = `${environment.apiUrl}/Auth`;
 
   constructor(private http: HttpClient) {
     const token = typeof window !== 'undefined' ? sessionStorage.getItem('token') : null;

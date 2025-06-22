@@ -22,6 +22,7 @@ import { Category } from '../../../../models/Category';
 import { HttpClient } from '@angular/common/http';
 import { LoadingSpinnerComponent } from '../../../loading-spinner/loading-spinner.component';
 import { BackButtonComponent } from '../../../back-button/back-button.component';
+import { UploadService } from '../../../../services/upload/upload.service';
 @Component({
   selector: 'app-add-file-form',
   standalone: true,
@@ -54,7 +55,7 @@ export class AddFileFormComponent {
   loading = false;
   categories$!: Observable<Category[]>;
 
-  constructor(private categoriesService: CategoriesService, private http: HttpClient) { }
+  constructor(private categoriesService: CategoriesService, private http: HttpClient,private uploadService :UploadService) { }
 
   ngOnInit(): void {
     this.categories$ = this.categoriesService.categories$;
@@ -97,54 +98,41 @@ export class AddFileFormComponent {
   }
 
   async upload() {
-    if (!this.file || this.uploadForm.invalid) return;
+     if (!this.file || this.uploadForm.invalid) return;
     this.loading = true;
     this.isUploading.set(true);
     this.progress.set(0);
 
     try {
-      const fileName = this.file.name;
-      const fileType = this.file.type;
-      const getPresignedUrl = `https://paintme-server.onrender.com/api/upload/presigned-url`;
+      const presignedUrl = await this.uploadService.getPresignedUrl(this.file.name);
 
-      const response = await firstValueFrom(
-        this.http.get<{ url: string }>(getPresignedUrl, {
-          params: { fileName }
-        })
-      );
+      await this.uploadService.uploadFileToS3(presignedUrl, this.file);
 
-      this.http.put(response.url, this.file, {
-        headers: {
-          'Content-Type': fileType
-        },
-      });
+      const downloadUrl = await this.uploadService.getDownloadUrl(this.file.name);
 
-      const downloadUrlResponse = await firstValueFrom(
-        this.http.get(`https://paintme-server.onrender.com/api/upload/download-url/${fileName}`, {
-          responseType: 'text'
-        })
-      );
-
-      const downloadUrl = downloadUrlResponse;
-
+      const name = this.uploadForm.get('artworkName')?.value;
+      const categoryId = this.uploadForm.get('category')?.value;
+      if (typeof name !== 'string' || !name || typeof categoryId !== 'string' && typeof categoryId !== 'number') {
+        throw new Error('Invalid form values');
+      }
       const saveFileBody = {
-        name: this.uploadForm.get('artworkName')?.value,
-        categoryId: this.uploadForm.get('category')?.value,
+        name: name,
+        categoryId: Number(categoryId),
         fileUrl: downloadUrl
-      };      
-
-      await firstValueFrom(
-        this.http.post('https://paintme-server.onrender.com/api/Files', saveFileBody)
-      );
+      };
+      await this.uploadService.saveFileRecord(saveFileBody);
 
       this.uploadSuccess.set(true);
       this.uploadForm.reset();
+      this.file = null;
+      this.fileName = '';
+
     } catch (error) {
       console.error('שגיאה בהעלאה:', error);
       this.uploadSuccess.set(false);
     } finally {
       this.isUploading.set(false);
-      this.loading=false
+      this.loading = false;
     }
   }
 
