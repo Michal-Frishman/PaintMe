@@ -12,10 +12,10 @@ import { LoadingSpinnerComponent } from '../../../loading-spinner/loading-spinne
 
 @Component({
   selector: 'app-update-user-form',
-    standalone: true,
+  standalone: true,
 
   templateUrl: './update-user-form.component.html',
-   imports: [BackButtonComponent, RouterModule, MatSelectModule, MatRadioModule, MatButtonModule, MatInputModule, MatFormFieldModule, ReactiveFormsModule,LoadingSpinnerComponent],
+  imports: [BackButtonComponent, RouterModule, MatSelectModule, MatRadioModule, MatButtonModule, MatInputModule, MatFormFieldModule, ReactiveFormsModule, LoadingSpinnerComponent],
 
   styleUrls: ['./update-user-form.component.css']
 })
@@ -24,7 +24,7 @@ export class UpdateUserFormComponent implements OnInit {
   userId!: number;
   router = inject(Router);
   initialValues: any;
-loading=false
+  loading = false
 
   constructor(
     private fb: FormBuilder,
@@ -38,33 +38,33 @@ loading=false
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     });
-    this.loadUserData(); 
+    this.loadUserData();
   }
 
-    loadUserData() {
-      this.usersService.getUserById(this.userId).subscribe({
-        next: user => {
-          this.userForm.patchValue(user);
-          this.initialValues = user;
+  loadUserData() {
+    this.usersService.getUserById(this.userId).subscribe({
+      next: user => {
+        this.userForm.patchValue(user);
+        this.initialValues = user;
 
+      },
+      error: err => {
+        console.error('Error fetching user data:', err);
+      }
+    });
+  }
+
+  updateUser() {
+    if (this.userForm.valid) {
+      this.loading = true;
+      this.usersService.updateUser(this.userId, this.userForm.value).subscribe({
+        next: res => {
+          this.loading = false;
         },
         error: err => {
-          console.error('Error fetching user data:', err);
+          console.error('Error updating user:', err);
         }
       });
     }
-
-    updateUser() {
-      if (this.userForm.valid) {
-        this.loading = true;
-        this.usersService.updateUser(this.userId, this.userForm.value).subscribe({
-          next: res => {
-            this.loading = false;
-          },
-          error: err => {
-            console.error('Error updating user:', err);
-          }
-        });
-      }
-    }
   }
+}

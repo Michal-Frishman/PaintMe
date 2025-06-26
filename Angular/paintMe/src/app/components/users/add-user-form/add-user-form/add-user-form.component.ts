@@ -16,7 +16,7 @@ import { LoadingSpinnerComponent } from '../../../loading-spinner/loading-spinne
 @Component({
   selector: 'app-add-user-form',
   standalone: true,
-  imports: [BackButtonComponent, MatIconModule,MatCardModule,RouterModule,MatSelectModule,MatRadioModule,MatButtonModule, MatInputModule, MatFormFieldModule, ReactiveFormsModule,LoadingSpinnerComponent],
+  imports: [BackButtonComponent, MatIconModule, MatCardModule, RouterModule, MatSelectModule, MatRadioModule, MatButtonModule, MatInputModule, MatFormFieldModule, ReactiveFormsModule, LoadingSpinnerComponent],
   templateUrl: './add-user-form.component.html',
   styleUrls: ['./add-user-form.component.css']
 })
@@ -24,7 +24,7 @@ export class AddUserFormComponent implements OnInit {
   userForm!: FormGroup;
   router = inject(Router);
   hidePassword = true;
-loading=false
+  loading = false
   constructor(private fb: FormBuilder, private http: HttpClient, private usersService: UsersService) {
 
   }
@@ -42,9 +42,10 @@ loading=false
     }
   }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.userForm = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required],
-  });}
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
+    });
+  }
 }

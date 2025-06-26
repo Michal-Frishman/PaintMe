@@ -13,14 +13,14 @@ import { BackButtonComponent } from '../../back-button/back-button.component';
 @Component({
   selector: 'app-add-category-form',
   standalone: true,
-  imports: [BackButtonComponent, MatProgressSpinnerModule,MatIconModule, RouterModule, MatButtonModule, MatInputModule, MatFormFieldModule, ReactiveFormsModule,LoadingSpinnerComponent],
+  imports: [BackButtonComponent, MatProgressSpinnerModule, MatIconModule, RouterModule, MatButtonModule, MatInputModule, MatFormFieldModule, ReactiveFormsModule, LoadingSpinnerComponent],
   templateUrl: './add-category-form.component.html',
   styleUrl: './add-category-form.component.css'
 })
 export class AddCategoryFormComponent implements OnInit {
   categoryForm!: FormGroup;
   router = inject(Router);
-loading=false
+  loading = false
   constructor(private fb: FormBuilder, private categoriesService: CategoriesService) { }
 
 
@@ -30,20 +30,20 @@ loading=false
     });
   }
 
-addCategory(): void {
-  if (this.categoryForm.invalid) return;
-  this.loading = true;
-  this.categoriesService.addCategory(this.categoryForm.value).subscribe({
-    next: () => {
-      this.loading = false;
-this.categoryForm.reset();
-this.categoryForm.markAsPristine();
-this.categoryForm.markAsUntouched();
-    },
-    error: () => {
-      this.loading = false;
-    }
-  });
-}
+  addCategory(): void {
+    if (this.categoryForm.invalid) return;
+    this.loading = true;
+    this.categoriesService.addCategory(this.categoryForm.value).subscribe({
+      next: () => {
+        this.loading = false;
+        this.categoryForm.reset();
+        this.categoryForm.markAsPristine();
+        this.categoryForm.markAsUntouched();
+      },
+      error: () => {
+        this.loading = false;
+      }
+    });
+  }
 
 }

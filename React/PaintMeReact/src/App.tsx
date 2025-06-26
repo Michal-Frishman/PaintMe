@@ -7,10 +7,10 @@ import theme from "./components/Designs/Theme";
 function App() {
   return (
     <ThemeProvider theme={theme}>
-  <div className="relative flex min-h-screen flex-col bg-gradient-paintme">
-    <RouterProvider router={myRouter} />
-  </div>
-</ThemeProvider>
+      <div className="relative flex min-h-screen flex-col bg-gradient-paintme">
+        <RouterProvider router={myRouter} />
+      </div>
+    </ThemeProvider>
 
   );
 }

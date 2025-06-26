@@ -1,4 +1,4 @@
-  <app-back-button></app-back-button>
+<app-back-button></app-back-button>
 <div class="content-container" dir="rtl">
   <div class="page-header">
     <h1>ניהול משתמשים</h1>
@@ -9,37 +9,37 @@
     <mat-icon>person_add</mat-icon>
     הוסף משתמש
   </a>
-<mat-form-field appearance="outline" class="search-field">
-  <mat-label>חיפוש לפי אימייל</mat-label>
-  <input matInput (input)="applyFilter($event)" placeholder="הקלד אימייל">
-  <mat-icon matSuffix>search</mat-icon>
-</mat-form-field>
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>חיפוש לפי אימייל</mat-label>
+    <input matInput (input)="applyFilter($event)" placeholder="הקלד אימייל">
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
 
 
-@if (isLoading$ | async) {
-   <div class="user-card-grid">
-      @for (i of [1, 2, 3, 4]; track $index) {
-      <mat-card class="user-card skeleton-card">
-        <div class="user-avatar skeleton-circle"></div>
-        <mat-card-header>
-          <mat-card-title>
-            <div class="skeleton-line short"></div>
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="skeleton-line"></div>
-          <div class="skeleton-line"></div>
-        </mat-card-content>
-        <mat-card-actions>
-          <div class="skeleton-button"></div>
-          <div class="skeleton-button"></div>
-        </mat-card-actions>
-      </mat-card>
+  @if (isLoading$ | async) {
+  <div class="user-card-grid">
+    @for (i of [1, 2, 3, 4]; track $index) {
+    <mat-card class="user-card skeleton-card">
+      <div class="user-avatar skeleton-circle"></div>
+      <mat-card-header>
+        <mat-card-title>
+          <div class="skeleton-line short"></div>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line"></div>
+      </mat-card-content>
+      <mat-card-actions>
+        <div class="skeleton-button"></div>
+        <div class="skeleton-button"></div>
+      </mat-card-actions>
+    </mat-card>
     }
   </div>
   } @else {
   <div class="user-card-grid">
-@for (user of filteredUsers$ | async; track user.id) {
+    @for (user of filteredUsers$ | async; track user.id) {
     <mat-card class="user-card">
       <div class="user-avatar">
         <mat-icon>account_circle</mat-icon>
@@ -67,11 +67,11 @@
       <mat-card-actions align="start">
 
 
-        <a mat-icon-button  [routerLink]="['/users', user.id, 'update']" matTooltip="עדכן פרטים">
+        <a mat-icon-button [routerLink]="['/users', user.id, 'update']" matTooltip="עדכן פרטים">
           <mat-icon>edit</mat-icon>
         </a>
 
-        <button mat-icon-button  (click)="deleteUser(user.id)" matTooltip="הסר משתמש">
+        <button mat-icon-button (click)="deleteUser(user.id)" matTooltip="הסר משתמש">
           <mat-icon>delete</mat-icon>
         </button>
       </mat-card-actions>
