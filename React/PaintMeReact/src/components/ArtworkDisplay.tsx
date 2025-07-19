@@ -109,7 +109,6 @@ const ArtworkDisplay = observer(() => {
                     component="img"
                     image={artwork.fileUrl}
                     alt={artwork.name}
-                    crossOrigin="anonymous"
                   />
 
                   <Box sx={{ p: 2, textAlign: "center" }}>
