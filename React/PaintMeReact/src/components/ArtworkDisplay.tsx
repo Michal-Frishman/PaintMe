@@ -13,7 +13,7 @@ import {
   Container,
   Fade,
   IconButton,
-  
+
   Tooltip,
   TextField,
   InputAdornment,
@@ -22,7 +22,7 @@ import {
 import { ArrowBack, Search as SearchIcon } from "@mui/icons-material"
 import ArtWorkStore from "../Stores/FilesStore"
 const ArtworkDisplay = observer(() => {
-    const { artworks, loadArtworksByCategory } = ArtWorkStore;
+  const { artworks, loadArtworksByCategory } = ArtWorkStore;
 
   const { id: categoryId } = useParams()
   const navigate = useNavigate()
@@ -109,11 +109,9 @@ const ArtworkDisplay = observer(() => {
                     component="img"
                     image={artwork.fileUrl}
                     alt={artwork.name}
-                    sx={{
-                      height: 220,
-                      objectFit: "cover",
-                    }}
+                    crossOrigin="anonymous"
                   />
+
                   <Box sx={{ p: 2, textAlign: "center" }}>
                     <Typography
                       variant="body2"
@@ -136,7 +134,7 @@ const ArtworkDisplay = observer(() => {
       </Fade>
     </Container>
   )
-  
+
 })
 const LoadingState = () => {
   return (
