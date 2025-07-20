@@ -35,7 +35,7 @@ namespace PaintMe.API.Controllers
             if (role == "Admin" || role == "User")
             {
                 var token = _authService.GenerateJwtToken(user.Id, model.Email, role);
-                return Ok(new { Token = token, User = user });
+                return Ok(new { Token = token });
             }
             return Unauthorized("Invalid role");
         }
@@ -52,7 +52,7 @@ namespace PaintMe.API.Controllers
             var newUser = await _userService.AddAsync(user);
             var token = _authService.GenerateJwtToken(newUser.Id, model.Email, "User");
 
-            return Ok(new { Token = token, User = newUser });
+            return Ok(new { Token = token});
         }
 
         public class LoginModel
