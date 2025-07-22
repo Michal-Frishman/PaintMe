@@ -9,6 +9,7 @@ interface DrawingAreaProps {
   draw: (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => void;
   endDrawing: () => void;
   isImageLoading: boolean;
+  loadingError: boolean;
   fileUrl: string;
 }
 
@@ -19,12 +20,13 @@ const DrawingArea = ({
   draw,
   endDrawing,
   isImageLoading,
+  loadingError,
   fileUrl
 }: DrawingAreaProps) => {
   const theme = useTheme();
-  
+
   return (
-    <Box 
+    <Box
       ref={containerRef}
       display="flex"
       justifyContent="center"
@@ -52,7 +54,30 @@ const DrawingArea = ({
         onTouchMove={draw}
         onTouchEnd={endDrawing}
       />
-      {isImageLoading && (
+
+      {loadingError ? (
+        <Typography
+          variant="h6"
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            color: "black",
+            backgroundColor: "rgba(255,255,255,0.9)",
+            padding: 2,
+            borderRadius: 2,
+            whiteSpace: "pre-line", // מאפשר שורות חדשות
+            textAlign: "center",
+          }}
+        >
+
+          🙁🙁🙁{"\n"}
+         Oops, הייתה שגיאה בטעינת הציור.{"\n"}
+          קבלו התנצלות כנה!!{"\n"}
+            נשמח אם תעדכנו אותנו מה הציור הבעייתי paintmepaintmepaintme@gmail.com
+        </Typography>
+      ) : isImageLoading && (
         <Typography
           variant="h6"
           sx={{

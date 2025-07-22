@@ -18,6 +18,7 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
   const [isDrawing, setIsDrawing] = useState(false)
   const [lastX, setLastX] = useState(0)
   const [lastY, setLastY] = useState(0)
+  const [loadingError, setLoadingError] = useState(false)
   const [snackbar, setSnackbar] = useState<{
     open: boolean
     message: string
@@ -61,7 +62,7 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
         if (isColored) {
           await ColoredFilesStore.loadColoredFileById(artworkId);
           const data = ColoredFilesStore.coloredFileById;
-          
+
           if (data) {
             if ("originalDrawingId" in data && typeof data.originalDrawingId === "number") {
               setBaseDrawingId(typeof data.originalDrawingId === "number" ? data.originalDrawingId : null);
@@ -128,8 +129,15 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
         setIsImageLoading(false)
       }
+
+      img.onerror = () => {
+        setIsImageLoading(false)
+        setLoadingError(true)
+      }
+
     }
   }, [backgroundImage])
+
 
   const showSnackbar = (message: string, severity: "success" | "error" | "info" = "success") => {
     setSnackbar({
@@ -284,95 +292,95 @@ const DrawingCanvas = ({ isColored }: { isColored: boolean }) => {
   const saveCanvas = async (canvas: HTMLCanvasElement) => {
     await ColoredFilesStore.saveCanvas(canvas, fileName, isColored, baseDrawingId ?? 0);
   };
-const handleDownload = async () => {
-  if (!canvasRef.current) return;
-  if (isDownloading) return;
+  const handleDownload = async () => {
+    if (!canvasRef.current) return;
+    if (isDownloading) return;
 
-  setIsDownloading(true);
-  showSnackbar("מכין את הציור להורדה...", "info");
+    setIsDownloading(true);
+    showSnackbar("מכין את הציור להורדה...", "info");
 
-  try {
-    const canvas = canvasRef.current;
-    const mergedCanvas = await createMergedCanvas(canvas);
+    try {
+      const canvas = canvasRef.current;
+      const mergedCanvas = await createMergedCanvas(canvas);
 
-    const downloadCanvas = document.createElement("canvas");
-    downloadCanvas.width = 2480;
-    downloadCanvas.height = 3508;
+      const downloadCanvas = document.createElement("canvas");
+      downloadCanvas.width = 2480;
+      downloadCanvas.height = 3508;
 
-    const ctx = downloadCanvas.getContext("2d");
-    if (!ctx) throw new Error("Failed to get context for download canvas");
+      const ctx = downloadCanvas.getContext("2d");
+      if (!ctx) throw new Error("Failed to get context for download canvas");
 
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, downloadCanvas.width, downloadCanvas.height);
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, downloadCanvas.width, downloadCanvas.height);
 
-    const scale = Math.min(
-      downloadCanvas.width / mergedCanvas.width,
-      downloadCanvas.height / mergedCanvas.height
-    );
+      const scale = Math.min(
+        downloadCanvas.width / mergedCanvas.width,
+        downloadCanvas.height / mergedCanvas.height
+      );
 
-    const drawWidth = mergedCanvas.width * scale;
-    const drawHeight = mergedCanvas.height * scale;
-    const offsetX = (downloadCanvas.width - drawWidth) / 2;
-    const offsetY = (downloadCanvas.height - drawHeight) / 2;
+      const drawWidth = mergedCanvas.width * scale;
+      const drawHeight = mergedCanvas.height * scale;
+      const offsetX = (downloadCanvas.width - drawWidth) / 2;
+      const offsetY = (downloadCanvas.height - drawHeight) / 2;
 
-    ctx.drawImage(mergedCanvas, offsetX, offsetY, drawWidth, drawHeight);
+      ctx.drawImage(mergedCanvas, offsetX, offsetY, drawWidth, drawHeight);
 
-    const imageUrl = downloadCanvas.toDataURL("image/png");
-    const link = document.createElement("a");
-    link.href = imageUrl;
-    link.download = `ציור-${fileName || "שלי"}-${Date.now()}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+      const imageUrl = downloadCanvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = imageUrl;
+      link.download = `ציור-${fileName || "שלי"}-${Date.now()}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
 
-    showSnackbar("הציור הורד בהצלחה", "success");
-  } catch (error) {
-    console.error("Error downloading drawing:", error);
-    showSnackbar("שגיאה בהורדת הציור", "error");
-  } finally {
-    setIsDownloading(false);
-  }
-};
+      showSnackbar("הציור הורד בהצלחה", "success");
+    } catch (error) {
+      console.error("Error downloading drawing:", error);
+      showSnackbar("שגיאה בהורדת הציור", "error");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
-const handlePrint = async () => {
-  if (!canvasRef.current) return;
-  if (isPrinting) return;
+  const handlePrint = async () => {
+    if (!canvasRef.current) return;
+    if (isPrinting) return;
 
-  setIsPrinting(true);
-  showSnackbar("מכין את הציור להדפסה...", "info");
+    setIsPrinting(true);
+    showSnackbar("מכין את הציור להדפסה...", "info");
 
-  try {
-    const canvas = canvasRef.current;
-    const mergedCanvas = await createMergedCanvas(canvas);
+    try {
+      const canvas = canvasRef.current;
+      const mergedCanvas = await createMergedCanvas(canvas);
 
-    const printCanvas = document.createElement("canvas");
-    printCanvas.width = 2480;
-    printCanvas.height = 3508;
+      const printCanvas = document.createElement("canvas");
+      printCanvas.width = 2480;
+      printCanvas.height = 3508;
 
-    const ctx = printCanvas.getContext("2d");
-    if (!ctx) throw new Error("Failed to get context for print canvas");
+      const ctx = printCanvas.getContext("2d");
+      if (!ctx) throw new Error("Failed to get context for print canvas");
 
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, printCanvas.width, printCanvas.height);
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, printCanvas.width, printCanvas.height);
 
-    const scale = Math.min(
-      printCanvas.width / mergedCanvas.width,
-      printCanvas.height / mergedCanvas.height
-    );
+      const scale = Math.min(
+        printCanvas.width / mergedCanvas.width,
+        printCanvas.height / mergedCanvas.height
+      );
 
-    const drawWidth = mergedCanvas.width * scale;
-    const drawHeight = mergedCanvas.height * scale;
-    const offsetX = (printCanvas.width - drawWidth) / 2;
-    const offsetY = (printCanvas.height - drawHeight) / 2;
+      const drawWidth = mergedCanvas.width * scale;
+      const drawHeight = mergedCanvas.height * scale;
+      const offsetX = (printCanvas.width - drawWidth) / 2;
+      const offsetY = (printCanvas.height - drawHeight) / 2;
 
-    ctx.drawImage(mergedCanvas, offsetX, offsetY, drawWidth, drawHeight);
+      ctx.drawImage(mergedCanvas, offsetX, offsetY, drawWidth, drawHeight);
 
-    const imageUrl = printCanvas.toDataURL("image/png");
+      const imageUrl = printCanvas.toDataURL("image/png");
 
-    const printWindow = window.open("", "", "height=800,width=600");
-    if (!printWindow) throw new Error("Failed to open print window");
+      const printWindow = window.open("", "", "height=800,width=600");
+      if (!printWindow) throw new Error("Failed to open print window");
 
-    printWindow.document.write(`
+      printWindow.document.write(`
       <html>
         <head>
           <title>הדפסת ציור</title>
@@ -405,19 +413,19 @@ const handlePrint = async () => {
         </body>
       </html>
     `);
-    printWindow.document.close();
-    setTimeout(() => {
-      printWindow.focus();
-      printWindow.print();
-      printWindow.close();
+      printWindow.document.close();
+      setTimeout(() => {
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+        setIsPrinting(false);
+      }, 500);
+    } catch (error) {
+      console.error("Error printing drawing:", error);
+      showSnackbar("שגיאה בהדפסת הציור", "error");
       setIsPrinting(false);
-    }, 500);
-  } catch (error) {
-    console.error("Error printing drawing:", error);
-    showSnackbar("שגיאה בהדפסת הציור", "error");
-    setIsPrinting(false);
-  }
-};
+    }
+  };
 
 
   const clearCanvas = () => {
@@ -469,8 +477,10 @@ const handlePrint = async () => {
           draw={draw}
           endDrawing={endDrawing}
           isImageLoading={isImageLoading}
+          loadingError={loadingError}
           fileUrl={fileUrl}
         />
+
 
         <ActionButtons
           clearCanvas={clearCanvas}
